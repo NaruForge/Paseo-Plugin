@@ -10,6 +10,8 @@ SWBaek maintains this community project on a best-effort basis; there is no guar
 
 Paseo plugins are trusted, unsandboxed code. Backend code runs with the daemon user's access; client contributions run inside Paseo. These plugins' allowlists constrain their implementation, not the operating system or other installed plugins. Inspect source and pin a reviewed commit/tag when appropriate.
 
+Paseo 0.8 adds compiler boundaries between client/server/shared modules and daemon/app version requirements; these are **not an OS sandbox**. Its lifecycle hooks, permission responses, provider contributions and terminal actions can change host/agent state. Those APIs are reference material for future work and do not expand this collection's current read-only operations. Built-in host settings are ordinary JSON and must not hold credentials. See the [0.8 migration scope](docs/MIGRATION_0.8.md).
+
 ## Data access by plugin
 
 | Plugin | Reads and connections | Writes and user actions |

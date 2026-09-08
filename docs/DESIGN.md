@@ -2,13 +2,13 @@
 
 이 문서는 `plugins/*`의 Paseo 클라이언트 UI에 적용하는 저장소 공통 디자인 규칙이다. Paseo 본체의 [Design](https://github.com/getpaseo/paseo/blob/main/docs/design.md)을 플러그인 공개 계약에 맞게 번안했으며, 원문을 그대로 복제하거나 자동 동기화하지 않는다.
 
-마지막 대조일: 2026-09-04
+마지막 대조일: 2026-09-08. 새 API 참조는 **0.8.0-beta.1** 기준이며 현재 두 플러그인의 소스는 아직 **0.7.2**다. 아래 공통 시각 규칙은 두 버전에 적용하고, 새 import·Settings·Modal 계약은 [0.8 이관](MIGRATION_0.8.md) 이후 적용한다.
 
 ## Rule precedence
 
 규칙이 충돌하면 아래 순서를 따른다.
 
-1. 현재 안정판 [Plugin quickstart](https://paseo.sh/docs/plugins/v0.7)와 [Plugin reference](https://paseo.sh/docs/plugins/v0.7/reference)
+1. 대상 버전 공식 문서: [v0.8 quickstart](https://paseo.sh/docs/plugins/v0.8)·[reference](https://paseo.sh/docs/plugins/v0.8/reference), 기존 소스 유지보수는 [v0.7 reference](https://paseo.sh/docs/plugins/v0.7/reference)
 2. 대상 Paseo 버전의 fresh scaffold와 exact `@getpaseo/plugin` package declaration
 3. 이 문서
 4. Paseo 본체의 `docs/design.md`
@@ -27,11 +27,11 @@
 Paseo는 플러그인 surface의 route, 화면 header, 닫기 동작, host picker, error boundary와 query client를 소유한다. 플러그인은 header 아래의 body만 소유한다.
 
 - Paseo가 제공하는 화면 제목이나 navigation chrome을 body 안에 반복하지 않는다.
-- `packages/app/...`의 내부 컴포넌트나 토큰을 가져오지 않는다. 본체의 `<Button>`, `<StatusBadge>`, `<SettingsSection>`, `confirmDialog` 같은 이름은 공개 플러그인 API가 아니다.
+- `packages/app/...`나 `/client/host`의 내부 컴포넌트·토큰을 가져오지 않는다. 본체의 `<Button>`, `<StatusBadge>`, `confirmDialog`를 이름만 보고 사용하지 않는다. 0.8의 `SettingsSection` 등은 `@getpaseo/plugin/client/ui`에 공개된 export로만 사용한다.
 - 클라이언트에서는 대상 버전의 package declaration과 Plugin reference가 허용한 runtime module만 가져온다.
 - 같은 플러그인 안에서 동일한 의미의 UI가 세 곳 이상 쓰이면 공통 컴포넌트로 만든다. 서로 독립적으로 설치되는 플러그인 사이에는 런타임 결합을 만들지 않는다.
-- 기여 icon은 현재 플러그인 계약이 요구하는 Lucide 이름을 사용한다.
-- 현재 기준인 Paseo `0.7.2`의 surface 내부 icon은 `@getpaseo/plugin`이 제공하는 `Icon`을 `*.client.tsx`에서 사용한다. `lucide-react-native`나 `react-native-svg`를 직접 가져오지 않는다.
+- UI 기여 icon은 Lucide 이름을 사용한다. 0.8의 Provider 등록 icon은 별도 계약인 plugin 내부 self-contained SVG 경로이며 최대 64 KiB다.
+- 0.8의 내부 `Icon`은 `@getpaseo/plugin/client/react-native`에서 가져와 `client/` UI에서 사용한다. 기존 0.7 소스는 해당 버전의 root 또는 `/react-native` export를 유지한다. `lucide-react-native`나 `react-native-svg`를 직접 가져오지 않는다.
 - 내부 icon은 action이나 상태를 더 빨리 이해하게 하는 경우에만 사용하고, 텍스트 label이나 접근성 설명을 대체하지 않는다.
 
 ## Theme and color
@@ -95,7 +95,7 @@ Compact 화면을 먼저 설계하고 wide 화면은 같은 정보와 행동에 
 
 - 화면 폭에 따른 padding, stacking과 열 배치는 `layout.compact`로 결정한다.
 - `layout.platform`은 DOM 또는 native capability처럼 플랫폼 자체가 다른 동작에만 사용한다. 화면 폭의 대용으로 사용하지 않는다.
-- Web 전용 global이나 DOM API는 `layout.platform === "web"`일 때만 접근한다.
+- 0.8에서 필요한 browser API는 `client/web.ts`로 모으고 좁은 타입 선언과 `Platform.OS === "web"` 분기 및 native 대안을 제공한다. UI component 안에 browser global을 직접 넣거나 DOM lib를 추가하지 않는다. `layout.platform`은 표시 분기에 사용한다.
 - Hover로 나타나는 행동은 compact와 native에서도 항상 발견하고 사용할 수 있어야 한다.
 - Compact와 wide가 서로 다른 데이터 흐름이나 별도 컴포넌트 트리를 갖지 않도록 한다. 가능한 한 framing만 바꾼다.
 
@@ -110,6 +110,18 @@ Compact 화면을 먼저 설계하고 wide 화면은 같은 정보와 행동에 
 - 요청 중에는 중복 실행을 막고 버튼 크기가 바뀌지 않는 진행 문구를 표시한다.
 - 버튼이나 filter 같은 의미 요소가 반복되면 raw `Pressable` 조합을 계속 복사하지 말고 플러그인 내부 primitive로 만든다.
 - Pointer 전용 event나 hover만으로 핵심 행동을 구현하지 않는다.
+
+## Settings and modal bodies in 0.8
+
+- Settings 화면은 `client.addSettingsScreen`으로 등록하고 같은 설치의 `openSettings`로 연다. Paseo가 header·뒤로가기·safe area·scroll·중앙 column을 제공하므로 화면 frame을 중복 구현하지 않는다.
+- `SettingsSection`·`SettingsGroup`·`SettingsCard`·`SettingsRow`·`SettingsSwitch`·`SettingsSelect`·`SettingsInput`·`SettingsAction`은 `/client/ui`의 공개 컴포넌트를 우선 사용한다. 별도의 form wrapper나 내부 app 컴포넌트를 요구하지 않는다.
+- `SettingsInput`은 `initialValue`로 시작하는 자체 draft input이다. 저장된 설정 값과 draft를 분리하고 `useSettings`의 loading/invalid/error/saving/saveError 및 revision 충돌을 표시한다. 오래된 draft를 새 revision에 자동 저장하지 않는다.
+- `Modal.Content`의 `style`, `contentContainerStyle`, `scrollable`로 body를 구성한다. 기본 padding 24·gap 16을 재정의할 수 있으나 safe-area clearance는 Paseo가 소유한다.
+- 자체 목록을 가진 bounded modal body는 `scrollable={false}`와 `/client/react-native`의 `ScrollView`·`FlatList`를 사용한다. Keyboard input은 같은 모듈의 `TextInput`을 사용하고 같은 축의 중복 scroll을 피한다.
+- 복사는 `/client/react-native`의 `copyText`로 현재 client clipboard에 실행한다. 실패를 처리하고 사용자에게 성공·오류 피드백을 제공한다.
+- Streaming timeline renderer는 `phase`를 반영하고 필요한 경우 `useRevealedText`를 사용한다. Transformer는 동기적·결정적으로 유지하며 render 중 네트워크 호출을 하지 않는다.
+
+새 settings 화면·공통 modal layout·반응형 구조는 D 등급이다. 기존 화면의 국소적 변경은 아래 영향 기반 등급을 따른다. 이번 참조 문서 갱신은 runtime UI 변경이나 수동 검수 증거가 아니다.
 
 ## Loading, empty, error, and status states
 

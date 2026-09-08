@@ -24,9 +24,11 @@ paseo plugin remove file-browser
 paseo plugin ls
 ```
 
-These commands use the original default IDs. If you installed with `--id`, use the actual ID from the listing; use `--host <host>` for another daemon. Do not remove Branch Garden or Provider Usage. No daemon restart is required.
+These commands use the original default IDs. If you installed with `--id`, use the actual ID from the listing. On the 0.8 CLI, remote commands use global `--host`, for example `paseo --host <host> plugin ls`. Do not remove Branch Garden or Provider Usage. No daemon restart is required.
 
 Old Git installs can keep running their pinned source; an update into the removed subdirectory cannot migrate them. Remove them explicitly instead. Their source and documentation remain available in [the last seven-plugin commit](https://github.com/SWBaek/Paseo-Plugin/tree/5919ab16fad941d46f2a294e981154f76297cc49), but receive no further maintenance here.
+
+That pinned-source statement assumes a compatible older Paseo runtime. Paseo 0.8 rejects old entry/manifest contracts, and these retired plugins are outside the [0.8 migration scope](MIGRATION_0.8.md). Their historical JSON files below are separate from the new built-in 0.8 Settings API, whose values are deleted when an installation is removed.
 
 ## Optional host leftovers
 
