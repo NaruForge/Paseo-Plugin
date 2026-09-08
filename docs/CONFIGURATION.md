@@ -11,9 +11,11 @@ The earlier GitHub owner and File Browser root configuration files are no longer
 
 ## Provider Usage Settings
 
-Changes save immediately. Defaults: Composer pill on, Show remaining % on, Show provider name on, Show reset time off. Command Center always provides the usage surface and settings screen. Local Composer pill visibility changes apply after saving; another client’s Composer pill visibility changes converge within 30 seconds while connected. Pill fields use live host settings. Failed saves preserve prior values and offer reload; invalid documents offer explicit default recovery.
+Changes save immediately. Defaults: Composer pill on, Show remaining % on, Show provider name on, Show reset time off, Reset time display format Date and time. Command Center always provides the usage surface and settings screen. Local Composer pill visibility changes apply after saving; another client’s Composer pill visibility changes converge within 30 seconds while connected. Pill fields use live host settings. Failed saves preserve prior values and offer reload; invalid documents offer explicit default recovery.
 
-Sidebar visibility belongs to **Paseo Settings → Layout**. Provider Usage always registers the Usage sidebar item, independently of its settings state. Schema v2 migrates v1 by removing only the old Sidebar preference and preserving the remaining four options; it does not modify Paseo Layout. Downgrading to the old schema can report the v2 document as invalid.
+Sidebar visibility belongs to **Paseo Settings → Layout**. Provider Usage always registers the Usage sidebar item, independently of its settings state. Schema v3 migrates v1/v2 by removing the retired Sidebar preference, preserving all four choices and defaulting the new reset format to Date and time; it does not modify Paseo Layout. Downgrading to the old schema can report the v3 document as invalid.
+
+**Reset time → Display format** chooses Date and time or Time remaining for both Usage and the pill. Show reset time still independently controls pill visibility. Pill text omits Reset/Resets and uses at most two duration units (`2h 15m`, `6d 3h`). Client-only countdowns update every 30 seconds while mounted; `<1m` covers the final minute and `Due` indicates a passed deadline pending fresh usage. Background throttling may delay the next tick.
 
 ## Paseo 0.8 settings contract
 

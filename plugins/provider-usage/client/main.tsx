@@ -1,5 +1,5 @@
 import type { PluginTheme } from "@getpaseo/plugin";
-import { type PluginSurfaceProps, useRpc } from "@getpaseo/plugin/client";
+import { type PluginSurfaceProps, useRpc, useSettings } from "@getpaseo/plugin/client";
 import { Icon } from "@getpaseo/plugin/client/react-native";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useMemo } from "react";
@@ -15,6 +15,11 @@ import {
   usageCopy,
 } from "./provider-usage.view";
 import { bindUsageQueryClient, usageQueryOptions } from "./usage-query";
+
+import { usageSettings, type ResetTimeFormat } from "../shared/usage-settings";
+import { useResetClock } from "./use-reset-clock";
+
+interface ResetDisplay { now: Date; format: ResetTimeFormat; }
 
 function createStyles(theme: PluginTheme, compact: boolean) {
   return StyleSheet.create({
@@ -141,14 +146,16 @@ function WindowReading({
   window,
   theme,
   styles,
+  resetDisplay,
 }: {
   window: UsageWindow;
   theme: PluginTheme;
   styles: ReturnType<typeof createStyles>;
+  resetDisplay: ResetDisplay;
 }) {
   const used = window.usedPercent;
   const width = `${Math.max(0, Math.min(100, typeof used === "number" ? used : 0))}%` as `${number}%`;
-  const reset = formatResetAt(window.resetsAt);
+  const reset = formatResetAt(window.resetsAt, resetDisplay.now, resetDisplay.format);
   return (
     <View style={styles.reading}>
       <View style={styles.readingHeader}>
@@ -171,10 +178,12 @@ function BalanceReading({
   balance,
   theme,
   styles,
+  resetDisplay,
 }: {
   balance: UsageBalance;
   theme: PluginTheme;
   styles: ReturnType<typeof createStyles>;
+  resetDisplay: ResetDisplay;
 }) {
   return (
     <View style={styles.reading}>
@@ -184,6 +193,9 @@ function BalanceReading({
           {formatBalance(balance.remaining, balance.limit, balance.unit)}
         </Text>
       </View>
+      {formatResetAt(balance.resetsAt, resetDisplay.now, resetDisplay.format) ? (
+        <Text style={styles.readingMeta}>{formatResetAt(balance.resetsAt, resetDisplay.now, resetDisplay.format)}</Text>
+      ) : null}
     </View>
   );
 }
@@ -192,10 +204,12 @@ function ProviderCard({
   provider,
   theme,
   styles,
+  resetDisplay,
 }: {
   provider: ProviderUsage;
   theme: PluginTheme;
   styles: ReturnType<typeof createStyles>;
+  resetDisplay: ResetDisplay;
 }) {
   return (
     <View style={styles.card}>
@@ -210,7 +224,7 @@ function ProviderCard({
         ) : null}
       </View>
       {provider.windows.map((window) => (
-        <WindowReading key={window.id} window={window} theme={theme} styles={styles} />
+        <WindowReading key={window.id} window={window} theme={theme} styles={styles} resetDisplay={resetDisplay} />
       ))}
       {provider.details?.map((detail) => (
         <View key={detail.id} style={styles.reading}>
@@ -219,13 +233,17 @@ function ProviderCard({
         </View>
       ))}
       {provider.balances.map((balance) => (
-        <BalanceReading key={balance.id} balance={balance} theme={theme} styles={styles} />
+        <BalanceReading key={balance.id} balance={balance} theme={theme} styles={styles} resetDisplay={resetDisplay} />
       ))}
     </View>
   );
 }
 
 export function MainSurface({ theme, layout }: PluginSurfaceProps) {
+  const preferences = useSettings(usageSettings);
+  const format = preferences.status === "ready" ? preferences.values.resetTimeFormat : "date-time";
+  const now = useResetClock(format === "time-remaining");
+  const resetDisplay = { now, format };
   const compact = layout.compact;
   const styles = useMemo(() => createStyles(theme, compact), [theme, compact]);
   const snapshot = useRpc(providerUsageSnapshot);
@@ -289,7 +307,7 @@ export function MainSurface({ theme, layout }: PluginSurfaceProps) {
           {providers.length > 0 ? (
             <View style={styles.cards}>
               {providers.map((provider) => (
-                <ProviderCard key={provider.id} provider={provider} theme={theme} styles={styles} />
+                <ProviderCard key={provider.id} provider={provider} theme={theme} styles={styles} resetDisplay={resetDisplay} />
               ))}
             </View>
           ) : null}

@@ -16,6 +16,7 @@ Open **Settings → Plugins → Provider Usage → Provider Usage Settings**, or
 | Pill | Show remaining % | On |
 | Pill | Show provider name | On |
 | Pill | Show reset time | Off |
+| Reset time | Display format | Date and time |
 
 Changes save immediately to this Host and plugin installation, with revision conflict detection. Failed saves leave the previous values in effect; reload the latest settings before retrying. Invalid settings can be explicitly restored to defaults. Loading or invalid settings do not silently overwrite stored values.
 
@@ -23,9 +24,13 @@ Sidebar visibility is controlled exclusively by **Paseo Settings → Layout**. T
 
 Pill fields follow the host's live settings hook. Composer pill visibility changes made in this screen apply after saving; changes from other clients converge within 30 seconds while connected. Turning all pill fields off leaves an accessible gauge icon.
 
-Settings schema v2 automatically migrates v1: only the retired Sidebar value is removed; Composer pill visibility and all three pill field choices are preserved. The old Sidebar value is not copied into Paseo Layout. See the [sidebar ownership verification](../../docs/verification/provider-usage-sidebar-layout.md). Reverting to v1 code may report the newer document as invalid; it does not silently reset it.
+Settings schema v3 migrates v1/v2 while preserving Composer pill visibility and all three pill field choices, removing the retired Sidebar value and defaulting the reset format to Date and time. It does not modify Paseo Layout. Downgrading to older schema code may report the newer document as invalid; it does not silently reset it.
 
 Settings survive reload, disable, update and daemon restart. Removing the installation deletes its settings; reinstalling starts from defaults. Values are shared across authorized clients of the same Host and installation, without cross-host synchronization.
+
+Choose **Reset time → Display format** to show either **Date and time** or **Time remaining** in Usage and the pill. The pill’s **Show reset time** switch remains independent. Pill values omit Reset/Resets: `09:30` (with a date on other days) or `2h 15m`, limited to two duration units such as `6d 3h`. Screen-reader labels retain the reset context.
+
+Remaining time is calculated on the client and updates every 30 seconds while mounted, without additional Provider requests. Below one minute it shows `<1m`; after the supplied deadline it shows `Due` in the pill and `Reset due` in Usage. This indicates a passed deadline, not a confirmed refreshed quota. Background timer throttling can delay updates; the next tick uses current wall time.
 
 ## Usage and refresh
 

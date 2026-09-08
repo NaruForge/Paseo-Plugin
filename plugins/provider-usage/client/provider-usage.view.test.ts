@@ -4,6 +4,8 @@ import {
   formatBalance,
   formatPercent,
   formatResetAt,
+  formatPillResetAt,
+  formatResetRemaining,
   pillAccessibilityLabel,
   pillLabel,
   snapshotStatus,
@@ -44,6 +46,32 @@ function provider(overrides: Partial<ProviderUsage> = {}): ProviderUsage {
 }
 
 describe("provider usage view", () => {
+  it("renders exclusive, compact reset formats and handles time boundaries", () => {
+    const now = new Date("2026-09-09T00:00:00Z");
+    const future = (seconds: number) => new Date(now.getTime() + seconds * 1000).toISOString();
+    for (const invalid of [null, undefined, "", "bad-date"]) {
+      expect(formatResetRemaining(invalid, now)).toBeNull();
+      expect(formatPillResetAt(invalid, now, "time-remaining")).toBeNull();
+    }
+    expect(formatPillResetAt(future(-1), now, "time-remaining")).toBe("Due");
+    expect(formatPillResetAt(future(0), now, "time-remaining")).toBe("Due");
+    expect(formatPillResetAt(future(1), now, "time-remaining")).toBe("<1m");
+    expect(formatPillResetAt(future(60), now, "time-remaining")).toBe("1m");
+    expect(formatPillResetAt(future(61), now, "time-remaining")).toBe("2m");
+    expect(formatPillResetAt(future(3600), now, "time-remaining")).toBe("1h");
+    expect(formatPillResetAt(future(8100), now, "time-remaining")).toBe("2h 15m");
+    expect(formatPillResetAt(future(6 * 86400 + 3 * 3600 + 900), now, "time-remaining")).toBe("6d 3h");
+    expect(formatResetAt(future(8100), now, "time-remaining")).toBe("Resets in 2h 15m");
+    expect(formatResetAt(future(0), now, "time-remaining")).toBe("Reset due");
+    expect(formatPillResetAt(future(8100), now)).toMatch(/^\d{2}:\d{2}$/u);
+    expect(formatPillResetAt(future(86400), now)).not.toMatch(/Reset|\bin\b/u);
+    const reading = provider();
+    reading.windows[0]!.resetsAt = future(8100);
+    const fields = { showProviderName: true, showRemainingPercent: true, showResetTime: true };
+    expect(pillLabel(reading, "codex", fields, now, "time-remaining")).toBe("Codex 75% · 2h 15m");
+    expect(pillLabel(reading, "codex", { ...fields, showResetTime: false }, now, "time-remaining")).toBe("Codex 75%");
+    expect(pillLabel(provider({ status: "unavailable" }), "codex", fields, now, "time-remaining")).toBe("Codex — · —");
+  });
   it("formats glance copy without inventing numbers", () => {
     expect(formatPercent(32.4)).toBe("32%");
     expect(formatPercent(null)).toBe("—");
@@ -76,7 +104,7 @@ describe("provider usage view", () => {
       const label = pillLabel(provider(), "codex", settings);
       expect(label.includes("Codex")).toBe(settings.showProviderName);
       expect(label.includes("75%")).toBe(settings.showRemainingPercent);
-      expect(label.includes("Reset —")).toBe(settings.showResetTime);
+      expect(label.includes("—")).toBe(settings.showResetTime);
       if (flags === 0) expect(label).toBe("");
     }
     expect(pillAccessibilityLabel(provider(), "codex")).toBe("Codex 75 percent remaining");
@@ -84,7 +112,7 @@ describe("provider usage view", () => {
 
   it("uses balance-only percentages and reset times, preserving a real zero", () => {
     const reading = provider({ windows: [], balances: [{ id: "credits", label: "Credits", used: null, remaining: 0, limit: 100, unit: "credits", resetsAt: "2026-10-01T00:00:00Z", tone: "danger" }] });
-    expect(pillLabel(reading, "codex", { showProviderName: false, showRemainingPercent: true, showResetTime: true }, new Date("2026-09-09T00:00:00Z"))).toMatch(/^0% · Resets /u);
+    expect(pillLabel(reading, "codex", { showProviderName: false, showRemainingPercent: true, showResetTime: true }, new Date("2026-09-09T00:00:00Z"))).toMatch(/^0% · (?!Resets)/u);
   });
 
 });
