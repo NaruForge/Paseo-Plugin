@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       tag:
-        description: Tag matching package version (for example v0.1.0-rc.1)
+        description: Tag matching package version (for example v0.1.0-rc.2)
         required: true
         type: string
 

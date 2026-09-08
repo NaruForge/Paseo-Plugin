@@ -10,6 +10,7 @@ Closes #
 
 - [ ] `npm run check:docs-sync`
 - [ ] `npm run check:git-source-imports` (Git source 또는 배포 경로에 영향이 있는 경우)
+- [ ] `npm run check:release` (버전·카탈로그·workspace·lockfile 변경 시)
 - [ ] 대상 workspace의 typecheck
 - [ ] 대상 workspace의 필수 테스트
 - [ ] 여러 workspace·구조·설치 상태 변경 시 루트 `npm run typecheck`
@@ -25,4 +26,4 @@ UI 결과에 영향을 주지 않는 변경이면 등급 A와 그 근거만 남�
 ## 문서와 운영 영향
 
 - [ ] 사용자용 요구 사항·안전 경계·운영 절차가 바뀌면 관련 README/docs를 함께 갱신했습니다.
-- [ ] 플러그인 디렉터리나 runtime ID가 바뀌면 AGENTS, README, Issue Form과 Git 설치 목록을 함께 갱신했습니다.
+- [ ] 플러그인 디렉터리나 runtime ID가 바뀌면 AGENTS, 영문·한글 README, plugins.json, lockfile, Issue Form과 Git 설치 목록을 함께 갱신했습니다.

@@ -16,7 +16,7 @@ The initial release line targets Paseo **0.7.2**. Newer or preview APIs are not 
 
 Before 1.0, breaking changes can occur in minor releases and are documented in the changelog. Release candidates are for evaluation. Only the latest release in the active minor line receives routine fixes; use a reviewed tag/commit and retain the previous source reference for rollback.
 
-For published releases, if a plugin cannot follow upstream safely, mark it experimental or deprecated in the catalog and guide. Announce deprecation with migration/removal instructions in the changelog before removal in a later minor release. No fixed calendar commitment is made. Preserve prior tags and release notes.
+For published releases, if a plugin cannot follow upstream safely, set its catalog maturity to `experimental` and explain the limitations in its guide. If retiring it, announce deprecation in the guide and changelog with migration/removal instructions before removal in a later minor release. The catalog's allowed maturity values are `preview`, `experimental` and `stable`; it has no `deprecated` value. No fixed calendar commitment is made. Preserve prior tags and release notes.
 
 ## Troubleshooting first steps
 

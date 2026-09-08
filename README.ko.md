@@ -25,16 +25,15 @@ Runtime ID의 기준은 디렉터리명이나 package 이름이 아니라 각 �
 필요한 도구:
 
 - Paseo Desktop/daemon/CLI `0.7.2`
-- Node.js와 npm
+- Branch Garden을 사용할 daemon host의 Git과 활성 Paseo Workspace
+- 로컬 개발·검증에는 Node.js 22 이상과 npm (Git source 설치만 할 때는 npm 실행 불필요)
 - `provider-usage`는 선택된 host에 이미 저장된 Codex·Grok 인증만 읽으며, 인증이 없는 provider는 사용 불가 상태로 표시합니다.
 
-루트에서 의존성을 설치하고 문서 동기화·Git-source runtime import·모든 workspace 타입을 검사합니다.
+로컬 개발 시 루트에서 의존성을 설치하고 문서 동기화·Git-source runtime import·릴리스 메타데이터·모든 workspace 타입과 테스트를 검사합니다.
 
 ```powershell
-npm install
-npm run check:docs-sync
-npm run check:git-source-imports
-npm run typecheck
+npm ci
+npm run check
 ```
 
 동작 로직을 변경했다면 해당 플러그인의 테스트를 실행합니다. 전체 테스트는 Windows·macOS·Linux에서 다음 명령으로 실행합니다.

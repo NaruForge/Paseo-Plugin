@@ -2,6 +2,8 @@
 
 이 문서는 Paseo `0.7.2` Plugin API로 **실제로 무엇을 만들 수 있는지** 빠르게 보여주는 아이디어 모음이다. 예제는 핵심 계약만 보여주며, 실제 Plugin에는 import, loading·empty·error 상태, 접근성 label과 cleanup을 함께 추가한다.
 
+아래 예시는 현재 설치 가능한 제품 목록이 아니다. 이 저장소의 배포 대상은 [Branch Garden과 Provider Usage](../../README.md#plugins)이며, 그 밖의 예시는 API 활용 아이디어다.
+
 ## 30초 아이디어 지도
 
 | 만들고 싶은 것 | 사용자에게 보이는 위치 | 조합할 기능 |

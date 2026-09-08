@@ -2,6 +2,8 @@
 
 이 문서는 **Paseo CLI와 daemon `0.7.2`**에서 공개 Plugin API로 구현할 수 있는 기능과 그 경계를 정리한 버전 스냅샷이다.
 
+이 문서의 API·아이디어 목록은 배포 플러그인 목록이 아니다. 현재 이 저장소가 유지보수하는 플러그인은 [Branch Garden과 Provider Usage](../../README.md#plugins) 두 개다.
+
 - 조사일: 2026-09-04 (Asia/Seoul)
 - 확인한 CLI: `paseo --version` → `0.7.2`
 - 확인한 daemon: `paseo daemon status --json` → `daemonVersion: 0.7.2`

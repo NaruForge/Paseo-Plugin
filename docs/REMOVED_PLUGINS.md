@@ -12,6 +12,8 @@ Before the first public release, this repository narrowed its maintained scope t
 
 Updating a checkout or Git source does not uninstall a running plugin. Check the intended daemon and remove each retired runtime explicitly:
 
+For directory-source development installs, uninstall before pulling the removal commit into the source directory. Otherwise a later reload or daemon restart can fail because the plugin's entrypoint is gone. If the source is already gone, use the catalog's runtime ID to uninstall it anyway.
+
 ```sh
 paseo plugin ls
 paseo plugin remove github-project-board
@@ -28,7 +30,7 @@ Old Git installs can keep running their pinned source; an update into the remove
 
 ## Optional host leftovers
 
-Uninstalling a plugin does not delete the user's source files, provider/GitHub credentials, or unrelated Tailscale services. The retired plugins' own JSON settings, if present, are no longer used:
+Uninstalling a directory-source plugin leaves its original source directory intact; a Git-source uninstall removes Paseo's managed checkout. Neither removes your original Git repository, provider/GitHub credentials, or unrelated Tailscale services. The retired plugins' own JSON settings, if present, are no longer used:
 
 - `~/.config/paseo-plugins/github-project-board.json`
 - `~/.config/paseo-plugins/file-browser.json`
