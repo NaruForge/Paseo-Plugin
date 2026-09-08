@@ -18,7 +18,7 @@ Maintained by **NaruForge and contributors**. This is a community project, indep
 | Plugin | What it does | Requirements | Maturity |
 | --- | --- | --- | --- |
 | [`branch-garden`](plugins/branch-garden/) | Inspect registered Git projects, workspaces, branches and worktrees without changing Git state. | Current source: Paseo 0.8.0-beta.1; Git; registered projects or workspaces | Preview |
-| [`provider-usage`](plugins/provider-usage/) | Inspect enabled Provider usage through Paseo, with configurable pills and sidebar. | Paseo 0.8.0-beta.1 source; enabled provider connections | Experimental |
+| [`provider-usage`](plugins/provider-usage/) | Inspect enabled Provider usage through Paseo, with configurable pills and a sidebar managed by Paseo Layout. | Paseo 0.8.0-beta.1 source; enabled provider connections | Experimental |
 
 Both plugins are maintained as this repository's core offering; this does not imply Paseo-team support. Branch Garden's interface is in English. Provider Usage remains experimental at the provider integration boundary and still includes Korean status messages. Installation guides are available in English, with actual screenshots in each plugin guide.
 

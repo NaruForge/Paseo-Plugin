@@ -56,7 +56,7 @@ npm run typecheck --workspace branch-garden
   Role: 선택된 호스트의 Git Workspace와 로컬 브랜치 상태를 읽기 전용으로 집계하는 전역 사이드바 surface를 제공한다.
 - `plugins/provider-usage/`
   Audience: **Personal operations**
-  Role: 선택된 Host의 활성 Provider 연결과 사용량을 공식 SDK로 읽어 surface와 해당 Agent Composer pill에 표시하고 host Settings에서 표시 여부·필드를 저장한다. native 설정 → 사용량 화면을 대체하지 않는다.
+  Role: 선택된 Host의 활성 Provider 연결과 사용량을 공식 SDK로 읽어 surface와 해당 Agent Composer pill에 표시하고 host Settings에서 Composer pill 표시 여부·필드를 저장한다. Sidebar 노출은 Paseo Layout이 소유하며 플러그인은 항목을 항상 등록한다. native 설정 → 사용량 화면을 대체하지 않는다.
 
 ## Per-Plugin Change Routing
 

@@ -84,7 +84,6 @@ export function UsageSettingsForm({ theme, settings, onChanged }: SettingsProps 
       <SettingsSection title="Visibility">
         <SettingsCard>
           <SettingsSwitch label="Composer pill" value={values.visibility.composerPill} onValueChange={(value) => setVisibility("composerPill", value)} disabled={disabled} />
-          <SettingsSwitch label="Sidebar" value={values.visibility.sidebar} onValueChange={(value) => setVisibility("sidebar", value)} disabled={disabled} />
         </SettingsCard>
       </SettingsSection>
       <SettingsSection title="Pill">

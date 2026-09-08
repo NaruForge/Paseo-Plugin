@@ -16,8 +16,8 @@ function setup() {
 afterEach(() => vi.useRealTimers());
 describe("usage visibility settings", () => {
   it("uses the requested defaults and rejects invalid booleans", () => {
-    expect(UsageSettingsSchema.parse({})).toEqual({ visibility: { composerPill: true, sidebar: false }, pill: { showRemainingPercent: true, showProviderName: true, showResetTime: false } });
-    expect(UsageSettingsSchema.safeParse({ visibility: { sidebar: "true" } }).success).toBe(false);
+    expect(UsageSettingsSchema.parse({})).toEqual({ visibility: { composerPill: true }, pill: { showRemainingPercent: true, showProviderName: true, showResetTime: false } });
+    expect(UsageSettingsSchema.safeParse({ visibility: { composerPill: "true" } }).success).toBe(false);
   });
 
   it("changes actual contributions only after confirmed settings and disposes once", async () => {
@@ -27,15 +27,15 @@ describe("usage visibility settings", () => {
     await Promise.resolve();
     expect(context.startPills).toHaveBeenCalledTimes(1);
     expect(context.addSidebarItem).not.toHaveBeenCalled();
-    context.rpc.mockResolvedValue({ status: "ready", values: { ...DEFAULT_USAGE_SETTINGS, visibility: { composerPill: false, sidebar: true } } });
+    context.rpc.mockResolvedValue({ status: "ready", values: { ...DEFAULT_USAGE_SETTINGS, visibility: { composerPill: false } } });
     await context.controller.refresh();
     expect(context.stopPills).toHaveBeenCalledTimes(1);
-    expect(context.addSidebarItem).toHaveBeenCalledTimes(1);
+    expect(context.addSidebarItem).not.toHaveBeenCalled();
     await context.controller.refresh();
-    expect(context.addSidebarItem).toHaveBeenCalledTimes(1);
+    expect(context.addSidebarItem).not.toHaveBeenCalled();
     context.controller.dispose();
     context.controller.dispose();
-    expect(context.removeSidebar).toHaveBeenCalledTimes(1);
+    expect(context.removeSidebar).not.toHaveBeenCalled();
     expect(vi.getTimerCount()).toBe(0);
   });
 
@@ -64,7 +64,7 @@ describe("usage visibility settings", () => {
     const stale = context.controller.refresh();
     context.rpc.mockResolvedValue({ status: "ready", values: DEFAULT_USAGE_SETTINGS });
     await context.controller.refresh();
-    resolve({ status: "ready", values: { ...DEFAULT_USAGE_SETTINGS, visibility: { composerPill: false, sidebar: true } } });
+    resolve({ status: "ready", values: { ...DEFAULT_USAGE_SETTINGS, visibility: { composerPill: false } } });
     await stale;
     expect(context.addSidebarItem).not.toHaveBeenCalled();
     context.rpc.mockImplementationOnce(() => new Promise((done) => { resolve = done; }));

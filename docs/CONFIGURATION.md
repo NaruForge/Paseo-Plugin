@@ -11,7 +11,9 @@ The earlier GitHub owner and File Browser root configuration files are no longer
 
 ## Provider Usage Settings
 
-Changes save immediately. Defaults: Composer pill on, Sidebar off, Show remaining % on, Show provider name on, Show reset time off. Command Center always provides the usage surface and settings screen. Local visibility changes apply after saving; another client’s visibility changes converge within 30 seconds while connected. Pill fields use live host settings. Failed saves preserve prior values and offer reload; invalid documents offer explicit default recovery.
+Changes save immediately. Defaults: Composer pill on, Show remaining % on, Show provider name on, Show reset time off. Command Center always provides the usage surface and settings screen. Local Composer pill visibility changes apply after saving; another client’s Composer pill visibility changes converge within 30 seconds while connected. Pill fields use live host settings. Failed saves preserve prior values and offer reload; invalid documents offer explicit default recovery.
+
+Sidebar visibility belongs to **Paseo Settings → Layout**. Provider Usage always registers the Usage sidebar item, independently of its settings state. Schema v2 migrates v1 by removing only the old Sidebar preference and preserving the remaining four options; it does not modify Paseo Layout. Downgrading to the old schema can report the v2 document as invalid.
 
 ## Paseo 0.8 settings contract
 

@@ -4,10 +4,12 @@ The collection uses one version/tag for all supported plugins. Published release
 
 ## Unreleased
 
+- Delegate Provider Usage sidebar visibility to Paseo Settings → Layout. Always register the sidebar item, remove the duplicate plugin switch, and migrate v1 display settings to v2 while preserving all four remaining preferences.
+
 - Migrate Branch Garden source to Paseo 0.8.0-beta.1 runtime entries and SDK imports, preserving the existing UI and read-only Git scan.
 - Check per-plugin SDK catalog versions and 0.8 runtime/type import boundaries; add an exact beta compiler check using a source copy without node_modules.
 - Migrate Provider Usage to the official Paseo usage SDK and all enabled Provider connections; remove direct credential and vendor HTTP access.
-- Add host-scoped Provider Usage Settings: Composer pill on, Sidebar off, remaining percentage and provider name on, reset time off by default.
+- Add host-scoped Provider Usage Settings: Composer pill on, remaining percentage and provider name on, reset time off by default.
 - The existing v0.1.0-rc.2 tag remains on 0.7.2. Live beta daemon/app and Git update verification are pending.
 
 ## 0.1.0-rc.2 — 2026-09-08 (prerelease)
