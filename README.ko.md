@@ -4,6 +4,8 @@
 
 사용자 안내: [호환성](docs/COMPATIBILITY.md) · [설정](docs/CONFIGURATION.md) · [릴리스](docs/RELEASING.md) · [보안](SECURITY.md) · [지원](SUPPORT.md)
 
+첫 공개 사전 릴리스 [v0.1.0-rc.2](https://github.com/SWBaek/Paseo-Plugin/releases/tag/v0.1.0-rc.2)를 발행했습니다. 릴리스 노트에서 버전을 고정하는 설치 명령과 지원 범위·제한 사항을 확인할 수 있습니다.
+
 Branch Garden과 Provider Usage 두 개의 [Paseo](https://paseo.sh) 플러그인에 집중하는 npm workspace입니다. 이 저장소의 핵심 지원 대상이며, Paseo 팀의 공식 지원을 의미하지 않습니다. Provider Usage의 공급자 연동은 여전히 실험적입니다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위이며, 플러그인끼리 런타임 코드를 공유하지 않습니다.
 
 > **기준 Paseo 버전: `0.7.2`** — Plugin API는 실험 단계입니다. 다른 Paseo 버전에서 개발하거나 설치할 때는 현재 공식 문서, 해당 CLI의 fresh scaffold와 exact `@getpaseo/plugin` package declaration을 먼저 대조하세요. 현재 버전의 전체 확장 지점은 [Paseo Plugin Capabilities](docs/plugin-capabilities/README.md)에 정리되어 있습니다.

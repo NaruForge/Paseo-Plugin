@@ -39,4 +39,4 @@ Delete those individual settings files only if you no longer need them. If a Tai
 
 ## Release history
 
-The unpublished seven-plugin `v0.1.0-rc.1` GitHub draft was withdrawn. The two-plugin collection starts at `0.1.0-rc.2`; no new release has been published by this cleanup.
+The unpublished seven-plugin `v0.1.0-rc.1` GitHub draft was withdrawn. The two-plugin collection was subsequently published as [v0.1.0-rc.2](https://github.com/SWBaek/Paseo-Plugin/releases/tag/v0.1.0-rc.2) on 2026-09-08.
