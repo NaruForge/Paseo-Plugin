@@ -2,7 +2,7 @@
 
 The collection uses one version/tag for all supported plugins. Published releases are listed on [GitHub](https://github.com/SWBaek/Paseo-Plugin/releases).
 
-## 0.1.0-rc.2 — two-plugin candidate
+## 0.1.0-rc.2 — 2026-09-08 (prerelease)
 
 - Convert Branch Garden's interface, accessibility labels, generated warnings/errors and scan-time display to English. Preserve user-provided names and read-only Git behavior. Explicit web accessibility states expose filter selection and repository expansion.
 - Add actual Branch Garden screenshots and a user-supplied Provider Usage composer-pill image to the plugin guides.
@@ -11,7 +11,7 @@ The collection uses one version/tag for all supported plugins. Published release
 - Update English/Korean documentation, Issue Forms and validation to cover the two remaining plugins. Removing the retired plugins did not change the retained plugins' runtime code; the subsequent Branch Garden language update is listed above.
 - Withdraw the unpublished seven-plugin release draft. Existing installs need explicit removal; see [removal and migration](docs/REMOVED_PLUGINS.md).
 
-See [compatibility](docs/COMPATIBILITY.md), [removal verification](docs/verification/0.1.0-rc.2.md) and [English UI verification](docs/verification/branch-garden-english.md). These changes do not publish a release.
+Published as [v0.1.0-rc.2](https://github.com/SWBaek/Paseo-Plugin/releases/tag/v0.1.0-rc.2) from commit `e2f5bc744920284bf575ed44c9287fa2ad2b737d`. See [compatibility](docs/COMPATIBILITY.md), [removal verification](docs/verification/0.1.0-rc.2.md) and [English UI verification](docs/verification/branch-garden-english.md).
 
 ## 0.1.0-rc.1 — withdrawn before publication
 

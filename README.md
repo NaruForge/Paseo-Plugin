@@ -9,7 +9,7 @@ Two independently installable plugins focused on Git workspace visibility and pr
 
 Maintained by **SWBaek and contributors**. This is a community project, independently maintained and not endorsed or operated by the Paseo team.
 
-**Target: Paseo 0.7.2.** The Plugin API is experimental. See the [compatibility and verification record](docs/COMPATIBILITY.md) before using another version. This repository is preparing its first `0.1.0-rc.2` release; a version in package metadata is not evidence of a published release.
+**Target: Paseo 0.7.2.** The Plugin API is experimental. See the [compatibility and verification record](docs/COMPATIBILITY.md) before using another version. The first public prerelease, [v0.1.0-rc.2](https://github.com/SWBaek/Paseo-Plugin/releases/tag/v0.1.0-rc.2), includes pinned installation instructions and known limitations.
 
 ## Plugins
 
