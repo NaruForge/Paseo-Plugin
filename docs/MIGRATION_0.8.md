@@ -95,4 +95,4 @@ Fresh CLI scaffold는 임시 빈 디렉터리에 `npm exec --yes --package=@getp
 
 ## 신규 기능 범위
 
-Provider Usage #84에는 사용자 요청에 따라 공식 사용량 SDK 전환과 표시 Settings 다섯 항목을 포함했다. 설정 기본값·저장·cleanup·오류와 미지원 Provider 상태를 함께 검증한다. Provider/ACP, slash command, timeline, lifecycle hook, Terminal SDK 등 나머지 [기능표](plugin-capabilities/README.md)의 API는 이번 구현 범위에 포함하지 않는다.
+Provider Usage #84에는 사용자 요청에 따라 공식 사용량 SDK 전환과 표시 Settings 다섯 항목을 포함했다. 후속 #86에서 Sidebar 표시를 Paseo Layout으로 일원화하고 schema v2로 나머지 네 옵션을 보존한다. 설정 기본값·저장·cleanup·오류와 미지원 Provider 상태를 함께 검증한다. Provider/ACP, slash command, timeline, lifecycle hook, Terminal SDK 등 나머지 [기능표](plugin-capabilities/README.md)의 API는 이번 구현 범위에 포함하지 않는다.

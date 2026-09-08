@@ -542,7 +542,7 @@ export function DisplaySettings({ theme }: PluginSurfaceProps) {
 }
 ```
 
-Client entry에서 `client.addSettingsScreen({ id: "display", title: "Display", icon: "Settings", Component: DisplaySettings })`를 등록한다. 실제 제품에는 읽기 재시도와 invalid/reset 복구 UI도 연결한다. Schema version과 revision은 다르며 충돌 시 사용자 draft를 유지한다. 이 저장소의 Provider Usage는 host-scoped 표시 Settings를 구현하며, 다섯 스위치의 즉시 저장·실패·invalid 복구를 제공한다.
+Client entry에서 `client.addSettingsScreen({ id: "display", title: "Display", icon: "Settings", Component: DisplaySettings })`를 등록한다. 실제 제품에는 읽기 재시도와 invalid/reset 복구 UI도 연결한다. Schema version과 revision은 다르며 충돌 시 사용자 draft를 유지한다. 이 저장소의 Provider Usage는 host-scoped 표시 Settings를 구현하며, 네 스위치의 즉시 저장·실패·invalid 복구를 제공한다.
 
 ## 16. Slash command로 사용량 화면 열기
 

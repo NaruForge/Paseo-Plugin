@@ -18,7 +18,7 @@ Branch Garden과 Provider Usage 두 개의 [Paseo](https://paseo.sh) 플러그�
 | Runtime ID | 대상 | 역할 |
 | --- | --- | --- |
 | [`branch-garden`](plugins/branch-garden/) | Personal operations | 선택된 host의 등록된 Git Project·Workspace와 로컬 branch·worktree 상태를 읽기 전용으로 집계하는 전역 sidebar surface입니다. |
-| [`provider-usage`](plugins/provider-usage/) | Personal operations | 선택된 Host에서 활성화한 Provider 연결의 사용량을 공식 SDK로 읽어 표시합니다. Settings에서 sidebar와 Composer pill 표시를 조절합니다. |
+| [`provider-usage`](plugins/provider-usage/) | Personal operations | 선택된 Host에서 활성화한 Provider 연결의 사용량을 공식 SDK로 읽어 표시합니다. Paseo Layout에서 sidebar 표시를, 플러그인 Settings에서 Composer pill 표시와 내용을 조절합니다. |
 
 Runtime ID의 기준은 디렉터리명이나 package 이름이 아니라 각 플러그인의 `paseo-plugin.json`입니다.
 
@@ -70,7 +70,7 @@ paseo plugin install (Join-Path $repoRoot "plugins\branch-garden")
 paseo plugin ls
 ```
 
-Provider Usage도 같은 호환 beta daemon에 설치할 수 있습니다. 표시 설정은 Settings → Plugins에서 열며 기본값은 Composer pill 켜짐, Sidebar 꺼짐입니다.
+Provider Usage도 같은 호환 beta daemon에 설치할 수 있습니다. Composer pill 설정은 Settings → Plugins에서 열며 기본값은 켜짐입니다. Sidebar 노출은 Paseo Settings → Layout에서 결정합니다.
 
 ```powershell
 $repoRoot = (Resolve-Path .).Path

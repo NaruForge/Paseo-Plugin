@@ -3,7 +3,7 @@ import type { PluginClientContext } from "@getpaseo/plugin/client";
 import { UsageSettingsSchema, usageSettings } from "../shared/usage-settings";
 
 // beta.1 exposes useSettings updates to components, but no settings subscription to entries.
-// Local saves call refresh immediately; other clients' visibility changes converge on this read.
+// Local saves call refresh immediately; other clients' Composer pill visibility changes converge on this read.
 export const VISIBILITY_REFRESH_INTERVAL_MS = 30_000;
 
 export function registerUsageVisibility(
@@ -14,23 +14,13 @@ export function registerUsageVisibility(
   let request = 0;
   let pending = 0;
   let removePills: PluginCleanup | undefined;
-  let removeSidebar: PluginCleanup | undefined;
 
-  function apply(composerPill: boolean, sidebar: boolean) {
+  function apply(composerPill: boolean) {
     if (!composerPill && removePills) {
       void removePills();
       removePills = undefined;
     }
-    if (!sidebar && removeSidebar) {
-      void removeSidebar();
-      removeSidebar = undefined;
-    }
     if (composerPill && !removePills) removePills = startPills();
-    if (sidebar && !removeSidebar) {
-      removeSidebar = client.addSidebarItem({
-        id: "main", title: "Usage", icon: "Gauge", surface: "main",
-      });
-    }
   }
 
   async function refresh(): Promise<void> {
@@ -43,10 +33,10 @@ export function registerUsageVisibility(
       const parsed = result.status === "ready" ? UsageSettingsSchema.safeParse(result.values) : null;
       if (!parsed?.success) {
         // Preserve invalid stored data. The always-registered settings screen can recover it.
-        apply(false, false);
+        apply(false);
         return;
       }
-      apply(parsed.data.visibility.composerPill, parsed.data.visibility.sidebar);
+      apply(parsed.data.visibility.composerPill);
     } catch {
       // Keep the last confirmed visibility through a transient disconnect; retry on the timer.
     } finally {
@@ -66,7 +56,7 @@ export function registerUsageVisibility(
       active = false;
       request += 1;
       clearInterval(timer);
-      apply(false, false);
+      apply(false);
     },
   };
 }

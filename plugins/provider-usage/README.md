@@ -13,14 +13,17 @@ Open **Settings → Plugins → Provider Usage → Provider Usage Settings**, or
 | Group | Setting | Default |
 | --- | --- | --- |
 | Visibility | Composer pill | On |
-| Visibility | Sidebar | Off |
 | Pill | Show remaining % | On |
 | Pill | Show provider name | On |
 | Pill | Show reset time | Off |
 
 Changes save immediately to this Host and plugin installation, with revision conflict detection. Failed saves leave the previous values in effect; reload the latest settings before retrying. Invalid settings can be explicitly restored to defaults. Loading or invalid settings do not silently overwrite stored values.
 
-Pill fields follow the host's live settings hook. Visibility changes made in this screen apply after saving; changes from other clients converge within 30 seconds while connected. Turning the sidebar off leaves **Open provider usage** available in Command Center. Turning all pill fields off leaves an accessible gauge icon.
+Sidebar visibility is controlled exclusively by **Paseo Settings → Layout**. The plugin always registers the Usage sidebar item, including while plugin settings are loading or invalid. It does not override your Layout preference. **Open provider usage** remains available in Command Center when the sidebar is hidden.
+
+Pill fields follow the host's live settings hook. Composer pill visibility changes made in this screen apply after saving; changes from other clients converge within 30 seconds while connected. Turning all pill fields off leaves an accessible gauge icon.
+
+Settings schema v2 automatically migrates v1: only the retired Sidebar value is removed; Composer pill visibility and all three pill field choices are preserved. The old Sidebar value is not copied into Paseo Layout. See the [sidebar ownership verification](../../docs/verification/provider-usage-sidebar-layout.md). Reverting to v1 code may report the newer document as invalid; it does not silently reset it.
 
 Settings survive reload, disable, update and daemon restart. Removing the installation deletes its settings; reinstalling starts from defaults. Values are shared across authorized clients of the same Host and installation, without cross-host synchronization.
 

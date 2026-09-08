@@ -44,7 +44,7 @@ Sidebar contribution 필드는 다음 네 개뿐이다.
 | `icon` | Lucide icon 이름 |
 | `surface` | 먼저 등록한 surface ID |
 
-한 Plugin이 여러 surface와 Sidebar 항목을 등록할 수 있다. 다만 nested menu, section 지정, 순서나 badge를 제어하는 필드는 없다. 0.8에서는 사용자가 Appearance 설정에서 top-level Sidebar 항목을 재정렬·숨길 수 있지만 플러그인의 순서 제어 필드는 아니다. 같은 contribution이 여러 host에 설치되면 Paseo가 하나의 Sidebar 항목과 host picker로 합친다.
+한 Plugin이 여러 surface와 Sidebar 항목을 등록할 수 있다. 다만 nested menu, section 지정, 순서나 badge를 제어하는 필드는 없다. 0.8에서는 사용자가 Paseo Layout 설정에서 top-level Sidebar 항목을 재정렬·숨길 수 있지만 플러그인의 순서 제어 필드는 아니다. 같은 contribution이 여러 host에 설치되면 Paseo가 하나의 Sidebar 항목과 host picker로 합친다.
 
 Surface component는 `PluginSurfaceProps`의 `theme`, `host`, `layout`, optional `navigation`을 받는다. `navigation`은 다음 두 메서드만 제공한다.
 

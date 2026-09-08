@@ -4,8 +4,7 @@ import { z } from "zod";
 export const UsageSettingsSchema = z.object({
   visibility: z.object({
     composerPill: z.boolean().default(true),
-    sidebar: z.boolean().default(false),
-  }).default({ composerPill: true, sidebar: false }),
+  }).default({ composerPill: true }),
   pill: z.object({
     showRemainingPercent: z.boolean().default(true),
     showProviderName: z.boolean().default(true),
@@ -16,8 +15,13 @@ export const UsageSettingsSchema = z.object({
 export const usageSettings = defineSettings({
   id: "display",
   scope: "host",
-  version: 1,
+  version: 2,
   schema: UsageSettingsSchema,
+  migrate(values, fromVersion) {
+    if (fromVersion !== 1) throw new Error("Unsupported Provider Usage settings version.");
+    // Zod strips the retired sidebar field without changing the remaining preferences.
+    return UsageSettingsSchema.parse(values);
+  },
 });
 
 export type UsageSettings = z.infer<typeof UsageSettingsSchema>;
