@@ -20,11 +20,6 @@ body:
       options:
         - workspace 전체
         - branch-garden
-        - github-project-board
-        - tailscale-dashboard
-        - composer-compact
-        - composer-skills
-        - file-browser
         - provider-usage
         - 새 플러그인
     validations:

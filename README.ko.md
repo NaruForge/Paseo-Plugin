@@ -4,7 +4,7 @@
 
 사용자 안내: [호환성](docs/COMPATIBILITY.md) · [설정](docs/CONFIGURATION.md) · [릴리스](docs/RELEASING.md) · [보안](SECURITY.md) · [지원](SUPPORT.md)
 
-여러 개의 독립적인 로컬 [Paseo](https://paseo.sh) 플러그인을 함께 개발하는 npm workspace입니다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위이며, 플러그인끼리 런타임 코드를 공유하지 않습니다.
+Branch Garden과 Provider Usage 두 개의 [Paseo](https://paseo.sh) 플러그인에 집중하는 npm workspace입니다. 이 저장소의 핵심 지원 대상이며, Paseo 팀의 공식 지원을 의미하지 않습니다. Provider Usage의 공급자 연동은 여전히 실험적입니다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위이며, 플러그인끼리 런타임 코드를 공유하지 않습니다.
 
 > **기준 Paseo 버전: `0.7.2`** — Plugin API는 실험 단계입니다. 다른 Paseo 버전에서 개발하거나 설치할 때는 현재 공식 문서, 해당 CLI의 fresh scaffold와 exact `@getpaseo/plugin` package declaration을 먼저 대조하세요. 현재 버전의 전체 확장 지점은 [Paseo Plugin Capabilities](docs/plugin-capabilities/README.md)에 정리되어 있습니다.
 
@@ -16,11 +16,6 @@
 | Runtime ID | 대상 | 역할 |
 | --- | --- | --- |
 | [`branch-garden`](plugins/branch-garden/) | Personal operations | 선택된 host의 활성 Git Workspace와 로컬 branch·worktree 상태를 읽기 전용으로 집계하는 전역 sidebar surface입니다. |
-| [`github-project-board`](plugins/github-project-board/) | Personal operations | 기존 GitHub CLI 인증으로 설정한 사용자·조직의 GitHub Projects를 조회하고, 선택한 Project를 읽기 전용 칸반으로 보여주는 전역 sidebar surface입니다. |
-| [`tailscale-dashboard`](plugins/tailscale-dashboard/) | Personal operations | 선택된 host의 Tailscale Serve 구성을 읽기 전용으로 조사하고, 기본 연결·피어 현황과 선택적인 TailscaleOps 확장 현황을 Paseo 안에 표시합니다. 전체 Dashboard는 필요할 때 시스템 브라우저로 엽니다. |
-| [`composer-compact`](plugins/composer-compact/) | Personal productivity | Agent의 Composer track bar에 `Compact` pill을 추가하고 확인 Modal에서 승인한 경우에만 해당 Agent에 `/compact`를 전송합니다. |
-| [`composer-skills`](plugins/composer-skills/) | Personal productivity | Agent의 Composer track bar에 `Skills` pill을 추가하고, 현재 세션 Skill을 Modal에서 고른 뒤 최종 문장을 클립보드에 복사합니다. 자동 전송과 Composer 직접 입력은 하지 않습니다. |
-| [`file-browser`](plugins/file-browser/) | Personal operations | 선택된 Windows daemon host에 설정한 허용 폴더를 읽기 전용으로 탐색하고, 검증된 파일과 폴더 ZIP을 Tailnet 전용 일회용 HTTPS URL로 내려받습니다. |
 | [`provider-usage`](plugins/provider-usage/) | Personal operations | 선택된 Host의 Codex와 Grok 계획 사용량을 읽기 전용으로 집계해 전역 sidebar와 Agent Composer pill에 보여 줍니다. |
 
 Runtime ID의 기준은 디렉터리명이나 package 이름이 아니라 각 플러그인의 `paseo-plugin.json`입니다.
@@ -30,22 +25,18 @@ Runtime ID의 기준은 디렉터리명이나 package 이름이 아니라 각 �
 필요한 도구:
 
 - Paseo Desktop/daemon/CLI `0.7.2`
-- Node.js와 npm
-- `github-project-board`를 사용할 경우 인증된 [GitHub CLI](https://cli.github.com/)
-- `tailscale-dashboard`를 사용할 경우 로그인된 [Tailscale CLI](https://tailscale.com/docs/reference/tailscale-cli). TailscaleOps 확장 Dashboard는 선택 사항입니다.
-- `file-browser`의 다운로드 기능을 사용할 경우 로그인된 Tailscale CLI와 [Tailnet 전용 Serve 설정](plugins/file-browser/README.md#downloads)
+- Branch Garden을 사용할 daemon host의 Git과 활성 Paseo Workspace
+- 로컬 개발·검증에는 Node.js 22 이상과 npm (Git source 설치만 할 때는 npm 실행 불필요)
 - `provider-usage`는 선택된 host에 이미 저장된 Codex·Grok 인증만 읽으며, 인증이 없는 provider는 사용 불가 상태로 표시합니다.
 
-루트에서 의존성을 설치하고 문서 동기화·Git-source runtime import·모든 workspace 타입을 검사합니다.
+로컬 개발 시 루트에서 의존성을 설치하고 문서 동기화·Git-source runtime import·릴리스 메타데이터·모든 workspace 타입과 테스트를 검사합니다.
 
 ```powershell
-npm install
-npm run check:docs-sync
-npm run check:git-source-imports
-npm run typecheck
+npm ci
+npm run check
 ```
 
-동작 로직이 있는 파일을 변경했다면 해당 플러그인의 테스트를 실행해야 합니다. OS에 맞는 전체 테스트는 다음 명령으로 실행합니다. Windows 경로·다운로드 검증은 Windows에서 수행하며 다른 OS에서는 이 플러그인의 설정·ignore·view 검증만 실행합니다.
+동작 로직을 변경했다면 해당 플러그인의 테스트를 실행합니다. 전체 테스트는 Windows·macOS·Linux에서 다음 명령으로 실행합니다.
 
 ```powershell
 npm test
@@ -59,9 +50,7 @@ npm run typecheck --workspace branch-garden
 
 ## 플러그인 설정
 
-GitHub Board는 기본적으로 로그인된 GitHub 사용자를 조회합니다. 사용자·조직 변경은 `~/.config/paseo-plugins/github-project-board.json`의 `owner`로 설정합니다.
-
-File Browser는 자동으로 폴더를 공개하지 않습니다. Windows daemon 사용자의 `~/.config/paseo-plugins/file-browser.json`에 `roots`를 지정한 뒤 사용하세요. 기존 `C:\Projects` 사용자도 명시적으로 설정해야 합니다. 파일 경로와 예시는 [설정 안내](docs/CONFIGURATION.md)에 있습니다.
+두 플러그인은 별도의 사용자 설정 파일이 필요하지 않습니다. Branch Garden은 Git과 Paseo Workspace를, Provider Usage는 기존 공급자 인증을 사용합니다. [설정 안내](docs/CONFIGURATION.md)와 [제거된 플러그인 안내](docs/REMOVED_PLUGINS.md)를 확인하세요.
 
 ## 로컬 설치와 reload
 
@@ -73,11 +62,6 @@ File Browser는 자동으로 폴더를 공개하지 않습니다. Windows daemon
 $repoRoot = (Resolve-Path .).Path
 paseo plugin ls
 paseo plugin install (Join-Path $repoRoot "plugins\branch-garden")
-paseo plugin install (Join-Path $repoRoot "plugins\github-project-board")
-paseo plugin install (Join-Path $repoRoot "plugins\tailscale-dashboard")
-paseo plugin install (Join-Path $repoRoot "plugins\composer-compact")
-paseo plugin install (Join-Path $repoRoot "plugins\composer-skills")
-paseo plugin install (Join-Path $repoRoot "plugins\file-browser")
 paseo plugin install (Join-Path $repoRoot "plugins\provider-usage")
 paseo plugin ls
 ```
@@ -104,11 +88,6 @@ npm run check:git-source-imports
 npm run typecheck
 paseo plugin ls
 paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden
-paseo plugin add SWBaek/Paseo-Plugin:plugins/github-project-board
-paseo plugin add SWBaek/Paseo-Plugin:plugins/tailscale-dashboard
-paseo plugin add SWBaek/Paseo-Plugin:plugins/composer-compact
-paseo plugin add SWBaek/Paseo-Plugin:plugins/composer-skills
-paseo plugin add SWBaek/Paseo-Plugin:plugins/file-browser
 paseo plugin add SWBaek/Paseo-Plugin:plugins/provider-usage
 paseo plugin ls
 paseo plugin status
@@ -124,11 +103,6 @@ paseo plugin ls
 .
 ├── plugins/
 │   ├── branch-garden/
-│   ├── github-project-board/
-│   ├── tailscale-dashboard/
-│   ├── composer-compact/
-│   ├── composer-skills/
-│   ├── file-browser/
 │   └── provider-usage/
 ├── docs/
 │   ├── DESIGN.md
@@ -164,7 +138,7 @@ paseo plugin ls
 - UI 변경은 [Paseo Plugin Design Rules](docs/DESIGN.md)를 따릅니다.
 - 새 기여 지점을 선택할 때는 [Paseo Plugin Capabilities](docs/plugin-capabilities/README.md)에서 현재 지원 범위와 제한을 먼저 확인합니다.
 - UI 검수는 디자인 규칙의 영향 기반 A–D 등급을 적용합니다. 변경이 영향을 주는 layout·theme·상태·접근성만 확인하고, D 등급에서 wide/compact와 밝은/어두운 theme를 모두 확인합니다.
-- Git 또는 GitHub CLI 명령은 read-only allowlist와 상태 무변경 테스트를 유지합니다.
+- Git 명령은 read-only allowlist와 상태 무변경 테스트를 유지합니다.
 - Git source로 배포하기 전에 `npm run check:git-source-imports`로 install 없이 사용할 수 없는 runtime dependency를 차단합니다.
 - 한 플러그인만 변경하면 해당 workspace를, 공통 계약·설치 상태·여러 플러그인을 변경하면 루트 전체를 검증합니다.
 - Plugin API 계약을 바꾸거나 새 기여 유형을 사용할 때는 공식 문서와 현재 CLI의 새 scaffold를 대조합니다.
@@ -182,5 +156,3 @@ paseo plugin ls
 - [Paseo v0.7 Plugin reference](https://paseo.sh/docs/plugins/v0.7/reference)
 - [Paseo CLI](https://paseo.sh/docs/cli)
 - [Paseo TypeScript SDK](https://paseo.sh/docs/sdk/reference)
-
-실제 화면: [File Browser 데스크톱](docs/screenshots/file-browser-wide-light.png) · [모바일 폭](docs/screenshots/file-browser-compact-dark.png) · [Compact 확인 창](docs/screenshots/composer-compact-dark.png). [릴리스 후보 검증 기록](docs/verification/0.1.0-rc.1.md)에서 확인 환경과 제한을 확인하세요.

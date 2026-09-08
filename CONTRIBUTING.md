@@ -16,24 +16,24 @@ Each `plugins/*` directory is independently installed. Read its manifest to iden
 For one plugin:
 
 ```sh
-npm run typecheck --workspace github-project-board
-npm test --workspace github-project-board
+npm run typecheck --workspace branch-garden
+npm test --workspace branch-garden
 ```
 
-On macOS/Linux, `npm test` intentionally runs only File Browser's portable configuration, archive-filter and view tests. Its Windows path/download suites run on Windows CI. Passing portable tests does not establish native client or daemon runtime support.
+Both plugin test suites run on Windows, macOS and Linux. Automated tests do not establish native client or daemon runtime support.
 
 ## Runtime and UI review
 
 Use a daemon you control. Check `paseo plugin ls` before every lifecycle operation. Install a development directory under a distinct runtime ID, then reload that ID after edits. Do not restart the daemon. Do not enable its global plugin switch without the owner's permission.
 
 ```sh
-paseo plugin install /absolute/path/to/Paseo-Plugin/plugins/github-project-board --id github-board-dev
-paseo plugin reload github-board-dev
+paseo plugin install /absolute/path/to/Paseo-Plugin/plugins/branch-garden --id branch-garden-dev
+paseo plugin reload branch-garden-dev
 paseo plugin ls
-paseo plugin logs github-board-dev
+paseo plugin logs branch-garden-dev
 ```
 
-Use [configuration examples](docs/CONFIGURATION.md) for host settings. Remove temporary installations after verification. File Browser's default download port is shared by all installations on a host; do not initiate downloads from two copies simultaneously.
+Use [configuration guidance](docs/CONFIGURATION.md) for prerequisites. Remove temporary installations after verification.
 
 Follow [Design rules](docs/DESIGN.md). Report the impact grade, tested layouts/themes/states, and why other environments were omitted. Use actual UI screenshots; redact private project names, local paths, account details and tokens before attaching them. Label fixture renders as fixtures.
 
@@ -41,7 +41,7 @@ Follow [Design rules](docs/DESIGN.md). Report the impact grade, tested layouts/t
 
 Use the PR template and `Closes #<issue>`. Explain the user-visible result and validation. Update relevant plugin guides, both root READMEs and the catalog when behavior or requirements change. Documentation-only work needs link/contract checks, not unrelated tests.
 
-Keep read-only command and HTTP allowlists, path and download boundaries, and cleanup behavior intact. Test changed behavior and failure paths. Never include credentials or private logs. See [SECURITY.md](SECURITY.md) for sensitive reports.
+Keep read-only command and HTTP allowlists, credential boundaries and cleanup behavior intact. Test changed behavior and failure paths. Never include credentials or private logs. See [SECURITY.md](SECURITY.md) for sensitive reports.
 
 Contributions are provided under this repository's [MIT license](LICENSE). Credit upstream code and preserve applicable notices. Be respectful, discuss the work, and avoid personal attacks or harassment; maintainers may moderate disruptive participation.
 

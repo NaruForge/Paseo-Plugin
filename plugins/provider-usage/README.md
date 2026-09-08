@@ -25,7 +25,7 @@ Sign in through the provider's normal tooling. Do not copy tokens into this repo
 
 ## Use
 
-Open **Usage** to inspect plans, usage windows, reset times and balances. A matching agent composer pill shows that provider's status. Missing authentication appears as unavailable, not zero usage. Refresh to request a new snapshot.
+Open **Usage** to inspect plans, usage windows, reset times and balances. A matching agent composer pill shows that provider's status; pressing the pill refreshes usage. The surface and pills share a cached snapshot and request a refresh every two minutes while their query is active; background clients may pause polling. The surface's refresh button also requests a new snapshot. Missing authentication appears as unavailable, not zero usage.
 
 ## Data access and limitations
 
