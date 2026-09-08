@@ -3,11 +3,12 @@ import { homedir } from "node:os";
 import { join } from "node:path";
 
 export const DEFAULT_PROJECT_OWNER = "@me";
-let configuredOwner: string | undefined;
-
-export function configuredProjectOwner(): string {
-  return configuredOwner ??= readProjectOwner();
+export function createProjectOwnerReader(readOwner = readProjectOwner): () => string {
+  let configuredOwner: string | undefined;
+  return () => configuredOwner ??= readOwner();
 }
+
+export const configuredProjectOwner = createProjectOwnerReader();
 
 export function validateProjectOwner(value: unknown): string {
   if (typeof value !== "string" || !(value === "@me" || /^[a-z\d](?:[a-z\d-]{0,37}[a-z\d])?$/i.test(value))) {

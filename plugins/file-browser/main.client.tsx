@@ -273,7 +273,7 @@ export function MainSurface(props: PluginSurfaceProps) {
     ?? roots.find((root) => root.available) ?? roots[0];
   const rootId = selected?.id ?? "";
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.surface0 }}>
+    <View testID="file-browser-surface" style={{ flex: 1, backgroundColor: theme.colors.surface0 }}>
       {roots.length > 1 ? (
         <ScrollView
           horizontal
@@ -708,7 +708,7 @@ function RootBrowser({ theme, host, layout, rootId }: PluginSurfaceProps & { roo
         >
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Projects 루트로 이동"
+            accessibilityLabel={`${activeRoot.label} 루트로 이동`}
             onPress={() => navigate([])}
             style={styles.breadcrumbButton}
           >

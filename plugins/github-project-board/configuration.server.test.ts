@@ -2,13 +2,24 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { readProjectOwner, validateProjectOwner } from "./configuration.server";
+import { createProjectOwnerReader, readProjectOwner, validateProjectOwner } from "./configuration.server";
 import { assertReadOnlyGhArgs, githubProjectViewArgs, listGithubProjects, scanGithubProject } from "./github-project-board.server";
 
 const temporary: string[] = [];
 afterEach(() => temporary.splice(0).forEach((directory) => rmSync(directory, { recursive: true, force: true })));
 
 describe("daemon project owner configuration", () => {
+  it("pins successful configuration until a new runtime and retries failed loads", () => {
+    let value: string | undefined;
+    const load = () => { if (!value) throw new Error("Invalid configuration"); return value; };
+    const read = createProjectOwnerReader(load);
+    expect(read).toThrow("Invalid");
+    value = "first-owner";
+    expect(read()).toBe("first-owner");
+    value = "second-owner";
+    expect(read()).toBe("first-owner");
+    expect(createProjectOwnerReader(load)()).toBe("second-owner");
+  });
   it("defaults to the authenticated user and fails closed for malformed configuration", () => {
     const directory = mkdtempSync(join(tmpdir(), "paseo-owner-"));
     temporary.push(directory);
