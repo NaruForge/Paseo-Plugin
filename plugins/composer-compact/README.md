@@ -38,3 +38,7 @@ paseo plugin remove composer-compact
 ```
 
 Use the actual runtime ID and `--host <host>` where appropriate. Directory sources use `reload` instead of `update`.
+
+## Screenshot
+
+[Actual confirmation modal in Paseo](../../docs/screenshots/composer-compact-dark.png).

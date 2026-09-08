@@ -182,3 +182,5 @@ paseo plugin ls
 - [Paseo v0.7 Plugin reference](https://paseo.sh/docs/plugins/v0.7/reference)
 - [Paseo CLI](https://paseo.sh/docs/cli)
 - [Paseo TypeScript SDK](https://paseo.sh/docs/sdk/reference)
+
+실제 화면: [File Browser 데스크톱](docs/screenshots/file-browser-wide-light.png) · [모바일 폭](docs/screenshots/file-browser-compact-dark.png) · [Compact 확인 창](docs/screenshots/composer-compact-dark.png). [릴리스 후보 검증 기록](docs/verification/0.1.0-rc.1.md)에서 확인 환경과 제한을 확인하세요.

@@ -73,3 +73,7 @@ paseo plugin remove file-browser
 ```
 
 Use the actual runtime ID and `--host <host>` where appropriate. Directory sources use `reload` instead of `update`.
+
+## Screenshots
+
+Actual Paseo web client: [wide/light](../../docs/screenshots/file-browser-wide-light.png), [wide/dark](../../docs/screenshots/file-browser-wide-dark.png), [compact/light](../../docs/screenshots/file-browser-compact-light.png), [compact/dark](../../docs/screenshots/file-browser-compact-dark.png).

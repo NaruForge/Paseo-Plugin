@@ -27,6 +27,8 @@ Client surfaces use Paseo's native plugin API. Host OS support and client suppor
 
 ## Install one plugin
 
+Actual Paseo captures: [File Browser, wide/light](docs/screenshots/file-browser-wide-light.png), [compact/dark](docs/screenshots/file-browser-compact-dark.png), and [Compact confirmation](docs/screenshots/composer-compact-dark.png). See the [candidate verification record](docs/verification/0.1.0-rc.1.md) for tested environments and limits.
+
 1. Install the tools listed in that plugin's guide on the **daemon host**.
 2. In Paseo **Settings → Plugins**, enable plugins if you choose to trust them.
 3. Run the command for the plugin you want:
