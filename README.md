@@ -11,6 +11,8 @@ Maintained by **SWBaek and contributors**. This is a community project, independ
 
 **Target: Paseo 0.7.2.** The Plugin API is experimental. See the [compatibility and verification record](docs/COMPATIBILITY.md) before using another version. The first public prerelease, [v0.1.0-rc.2](https://github.com/SWBaek/Paseo-Plugin/releases/tag/v0.1.0-rc.2), includes pinned installation instructions and known limitations.
 
+**Paseo 0.8.0-beta.1:** current plugins need migration before they can load. The [0.8 migration plan](docs/MIGRATION_0.8.md) and [updated API reference](docs/plugin-capabilities/README.md) describe the beta contract; source and runtime support remain on 0.7.2. Progress is tracked in [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77).
+
 ## Plugins
 
 | Plugin | What it does | Requirements | Maturity |
@@ -27,11 +29,11 @@ Both plugins are maintained as this repository's core offering; this does not im
 3. Run the command for the plugin you want:
 
 ```sh
-paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden
-paseo plugin add SWBaek/Paseo-Plugin:plugins/provider-usage
+paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
+paseo plugin add SWBaek/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
 ```
 
-Choose one command; there is no need to install the entire collection or run npm. These commands track the default branch. For a controlled installation, choose an existing tag or commit from [Releases](https://github.com/SWBaek/Paseo-Plugin/releases) and pass `--ref <tag-or-commit>`. See [Git installation and rollback](docs/GIT_INSTALLATION.md).
+Choose one command; there is no need to install the entire collection or run npm. These commands pin the 0.7-compatible release. Omitting `--ref` tracks the default branch and can pick up a future 0.8 migration. Select a reviewed compatible tag or commit from [Releases](https://github.com/SWBaek/Paseo-Plugin/releases). A pinned tag does not advance on `plugin update`. See [Git installation and rollback](docs/GIT_INSTALLATION.md).
 
 ```sh
 paseo plugin ls
@@ -39,7 +41,7 @@ paseo plugin logs branch-garden
 paseo plugin update branch-garden
 ```
 
-The manifest ID is the default runtime ID. If you install with `--id`, use that ID in later commands. Installations are per daemon; use `--host <host>` to target another machine.
+The manifest ID is the default runtime ID. If you install with `--id`, use that ID in later commands. Installations are per daemon. For 0.8 CLI operations, `--host` is global: `paseo --host <host> plugin ls`. Current source still requires a compatible 0.7 daemon and client.
 
 **Configuration:** Neither plugin needs a custom host settings file. See [prerequisites and removal guidance](docs/CONFIGURATION.md).
 
@@ -90,4 +92,4 @@ Five previously developed plugins have been removed before the first public rele
 
 Use the issue forms for bugs and proposals. English and Korean reports are welcome. The maintainer tracks work in GitHub Issues; you do not need access to the maintainer's private Project to contribute.
 
-Upstream: [Paseo plugin docs](https://paseo.sh/docs/plugins) · [v0.7 reference](https://paseo.sh/docs/plugins/v0.7/reference) · [Community projects](https://paseo.sh/docs/community)
+Upstream: [Plugin versions](https://paseo.sh/docs/plugins) · [v0.7 reference for current source](https://paseo.sh/docs/plugins/v0.7/reference) · [v0.8 beta reference](https://paseo.sh/docs/plugins/v0.8/reference) · [Migration](https://paseo.sh/docs/plugins/v0.8/migration) · [Community projects](https://paseo.sh/docs/community)

@@ -4,6 +4,8 @@ Inspect registered Git projects, active workspaces, local branches and worktrees
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Support](../../SUPPORT.md)
 
+**Paseo 0.8.0-beta.1:** this plugin still uses the 0.7.2 contract and cannot load on 0.8 until migrated. See the [migration plan](../../docs/MIGRATION_0.8.md) and [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77). The screenshots below are 0.7 evidence.
+
 ## Screenshots
 
 Actual Paseo 0.7.2 web client, showing this public repository. The overview combines scan totals, warnings and repository filters; expanding a repository shows workspaces and the reasons branches need review.
@@ -17,11 +19,11 @@ On a compact screen, workspace details and branch evidence stack vertically:
 ## Install
 
 ```sh
-paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden
+paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
 paseo plugin ls
 ```
 
-This tracks the default branch. Use an existing reviewed tag/commit with `--ref` for a pinned installation. Review and trust source before enabling plugins; see [Git installation](../../docs/GIT_INSTALLATION.md).
+This pins the 0.7-compatible release; `update` does not advance a pinned tag. Omitting `--ref` tracks the default branch, including future compatibility changes. Review and trust source before enabling plugins; see [Git installation](../../docs/GIT_INSTALLATION.md).
 
 ## Requirements and configuration
 
@@ -49,5 +51,5 @@ paseo plugin update branch-garden
 paseo plugin remove branch-garden
 ```
 
-Use the actual runtime ID if installed with `--id`; add `--host <host>` for another daemon. Directory development installations use `reload` instead of `update`.
+Use the actual runtime ID if installed with `--id`. For 0.8 CLI remote diagnostics, the syntax is `paseo --host <host> plugin ls`; it does not make current source compatible with that daemon. Directory development installations use `reload` instead of `update`.
 

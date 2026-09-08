@@ -4,6 +4,10 @@ Show Codex and Grok plan usage in the sidebar and on the matching agent composer
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Support](../../SUPPORT.md)
 
+**Paseo 0.8.0-beta.1:** this plugin still uses the 0.7.2 contract and cannot load on 0.8 until migrated. See the [migration plan](../../docs/MIGRATION_0.8.md) and [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77). The beta's settings/provider APIs are not implemented features of this plugin.
+
+The beta SDK exposes `paseo.providers.listUsage()` for normalized host usage. Migration planning will compare its Codex/Grok coverage, authentication, refresh and error behavior against the direct requests below before changing the data source. See the [SDK usage contract](../../docs/plugin-capabilities/backend-and-sdk.md#provider-사용량-sdk).
+
 ## Composer pill
 
 The pill above the agent composer shows the provider and remaining usage percentage. Press it to refresh usage; the active query also refreshes every two minutes. The image below is a user-supplied capture of the actual Paseo composer. Its displayed quota is a snapshot, not a guaranteed allowance.
@@ -13,11 +17,11 @@ The pill above the agent composer shows the provider and remaining usage percent
 ## Install
 
 ```sh
-paseo plugin add SWBaek/Paseo-Plugin:plugins/provider-usage
+paseo plugin add SWBaek/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
 paseo plugin ls
 ```
 
-This tracks the default branch. Add `--ref <existing-tag-or-commit>` to pin reviewed source. See [Git installation](../../docs/GIT_INSTALLATION.md).
+This pins the 0.7-compatible release; `update` does not advance a pinned tag. Omitting `--ref` tracks the default branch, including future compatibility changes. See [Git installation](../../docs/GIT_INSTALLATION.md).
 
 ## Requirements
 
@@ -49,4 +53,4 @@ paseo plugin update provider-usage
 paseo plugin remove provider-usage
 ```
 
-Use the actual runtime ID and `--host <host>` where appropriate. Directory sources use `reload` instead of `update`.
+Use the actual runtime ID. For 0.8 CLI remote diagnostics use `paseo --host <host> plugin ls`; current source still needs migration before loading on that daemon. Directory sources use `reload` instead of `update`.

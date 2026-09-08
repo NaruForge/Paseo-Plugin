@@ -14,6 +14,8 @@ Core support covers Branch Garden and Provider Usage. Provider Usage still depen
 
 The initial release line targets Paseo **0.7.2**. Newer or preview APIs are not assumed compatible. We prioritize reproducible problems on the Windows daemon and web client used for runtime validation. macOS/Linux automated checks and native mobile support have separate evidence in [Compatibility](docs/COMPATIBILITY.md).
 
+**0.8.0-beta.1 requires a source migration.** Current plugins have not been migrated or runtime-verified on the beta. Track [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77) and the [migration guide](docs/MIGRATION_0.8.md). Updated API reference pages do not expand the supported release line.
+
 Before 1.0, breaking changes can occur in minor releases and are documented in the changelog. Release candidates are for evaluation. Only the latest release in the active minor line receives routine fixes; use a reviewed tag/commit and retain the previous source reference for rollback.
 
 For published releases, if a plugin cannot follow upstream safely, set its catalog maturity to `experimental` and explain the limitations in its guide. If retiring it, announce deprecation in the guide and changelog with migration/removal instructions before removal in a later minor release. The catalog's allowed maturity values are `preview`, `experimental` and `stable`; it has no `deprecated` value. No fixed calendar commitment is made. Preserve prior tags and release notes.
@@ -21,3 +23,5 @@ For published releases, if a plugin cannot follow upstream safely, set its catal
 ## Troubleshooting first steps
 
 Run `paseo plugin ls` against the intended host, then `paseo plugin logs <runtime-id>`. Check the plugin's prerequisites and host configuration. After editing directory source, use `paseo plugin reload <runtime-id>`; after updating Git source, use `paseo plugin update <runtime-id>`. Restarting the daemon is not a plugin troubleshooting step.
+
+On 0.8 use `paseo --host <target> plugin ls` for remote state and include both daemon and app versions in reports. A missing `requirements.paseo` is treated as `<0.8.0`; an old `index.ts` needs the full runtime-entry migration. Do not add a permissive requirement alone to bypass the error. Use compatible source or complete the migration. `plugin ls` reports runtime/source/commit/load errors; `plugin status` checks the remote update ref.

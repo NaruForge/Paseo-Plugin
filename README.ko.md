@@ -8,7 +8,7 @@
 
 Branch Garden과 Provider Usage 두 개의 [Paseo](https://paseo.sh) 플러그인에 집중하는 npm workspace입니다. 이 저장소의 핵심 지원 대상이며, Paseo 팀의 공식 지원을 의미하지 않습니다. Provider Usage의 공급자 연동은 여전히 실험적입니다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위이며, 플러그인끼리 런타임 코드를 공유하지 않습니다.
 
-> **기준 Paseo 버전: `0.7.2`** — Plugin API는 실험 단계입니다. 다른 Paseo 버전에서 개발하거나 설치할 때는 현재 공식 문서, 해당 CLI의 fresh scaffold와 exact `@getpaseo/plugin` package declaration을 먼저 대조하세요. 현재 버전의 전체 확장 지점은 [Paseo Plugin Capabilities](docs/plugin-capabilities/README.md)에 정리되어 있습니다.
+> **현재 소스·배포 대상: `0.7.2` / 새 참조 문서: `0.8.0-beta.1`** — 현재 두 플러그인은 0.8에서 그대로 로드되지 않습니다. [0.8 이관 안내](docs/MIGRATION_0.8.md)와 [대응 이슈 #77](https://github.com/NaruForge/Paseo-Plugin/issues/77)을 확인하세요. [Paseo Plugin Capabilities](docs/plugin-capabilities/README.md)는 새 베타 API를 설명하며 실행 호환성 인증이 아닙니다. 실제 이관 시 해당 CLI의 fresh scaffold와 exact SDK 선언을 다시 대조합니다.
 
 > [!WARNING]
 > Paseo 플러그인은 신뢰된 비격리 코드입니다. 서버 측 코드는 daemon이 실행되는 컴퓨터의 파일, 프로세스, 자격 증명과 네트워크에 접근할 수 있고, 클라이언트 코드는 Paseo 앱 안에서 실행됩니다. 검토하고 신뢰하는 소스만 설치하세요.
@@ -80,7 +80,7 @@ paseo plugin ls
 paseo plugin logs branch-garden
 ```
 
-다른 host의 daemon을 관리할 때는 plugin 명령에 `--host <host>`를 추가합니다. 설치·reload·제거를 수행하기 전에는 `paseo plugin ls`로 대상 host와 runtime ID를 확인하세요.
+설치·reload·제거를 수행하기 전에는 `paseo plugin ls`로 대상 host와 runtime ID를 확인하세요. 0.8 CLI의 원격 옵션은 `paseo --host <host> plugin ls`처럼 명령 앞에 둡니다. 위 로컬 소스 설치 예시는 현재 소스와 호환되는 0.7.2 daemon/client를 전제로 합니다.
 
 ## Git source 배포와 update
 
@@ -91,15 +91,15 @@ npm run check:docs-sync
 npm run check:git-source-imports
 npm run typecheck
 paseo plugin ls
-paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden
-paseo plugin add SWBaek/Paseo-Plugin:plugins/provider-usage
+paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
+paseo plugin add SWBaek/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
 paseo plugin ls
 paseo plugin status
 paseo plugin update --all
 paseo plugin ls
 ```
 
-`--ref`를 생략하면 default branch를 추적하고, 명시적 branch는 새 commit을 추적하며, tag와 commit은 고정됩니다. 기존 directory 설치와 Git 설치에 같은 runtime ID를 사용하지 마세요. 임시 ID를 이용한 검증, 실패 후보 롤백과 정리 절차는 [Git source 설치와 업데이트](docs/GIT_INSTALLATION.md)에 정리되어 있습니다.
+위 예시는 0.7 호환 태그로 고정하므로 `update`로 새 commit으로 이동하지 않습니다. `--ref`를 생략하면 default branch를 추적해 향후 0.8 이관 commit을 받을 수 있습니다. 명시적 branch는 새 commit을 추적하며 tag와 commit은 고정됩니다. 기존 directory 설치와 Git 설치에 같은 runtime ID를 사용하지 마세요. 임시 ID 검증, 실패 후보 복구와 정리 절차는 [Git source 설치와 업데이트](docs/GIT_INSTALLATION.md)에 정리되어 있습니다.
 
 ## 저장소 구조
 
@@ -121,7 +121,7 @@ paseo plugin ls
 └── package.json
 ```
 
-플러그인 안에서는 파일 역할을 다음처럼 나눕니다.
+아래 표는 아직 이관하지 않은 **현재 0.7 소스**의 경로입니다. 0.8에서는 `index.client.ts[x]`·`index.server.ts[x]`와 `client/`·`server/`·`shared/`로 이동합니다. 새 등록·import·cleanup 규칙은 [이관 안내](docs/MIGRATION_0.8.md#파일과-import-이동)를 따릅니다.
 
 | 파일 | 역할 |
 | --- | --- |
@@ -140,7 +140,7 @@ paseo plugin ls
 ## 개발 원칙
 
 - UI 변경은 [Paseo Plugin Design Rules](docs/DESIGN.md)를 따릅니다.
-- 새 기여 지점을 선택할 때는 [Paseo Plugin Capabilities](docs/plugin-capabilities/README.md)에서 현재 지원 범위와 제한을 먼저 확인합니다.
+- 0.8의 새 기여 지점을 선택할 때는 [Paseo Plugin Capabilities](docs/plugin-capabilities/README.md)에서 지원 범위와 제한을 확인합니다. 기존 0.7 소스에 신규 API를 바로 적용하지 않습니다.
 - UI 검수는 디자인 규칙의 영향 기반 A–D 등급을 적용합니다. 변경이 영향을 주는 layout·theme·상태·접근성만 확인하고, D 등급에서 wide/compact와 밝은/어두운 theme를 모두 확인합니다.
 - Git 명령은 read-only allowlist와 상태 무변경 테스트를 유지합니다.
 - Git source로 배포하기 전에 `npm run check:git-source-imports`로 install 없이 사용할 수 없는 runtime dependency를 차단합니다.
@@ -158,5 +158,9 @@ paseo plugin ls
 - [Paseo Plugin 문서 버전 선택](https://paseo.sh/docs/plugins)
 - [Paseo v0.7 Plugin quickstart](https://paseo.sh/docs/plugins/v0.7)
 - [Paseo v0.7 Plugin reference](https://paseo.sh/docs/plugins/v0.7/reference)
+- [Paseo v0.8 beta quickstart](https://paseo.sh/docs/plugins/v0.8)
+- [Paseo v0.8 beta reference](https://paseo.sh/docs/plugins/v0.8/reference)
+- [Paseo v0.8 migration](https://paseo.sh/docs/plugins/v0.8/migration)
+- [Paseo v0.8 provider plugins](https://paseo.sh/docs/plugins/v0.8/providers)
 - [Paseo CLI](https://paseo.sh/docs/cli)
 - [Paseo TypeScript SDK](https://paseo.sh/docs/sdk/reference)

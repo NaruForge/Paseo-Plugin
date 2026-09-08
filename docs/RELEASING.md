@@ -11,6 +11,12 @@ Both plugins use one collection version and one Git tag (`v<version>`). Runtime 
 
 ## Validate runtime safely
 
+For **Paseo 0.8.0-beta.1**, apply the [migration checklist](MIGRATION_0.8.md) first. Current source and `v0.1.0-rc.2` remain on 0.7.2; the reference update is not a migrated release. Keep the previous tag and use an explicit candidate ref. Do not overwrite 0.7 release notes or runtime evidence with beta claims.
+
+Require separate client/server entries, runtime directories, `requirements.paseo`, exact target SDK/client dependencies and matching `plugins.json.paseoVersion`/lockfile metadata. Update import checks and test stubs with the source migration. Recommended manifest range: `^0.8.0`; development SDK: exact `0.8.0-beta.1`.
+
+Validate daemon and app versions independently, including host compiler boundaries, contribution removers and Provider Usage's pill registration/cleanup. For 0.8 remote operations use global `--host`, for example `paseo --host <target> plugin ls`. Recheck declarations if advancing beyond beta.1. Static docs/type checks do not establish beta runtime support.
+
 Use an authorized test daemon with plugins already enabled. Check `paseo plugin ls`; use unique runtime IDs. A Git branch candidate can be tested before a tag exists:
 
 ```sh
@@ -35,6 +41,8 @@ The workflow deliberately creates a **draft**. Publish only after reviewing the 
 `paseo plugin update` follows branches; tags and commits stay pinned. Retain the prior tag or full commit SHA. To change a pinned installation, record its ID/source, remove that installation, then add the reviewed source again under the same ID and explicit prior `--ref`. This briefly removes its contributions. Configuration files outside the checkout remain intact; do not remove them unless intentionally revoking their settings.
 
 Failed Git update candidates retain the previous running version, but directory reload failures do not. See [Git installation](GIT_INSTALLATION.md).
+
+For plugins using 0.8 built-in settings, removing an installation also deletes its stored settings. A remove/re-add rollback does not preserve those values; plan export/recovery before applying that procedure. The current two plugins have no such settings yet. A rejected Git update, without removal, keeps the installed revision.
 
 ## Upstream listing
 

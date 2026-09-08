@@ -1,122 +1,51 @@
 # Backend와 Paseo SDK
 
-Paseo Plugin은 하나의 `index.ts`에서 등록하지만 실제로는 client bundle과 daemon-side subprocess로 나뉜다. 정상적인 Paseo 조작은 host가 제공한 `PaseoApi`를 사용하고, Plugin 고유의 로컬 동작만 typed RPC로 연결한다.
+기준은 **Paseo 0.8.0-beta.1**이다. 현재 두 플러그인은 아직 0.7.2 소스이며 [이관 안내](../MIGRATION_0.8.md)에 따라 후속 변경한다. 이 문서는 [공식 reference](https://paseo.sh/docs/plugins/v0.8/reference)와 exact SDK 선언을 정적으로 대조한 참조 자료다.
 
 ## Runtime 경계
 
-| 파일 | 실행 위치 | 넣을 내용 |
-| --- | --- | --- |
-| `index.ts` | contribution wiring | 등록, handler 연결, cleanup 반환 |
-| `*.client.tsx` | 연결된 Paseo app | React, React Native, hook, style, surface/panel/pill component와 callback |
-| `*.server.ts` | daemon subprocess | Node API, filesystem, process, 자격 증명, 외부 API, RPC handler |
-| `*.shared.ts` | 양쪽 bundle | Zod RPC 계약과 JSON-safe 순수 값 |
-
-Client module에서 `*.server.ts`를 import하거나 server module에서 `*.client.tsx`를 import하면 build가 실패한다. Shared module에는 Node 또는 React Native runtime 호출을 넣지 않는다. `StyleSheet.create` 같은 top-level client 호출도 `index.ts`가 아니라 `*.client.tsx`에 둔다.
-
-## Host가 제공하는 Client module
-
-Paseo는 Git source의 lockfile을 보고 package manager나 install script를 자동 실행하지 않는다. Manifest에 명시적인 `build`가 있으면 staged plugin directory에서 해당 argv 명령만 실행한다. 다음 module은 Paseo가 client runtime에 제공한다.
-
-| Module | 용도 |
+| 위치 | 책임 |
 | --- | --- |
-| `@getpaseo/plugin` | contribution type, data hook, Paseo/RPC hook |
-| `@getpaseo/plugin/react-native` | `Modal`, `Icon`, `useToast` |
-| `@getpaseo/plugin/server` | shared RPC와 attachment 계약 |
-| `@tanstack/react-query` | async request state, cache, mutation |
-| `react`, `react/jsx-runtime` | component와 hook |
-| `react-native` | cross-platform UI와 host가 제공하는 React Native API |
-| `zod` | shared input/output schema |
+| `index.client.tsx` | surface/sidebar/panel/pill/command/settings/timeline 등 client 등록과 cleanup |
+| `index.server.ts` | RPC handler, settings persistence, provider, lifecycle 등록과 cleanup |
+| `client/` | React Native UI, 훅, 구독·query·controller |
+| `server/` | Node, filesystem, process, credentials, 외부 API |
+| `shared/` | Zod 계약과 런타임 중립 값·타입 |
 
-이 목록에 없는 client runtime import는 load 시 거부될 수 있다. 특히 DOM library, `lucide-react-native`, `react-native-svg`를 직접 import하지 않는다. Browser global은 `layout.platform === "web"`일 때만 존재하며 iOS/Android에서는 사용할 수 없다.
+진입점 외의 소스 모듈은 세 디렉터리 중 하나에 둔다. 예전 `*.client.tsx` 같은 suffix는 경계를 만들지 않는다. Client에서 server/Node를, server에서 client/React를 참조하면 compile 오류다. Shared는 shared만 참조하고 Node·React·런타임 전용 SDK 및 해당 타입을 가져오지 않는다. 이 규칙은 type import와 전이 의존성에도 적용된다.
 
-Server code에는 `@getpaseo/plugin`, `@getpaseo/plugin/server`, `zod`가 host module로 제공된다. Plugin 내부 상대 import와 Node 기본 module을 사용할 수 있고, directory source라면 설치된 dependency도 사용할 수 있다. Git source 배포에서는 host 제공 module·Node 기본 module·Plugin 내부 source만으로 실행 가능하게 만드는 것이 안전하다.
+## Host 제공 모듈
 
-## Paseo 상태를 읽는 Hook
-
-| Hook | 목적 | 특징 |
-| --- | --- | --- |
-| `usePaseo()` | 선택 host의 기존 `PaseoApi` 사용 | 새 client를 만들지 않으며 host 전환을 따른다. |
-| `useRpc(contract)` | 현재 설치의 daemon-side Plugin handler 호출 | Zod input/output type을 보존한다. |
-| `useWorkspace(id, selector)` | cached workspace snapshot 선택 | selector 필수, shallow equality, 없으면 `null` |
-| `useAgent(id, selector)` | cached agent snapshot 선택 | selector 필수, shallow equality, 없으면 `null` |
-
-Workspace와 Agent의 현재 문맥을 찾기 위한 별도 Plugin RPC를 만들지 않는다. Panel/Pill props가 안정적인 ID를 주고, hook이 app cache를 읽는다.
-
-## Paseo API를 받을 수 있는 위치
-
-같은 host-owned `PaseoApi`가 여러 context에 주입된다.
-
-| 위치 | 접근 방식 |
+| Import | 허용 런타임·용도 |
 | --- | --- |
-| Surface, Panel, Modal 내부 component | `usePaseo()` |
-| Command Center callback | callback의 `paseo` |
-| Headless client entrypoint | 해당 Plugin 설치 host의 `PluginClientContext.paseo` |
-| daemon RPC handler | handler context의 `{ paseo }` |
+| `@getpaseo/plugin` | 양쪽: `defineRpc`, `defineSettings`, `defineAttachmentSource`, 공유 타입 |
+| `@getpaseo/plugin/client` | client: context, props, `usePaseo`, `useRpc`, `useSettings`, `useAgent`, `useWorkspace` |
+| `@getpaseo/plugin/client/react-native` | client: host UI, clipboard, modal scroll/input |
+| `@getpaseo/plugin/client/ui` | client: 공개 Settings 컴포넌트 |
+| `react`, `react/jsx-runtime`, `react-native`, `@tanstack/react-query` | client |
+| `@getpaseo/plugin/server` | server: context, handler·lifecycle 타입 |
+| `@getpaseo/plugin/server/provider`, `@getpaseo/plugin/server/acp` | server: provider 구현과 ACP shim |
+| `zod` | 양쪽: schema |
 
-Plugin은 connection 생성, reconnect, close를 소유하지 않는다. 각 API는 surface/command가 선택한 host 또는 headless client/handler가 속한 설치 host에 묶인다. 해당 host가 offline이면 다른 host로 자동 fallback하지 않는다.
+`/client/host`는 private이다. Client에서 DOM library, `lucide-react-native`, `react-native-svg`를 직접 가져오지 않는다. Browser global이 필요한 경우 `client/web.ts`에 좁은 타입과 `Platform.OS` 분기를 두고 native 대안을 제공한다. `tsconfig`에 DOM lib를 추가해 우회하지 않는다.
 
-## `PaseoApi`로 가능한 동작
+Server는 Node 기본 모듈과 설치된 dependency도 사용할 수 있다. Git source는 package manager를 자동 실행하지 않으므로 외부 dependency가 필요하면 manifest의 명시적 `build`를 설계해야 한다. 현재 두 플러그인은 `build` 없이 host/Node/내부 상대 import만 사용하는 배포 방식을 유지한다. 자세한 내용은 [Git 설치](../GIT_INSTALLATION.md)를 따른다.
 
-`v0.7.2` SDK reference의 Plugin용 API 범위는 `projects`, `workspaces`, `agents`, `providers`, `config`다.
+## Hook과 주입 API
 
-### Projects
+`usePaseo()`는 선택 host의 연결을 빌린다. `useWorkspace(id, selector)`와 `useAgent(id, selector)`는 cached snapshot을 읽고, selector 결과를 shallow equality로 비교하며 record가 없으면 `null`을 반환한다. 전체 snapshot을 선택하거나 현재 문맥을 찾기 위한 RPC를 추가하지 않는다.
 
-- 등록된 Project 전체 조회: `projects.list(options?)`
+Command/Slash callback, client entry, server RPC handler와 lifecycle hook에도 같은 host의 `paseo`가 주입된다. Connection 생성·reconnect·close는 Paseo가 소유한다. Surface의 선택 host가 offline이어도 다른 host로 fallback하지 않는다.
 
-### Workspaces
+## Typed RPC
 
-- 목록·filter·paging·subscription: `workspaces.list`, `workspaces.subscribe`
-- directory를 열거나 기존 활성 Workspace 재사용: `workspaces.open`
-- directory/worktree 기반 새 Workspace 생성: `workspaces.create`
-- ID 또는 snapshot에서 handle 생성: `workspaces.ref`
-- Workspace archive: `workspaces.archive` 또는 handle의 `archive`
-- handle의 현재 snapshot, refresh, title 변경, update subscription
-- 해당 Workspace에 바로 Agent 생성: `workspace.agents.create`
-
-### Agents
-
-- 목록·filter·paging·subscription: `agents.list`, `agents.subscribe`
-- Agent 생성 또는 handle 참조: `agents.create`, `agents.ref`
-- prompt 전송: handle의 `send`
-- prompt 전송 후 완료/attention까지 대기: `run`
-- 이미 진행 중인 turn 대기: `waitForFinish`
-- 현재 snapshot 조회·refresh·subscription
-- archive 또는 parent 관계 detach
-- provider가 노출한 slash command와 skill 조회
-- timeline page refetch와 stream subscription
-
-Agent 생성 옵션에는 provider/model, mode, thinking option, feature value, provider-native option, system prompt, MCP server, tool policy, cwd/worktree, prompt, image, attachment, label 등을 조합할 수 있다.
-
-### Providers
-
-- 설치 가능 상태와 catalog snapshot 조회
-- provider discovery 완료 대기 또는 강제 refresh
-- model, mode, feature 목록 조회
-- 설정 diagnostic 조회
-- provider catalog update subscription
-
-### Daemon config
-
-- `config.get()`으로 mutable daemon config 조회
-- `config.patch(patch)`로 validation과 persistence를 거쳐 host config 수정
-
-`config.patch`는 모든 client와 이후 Agent에 영향을 주는 관리 기능이다. 개별 Plugin 설정 저장소처럼 사용하지 않는다.
-
-Plugin용 `PaseoApi`에는 client connection lifecycle method가 없고 UI route도 소유하지 않는다. 대신 Surface와 workspace/agent panel props의 optional `navigation`이 선택 host의 Agent와 Workspace를 여는 `openAgent`와 `openWorkspace`만 제공한다. Command Center와 headless client는 같은 Plugin의 `openSurface`와 `openPanel`을 사용할 수 있다. 그 밖의 임의 native route를 여는 범용 navigation API는 없다.
-
-## Plugin RPC
-
-Plugin RPC는 Paseo SDK에 없는 Plugin 고유 동작에 사용한다.
-
-- daemon machine의 파일과 directory 읽기
-- child process 또는 read-only CLI 실행
-- OS credential/token을 사용한 vendor API 호출
-- server-side cache, local DB, watcher, socket
-- client에 secret을 보내지 않고 결과만 반환하는 작업
-
-Shared 계약은 Zod input/output으로 정의한다.
+정상적인 Paseo 조작은 SDK를 사용하고, 벤더 API·파일 조사·Git 실행 같은 플러그인 고유 동작에 RPC를 사용한다.
 
 ```ts
+// shared/inspect.ts
+import { defineRpc } from "@getpaseo/plugin";
+import { z } from "zod";
+
 export const inspect = defineRpc({
   name: "repo.inspect",
   input: z.object({ directory: z.string() }),
@@ -124,79 +53,98 @@ export const inspect = defineRpc({
 });
 ```
 
-`index.ts`에서 handler를 연결한다.
+Server entry에서 `server.handle(inspect, inspectRepository)`를 등록한다. Handler 구현은 `server/`에 두고 입력/출력 타입은 root의 `RpcInput<typeof inspect>`, `RpcOutput<typeof inspect>`로 표현한다. Client component는 `useRpc(inspect)`, command/client entry는 `rpc(inspect, input)`을 사용한다. 입력과 출력은 양쪽에서 schema 검증을 받는다.
 
-```ts
-plugin.handle(inspect, inspectRepository);
-```
+Handler context는 `{ paseo }`다. Lifecycle context의 `signal`을 일반 RPC handler에도 있다고 가정하지 않는다. HTTP·프로세스의 timeout, 출력 제한과 오류 처리는 각 구현이 책임진다. 비동기 UI 상태는 TanStack Query로 관리한다.
 
-Client component에서는 `useRpc(inspect)`, Command Center나 headless client에서는 주입된 `rpc(inspect, input)`을 사용한다. Input과 output은 app과 subprocess 양쪽에서 validation된다.
+## Paseo SDK 범위
 
-RPC name은 소문자로 시작하고 소문자·숫자·점·하이픈·밑줄만 사용한다. 비동기 상태, retry, cache가 필요하면 client에서 TanStack Query를 사용한다.
+| 영역 | 대표 기능·0.8 추가 사항 |
+| --- | --- |
+| `projects` | `list`, 신규 `subscribe`로 Project 변경 관찰 |
+| `workspaces` | 목록·생성·열기·archive·구독, handle에서 Agent와 Terminal 접근 |
+| `agents` | 생성·참조·목록·구독, handle의 `send`, `run`, `waitForFinish`, timeline 조회·구독 |
+| Agent permission | handle의 `respondToPermission`으로 pending request 응답 |
+| Agent timeline | plugin server session에서 `timeline.append`로 durable row 기록 |
+| `providers` | catalog·model·mode·feature·diagnostic·구독, `listUsage`로 계획 사용량 조회 |
+| `terminals` | workspace ID로 생성·목록·입력·키 전송·capture·종료 |
+| `config` | host 전체 config 조회·patch |
 
-## Headless Client
+정확한 인자와 반환값은 [SDK reference](https://paseo.sh/docs/sdk/reference) 및 대상 `@getpaseo/client` 선언을 확인한다. `projects.subscribe()`는 향후 upsert/remove만 전달하므로 초기 `list()`와 buffer를 조합한다. Git filesystem watcher가 아니므로 Branch Garden의 dirty/branch 상태를 모두 실시간으로 보장하지 않는다. Agent/Workspace 구독도 현재 연결에 directory 구독 요청이 설정돼 있어야 하므로 초기 `list({ subscribe })`와 listener cleanup 계약을 확인한다.
 
-`addClientSide` callback은 화면을 mount하지 않아도 app 연결 동안 실행된다. `PluginClientContext`는 다음 기능을 제공한다.
+### Provider 사용량 SDK
 
-- `paseo`: 선택된 host API를 구독하거나 호출
-- `rpc`: typed Plugin RPC
-- `openSurface`: 같은 Plugin의 전역 surface 열기
-- `openPanel`: 명시한 `workspaceId`, optional `agentId`의 panel 열기
-- `addComposerPill`: 특정 Agent의 Composer track bar에 pill 등록
+Beta.1에는 **`paseo.providers.listUsage(options?)`가 공개돼 있다**. Options는 optional `requestId`, 반환 payload는 `requestId`, `fetchedAt`, `providers`를 포함한다. Provider별 `status`·`planLabel`·사용량 `windows`, optional `balances`·`details`·`error`를 제공한다. `agent.lastUsage`의 직전 turn 토큰·비용·context 값과 구분한다.
 
-Headless client는 subscription과 pill 제거 함수를 cleanup에서 반드시 해제한다. App unload, host disconnect, Plugin reload 때 Paseo도 남은 contribution을 제거한다.
+SDK는 host가 `providerUsageList` feature를 지원하지 않으면 update-host 오류로 reject한다. `providers.subscribe`는 catalog 구독이며 usage polling을 대체하지 않는다. 사용량 API를 호출하기 위해 새 Paseo client를 만들지 않고 제공된 `paseo`를 사용한다. 근거는 [공식 SDK reference](https://paseo.sh/docs/sdk/reference#clientproviders)와 exact client/protocol beta.1 선언이다.
 
-## Lifecycle과 Cleanup
+Provider Usage 이관에서는 기존 Codex/Grok 직접 GET을 이 SDK로 대체할 수 있는지 먼저 비교한다. 반환 provider 범위·계정 인증·누락 필드·refresh 주기·오류 상태·host cache를 실제 환경에서 검증한 뒤 데이터 경로를 바꾼다. 현재 저장소 구현은 아직 직접 GET이며 이번 문서 작업에서 자격 증명이나 벤더 API를 호출하지 않았다.
 
-기본 export는 항상 cleanup 함수를 반환한다.
+Terminal write/kill, permission 응답, Agent 생성과 config patch는 상태를 바꾸는 API다. 현재 플러그인의 읽기 전용 범위에 자동 편입하지 않는다. `config.patch`를 개별 플러그인 설정 저장소로 사용하지 않는다.
 
-```ts
-export default function contribute(plugin: PluginContext) {
-  // register contributions
-  return async () => {
-    // stop timers, watchers, sockets, subprocess-owned resources
-  };
-}
-```
+## Host 단위 설정 저장
 
-Cleanup은 sync 또는 async다. Reload, disable, remove, disconnect, daemon shutdown에서 실행된다. Paseo는 별도로 registration 제거, surface unmount, pending RPC reject, query state clear, daemon session close와 subprocess 종료를 처리한다.
+공유 `defineSettings({ id, scope: "host", version, schema, migrate? })`로 문서를 정의하고 `server.registerSettings(definition)`을 등록한다. Client는 `useSettings(definition)`을 사용한다. Schema는 `{}`를 완전한 기본 설정으로 parse할 수 있도록 defaults를 제공한다. `version`은 양의 정수 schema 버전이며 저장 revision과 별개다.
 
-각 Plugin subprocess는 전용 `plugin:<runtime-id>` session을 사용한다. Plugin은 신뢰된 비격리 코드이므로 backend는 daemon machine의 파일, process, credential, network에 접근할 수 있다.
+| Hook 상태/동작 | 의미 |
+| --- | --- |
+| `loading`, `error` | 읽기 중 또는 연결·읽기 오류 |
+| `ready` | typed `values`와 opaque `revision` 제공 |
+| `invalid` | 저장 값·migration·새 버전이 유효하지 않음; 원본 값 보존 |
+| `save(values, revision)` | 전체 문서 저장. 검증·충돌·전송 실패 시 throw 대신 `false`, `saveError` 반환 |
+| `reset()` | 현재 revision을 사용해 기본값으로 명시적 복구 |
+| `reload()` | 저장 오류를 지우고 재조회. UI draft는 자동 삭제하지 않음 |
 
-## Multi-host 동작
+Draft editor는 열 때 값과 revision을 함께 보관한다. 오래된 revision으로 저장하면 충돌로 거부되므로 새 저장 값과 사용자의 draft를 덮어쓰지 않는다. `saving`, `saveError`를 표시하고 중복 저장을 막는다.
 
-- Plugin은 daemon별로 설치된다.
-- 합쳐진 Sidebar contribution에서는 현재 screen header의 선택 host가 bundle, RPC, API, query cache를 제공한다.
-- Plugin code는 다른 host를 직접 지정할 수 없다.
-- 선택 host가 offline이어도 다른 설치로 fallback하지 않는다.
-- Attachment source는 합쳐지지 않고 Composer host에 종속된다.
-- Workspace panel과 Command Center item은 active host와 exact cached context에 종속된다.
-- Surface와 panel의 `navigation.openAgent`·`openWorkspace`도 렌더링 host에 고정되며, 대상이 다른 host에만 있어도 자동 fallback하지 않는다.
+설정은 같은 host·설치의 authorized client들에 동기화된다. 원자적으로 저장되며 restart/reload/disable/update 후에도 유지되지만 **설치를 remove하면 삭제되고 재설치 시 기본값으로 시작한다**. `scope`는 host만 지원하며 device/user/cross-host 저장소가 아니다. 일반 JSON이므로 credential vault로 사용하지 않는다. 내장 저장을 쓰려면 server entry가 필요하다. 설정 UI만 제공하는 client-only 플러그인은 가능하다.
 
-## Logging과 진단
+## Lifecycle hooks
 
-Daemon-side `console.log`와 `console.error`는 Plugin log tail에 저장된다. UI runtime log는 daemon Plugin log에 포함되지 않는다.
+Server entry에서 `server.on(name, handler)` 또는 `server.before(name, handler)`를 등록한다. App 연결이 없어도 활성 플러그인의 daemon hook은 동작한다.
+
+| `on` 이벤트 | 주요 내용 |
+| --- | --- |
+| `agent.created`, `agent.archived` | Agent 생성·archive |
+| `agent.turn_started` | Agent와 turn ID |
+| `agent.turn_ended` | Agent, turn ID, completed/failed/canceled outcome, 이전 대화를 포함한 timeline snapshot |
+| `agent.permission_requested`, `agent.permission_resolved` | pending permission/question과 응답/해소 |
+| `workspace.created`, `workspace.archived` | Workspace 생성·archive |
+
+| `before` 요청 | 수정 가능한 범위 |
+| --- | --- |
+| `agent.create` | 공개 Agent config 중 `cwd`·daemon 내부 필드 제외, optional env |
+| `agent.session_open` | `env`만. create/resume/refresh/import와 interactive/history 목적을 구분 |
+| `workspace.create` | 명시적 생성 요청의 source/title/firstAgentContext. 기존 directory lookup/import 전체를 가로채지는 않음 |
+
+`before`는 변경된 request를 반환하고 `undefined`면 그대로 유지한다. Plugin ID 순서, 같은 플러그인 내부 등록 순서로 적용되며 자동 deep merge는 없다. 잘못된 반환값이나 예외는 작업을 실패시키고 뒤 hook을 실행하지 않는다. `agent.create`에서 provider를 바꿀 때 model/mode/options의 호환성도 함께 맞춘다.
+
+Context는 `{ paseo, signal }`이다. 호출 timeout은 30초이며 플러그인 정지 때도 signal이 abort된다. Before 실패는 원래 작업을 실패시키지만 event-handler 실패는 로그에 기록하고 원래 작업은 계속된다. 이벤트는 live best effort로 전달되며 replay·영속 큐·자동 retry가 없고 서로 다른 이벤트는 겹쳐 실행될 수 있다. 후속 메시지나 permission 자동화에는 중복·재진입·무한 follow-up 방지를 별도로 설계한다.
+
+## Provider contributions
+
+`server.registerProvider()`는 완전한 Provider를 등록한다. `ProviderRegistration`은 `/server/provider`, ACP adapter의 `runAcpProvider()`는 `/server/acp`에서 가져온다. Provider guide의 [구현·테스트 계약](https://paseo.sh/docs/plugins/v0.8/providers)을 따른다.
+
+- Connection의 `send()`는 입력 수락을 의미하고 turn 완료를 뜻하지 않는다. `onEvent()`로 상태 snapshot과 결과를 전달한다.
+- Message·structured command·steering은 `session.prompt`로 처리한다. Client message ID와 prompt result의 대응, permission, persistence, provider-created child session 관계를 지켜야 한다.
+- Session 설정은 providerOptions, 공개 toggle/select descriptor와 MCP 설정을 구분한다. Session open 시 외부 상태를 다시 읽는다.
+- Provider icon은 plugin 내부의 self-contained SVG 상대 경로이며 최대 64 KiB다. 일반 UI contribution의 Lucide 이름과 다르다.
+
+Provider Usage는 기존 Provider의 계획 사용량을 읽는 플러그인이다. 0.8 이관을 위해 새 Provider를 등록할 필요는 없다.
+
+## Cleanup, multi-host와 진단
+
+두 entry는 각각 sync/async cleanup을 반환하고 직접 만든 timer/watcher/socket/subscription을 해제한다. 모든 client `add*`와 server `on`/`before`의 제거 함수는 idempotent다. Entry cleanup 뒤 Paseo가 남은 등록, UI와 세션 등 자신이 소유한 자원을 정리한다. Client entry는 각 연결 앱의 설치마다 실행되므로 backend의 유일한 background worker처럼 취급하지 않는다. Server entry가 없으면 subprocess도 없다.
+
+Sidebar 병합 화면의 선택 host가 bundle/API/RPC/query cache를 제공한다. Attachment source는 Composer host에 묶인다. 플러그인은 임의로 다른 host로 우회하지 않는다.
 
 ```powershell
-paseo plugin ls
-paseo plugin logs <runtime-id>
-paseo plugin logs <runtime-id> --json
+paseo --host <target> plugin ls
+paseo --host <target> plugin logs <runtime-id> --json
 ```
 
-`0.7.2`는 Plugin별 최근 log를 최대 500개, 256 KiB까지 memory에 유지하고 한 line을 16 KiB로 제한한다. Reload·disable·실패 뒤에도 tail이 남지만 Plugin remove는 지우고 daemon restart는 새 tail을 시작한다. Credential과 token은 log에 남기지 않는다.
-
-## 전용 Storage의 부재
-
-이 버전에는 cross-client Plugin storage API가 없다.
-
-- Browser `localStorage`는 web에서만 존재하며 다른 Paseo client와 공유되지 않는다.
-- 지속 상태가 필요하면 daemon-side RPC 뒤에 Plugin 소유 file/DB를 두고 schema, locking, migration, secret 보호를 직접 설계한다.
-- daemon config는 host 전체 관리 state이므로 Plugin별 임의 storage 대용으로 사용하지 않는다.
+0.8의 `--host`는 global 옵션이다. `ls`는 remote update 조회 없이 runtime 상태·source·설치 commit·load error를 보고한다. 원격 ref 확인은 `plugin status`다. Backend stdout/stderr는 log tail에 남으며 credential을 기록하지 않는다. `logs`는 실시간 follow가 아닌 snapshot이다. Reload/disable/실패 후에도 tail이 남지만 remove와 daemon restart에는 보존되지 않는다.
 
 ## 관련 문서
 
-- [실전 사용 예시](examples.md)
-- [전체 기능표](README.md)
-- [UI 기여 지점](ui-contributions.md)
-- [지원 경계](limitations.md)
-- [`v0.7.2` SDK API reference](https://github.com/getpaseo/paseo/blob/v0.7.2/public-docs/sdk/reference.md)
+[UI 기여 지점](ui-contributions.md) · [지원 경계](limitations.md) · [예제](examples.md) · [전체 기능표](README.md) · [공식 backend·lifecycle reference](https://paseo.sh/docs/plugins/v0.8/reference)

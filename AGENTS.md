@@ -2,6 +2,8 @@
 
 이 저장소는 Branch Garden과 Provider Usage 두 개의 독립적인 Paseo 플러그인을 개발하는 npm workspace다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위다.
 
+현재 소스·SDK·manifest·배포 태그 `v0.1.0-rc.2`는 Paseo **0.7.2** 대상이다. 새 참조 문서는 **0.8.0-beta.1** 계약을 설명하며 소스 이관이나 실행 호환성 인증을 뜻하지 않는다. 이관 계획은 [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77), 파일·import·검증 순서는 [docs/MIGRATION_0.8.md](docs/MIGRATION_0.8.md)를 따른다.
+
 아이디어, 개발 계획과 버그의 이슈 관리는 GitHub Issues를 사용한다. 새 이슈는 `.github/ISSUE_TEMPLATE/`의 양식을 사용하고, 분류·Project 상태·PR 연결 규칙은 `.github/ISSUE_MANAGEMENT.md`를 따른다.
 
 작업을 시작할 때:
@@ -9,10 +11,10 @@
 - 실제 구현을 시작할 때 해당 이슈의 GitHub Project Status를 `In progress`로 변경한다.
 - 먼저 변경 대상 플러그인을 `plugins/`에서 고른다.
 - 해당 디렉터리의 `paseo-plugin.json`에서 기본 설치 ID를 확인한다.
-- 기여 등록은 같은 디렉터리의 `index.ts`, 클라이언트 UI는 `*.client.tsx`에서 시작한다.
+- 현재 0.7 소스는 `index.ts`, UI는 `*.client.tsx`에서 시작한다. 0.8 이관 후에는 `index.client.tsx`·`index.server.ts`와 `client/`·`server/`·`shared/`를 따른다.
 - 한 플러그인만 바꿨으면 해당 workspace를, 구조나 공통 설치 상태를 바꿨으면 루트 workspace 전체를 검증한다.
 
-플러그인 API는 실험 단계이므로 계약을 바꾸거나 새 기여 유형을 추가하기 전에 현재 안정판 [Plugin quickstart](https://paseo.sh/docs/plugins/v0.7)와 [Plugin reference](https://paseo.sh/docs/plugins/v0.7/reference)를 확인한다.
+플러그인 API는 실험 단계이므로 계약을 바꾸거나 새 기여 유형을 추가하기 전에 **대상 버전**의 문서를 확인한다. 0.8 작업은 [quickstart](https://paseo.sh/docs/plugins/v0.8), [reference](https://paseo.sh/docs/plugins/v0.8/reference), [migration](https://paseo.sh/docs/plugins/v0.8/migration)를, 기존 0.7 유지보수는 [v0.7 quickstart](https://paseo.sh/docs/plugins/v0.7)와 [reference](https://paseo.sh/docs/plugins/v0.7/reference)를 사용한다. Exact package declaration에 없는 API를 최신 문서만 보고 사용하지 않는다.
 
 ## Design Rules
 
@@ -39,7 +41,7 @@ npm run typecheck --workspace branch-garden
 
 ## Adding a Plugin
 
-1. `plugins/<plugin-id>` 아래의 새 빈 디렉터리를 대상으로 `paseo plugin init <absolute-directory> --id <plugin-id>`를 실행한다.
+1. 지원할 Paseo 버전을 먼저 정하고 해당 CLI로 `plugins/<plugin-id>` 아래의 새 빈 디렉터리에 `paseo plugin init <absolute-directory> --id <plugin-id>`를 실행한다. 현재 collection의 0.7.2 계약에 0.8 scaffold를 혼합하지 않는다.
 2. 생성된 `package.json`의 `name`과 `paseo-plugin.json`의 `id`가 이 저장소 안에서 고유한지 확인한다.
 3. 루트에서 `npm install`을 실행해 workspace 설치 상태를 갱신한다.
 4. 아래 Workspace Map, `README.md`, `README.ko.md`, `plugins.json`의 플러그인 목록·설치 예시·저장소 구조와 `.github/ISSUE_TEMPLATE/*.yml`의 대상 선택지를 갱신한다. Git source로 배포할 플러그인이면 `docs/GIT_INSTALLATION.md`의 설치 목록도 갱신한다.
@@ -58,6 +60,17 @@ npm run typecheck --workspace branch-garden
 
 ## Per-Plugin Change Routing
 
+아래 suffix 경로는 **현재 0.7 소스**를 찾는 기준이다. 0.8 이관에는 다음 runtime 규칙을 우선 적용한다.
+
+- `index.client.ts[x]`: surface/sidebar/panel/command/slash/pill/attachment/theme/timeline/settings 등록과 client cleanup을 소유한다. `PluginClientContext`는 `@getpaseo/plugin/client`에서 가져온다. `addClientSide` wrapper 없이 helper cleanup을 직접 합성한다.
+- `index.server.ts[x]`: RPC handler, settings persistence, provider와 lifecycle 등록·server cleanup을 소유한다. `PluginServerContext`는 `@getpaseo/plugin/server`에서 가져온다.
+- `client/`: UI·훅·구독·query·controller. `server/`: Node·파일·프로세스·자격 증명·외부 API. `shared/`: 런타임 중립 값·타입·Zod 계약. Entry 외 소스 모듈은 이 디렉터리들에 두고 구형 루트 `index.ts`는 제거한다.
+- 공유 `defineRpc`·`defineSettings`·`defineAttachmentSource`·`RpcInput`·`RpcOutput`·`PluginTheme`는 SDK root, client 훅·props는 `/client`, UI는 `/client/react-native`·`/client/ui`에서 가져온다. `/client/host`는 private이며 type import에도 runtime 경계를 적용한다.
+- `*.logic.ts`, `*.view.ts`와 helper·테스트는 실제 소비자와 runtime 의존성에 따라 이동한다. 이름만으로 shared로 분류하지 않는다.
+- 이관 완료 소스는 manifest에 `requirements.paseo`를 선언한다. 권장 범위는 `^0.8.0`, 이관 기준 SDK는 exact `0.8.0-beta.1`이다. Manifest만 바꿔 호환성을 표시하지 않는다.
+
+현재 0.7 경로:
+
 - `index.ts`: daemon-side RPC·surface·sidebar와 client contribution의 연결을 소유한다. 기본 내보내기 함수는 정리 함수를 반환하고, 이 진입점이 만든 타이머·감시자·소켓은 그 함수에서 정리한다.
 - `*.client.ts`: client contribution 조립과 client-side 구독·controller 정리를 소유한다. 등록 함수가 반환한 cleanup은 이 계층에서 합성한다.
 - `*.client.tsx`: UI, 훅, React Native 스타일을 소유한다. 모든 `Text` 색상은 `theme.colors`에서 가져오고, 루트 배경에는 `theme.colors.surface0`, 좁은 화면 대응에는 `layout.compact`를 사용한다.
@@ -72,11 +85,13 @@ npm run typecheck --workspace branch-garden
 
 ## Synchronization Rules
 
-- 기여 ID, surface ID, sidebar의 surface 연결 또는 등록 방식은 같은 플러그인의 `index.ts`에서 함께 갱신한다. 연결된 컴포넌트의 export나 props가 영향을 받을 때만 해당 `*.client.tsx`를 함께 바꾼다.
-- RPC 입력·출력이 바뀌면 실제 영향 범위에 따라 같은 플러그인의 `*.shared.ts` 계약, `*.server.ts` 구현, `index.ts`의 `plugin.handle` 등록과 `*.client.tsx` 호출부를 함께 갱신한다.
+- 기여 ID, surface ID, sidebar의 surface 연결 또는 등록 방식은 같은 플러그인의 client 등록 entry에서 함께 갱신한다. 0.7은 `index.ts`, 0.8은 `index.client.ts[x]`다. 연결된 컴포넌트의 export나 props가 영향을 받을 때만 해당 UI 모듈을 함께 바꾼다.
+- RPC 입력·출력이 바뀌면 공유 계약, server 구현, handler 등록과 client 호출부를 영향 범위에 맞춰 갱신한다. 0.7은 suffix 모듈과 `plugin.handle`, 0.8은 runtime 디렉터리와 `index.server.ts[x]`의 `server.handle`을 사용한다.
+- 0.8 Settings 변경은 공유 definition·schema version·migration, server `registerSettings`, client `useSettings`와 draft/revision 충돌 처리를 함께 대조한다. Settings 제거 시 값도 삭제되므로 운영 문서를 갱신한다.
 - 플러그인 디렉터리를 추가·삭제·이름 변경하면 이 파일의 Workspace Map, `README.md`, `README.ko.md`, `plugins.json`의 플러그인 목록·설치 예시·저장소 구조, `.github/ISSUE_TEMPLATE/*.yml`의 대상 선택지와 루트 workspace 검증을 같은 변경에서 맞추고 `npm run check:docs-sync`를 실행한다. Git source 배포 목록에 영향을 주면 `docs/GIT_INSTALLATION.md`도 갱신한다.
-- 플러그인의 사용자용 설치 요구 사항, 운영 절차 또는 안전 경계를 바꾸면 해당 내용을 이미 설명하는 루트나 플러그인 `README.md`와 `docs/` 문서를 같은 변경에서 갱신한다.
+- 플러그인의 사용자용 설치 요구 사항, 운영 절차 또는 안전 경계를 바꾸면 해당 내용을 이미 설명하는 루트나 플러그인 `README.md`와 `docs/` 문서를 같은 변경에서 갱신한다. 과거 release·verification 기록은 당시 사실을 보존하고 새 버전 증거를 별도로 추가한다.
 - Paseo 플러그인 계약이 바뀌면 현재 CLI가 생성하는 새 스캐폴드, exact `@getpaseo/plugin` package declaration과 공식 참조 문서를 대조하고, 영향받는 각 플러그인의 타입 계약을 확인한다.
+- 0.8 source 이관은 runtime import allowlist, Vitest stub, exact SDK·client dependency, lockfile·catalog 일치도 함께 검증한다. 현재 검사 스크립트 통과만으로 0.8 host compiler나 실행 호환성을 인증하지 않는다.
 
 ## Validation and Runtime Safety
 
@@ -91,3 +106,5 @@ npm run typecheck --workspace branch-garden
 - 플러그인은 신뢰된 비격리 코드다. 데몬의 전역 플러그인 스위치가 꺼져 있거나 없으면 사용자의 명시적 허가 없이 켜지 않는다.
 - 소스 변경을 반영하려고 데몬을 재시작하지 않는다. `paseo plugin reload <runtime-id>`를 사용한다.
 - 백엔드 오류는 `paseo plugin logs <runtime-id>`로 확인하고, 로그에 자격 증명이나 토큰을 남기지 않는다.
+
+0.8 CLI의 원격 명령은 global 옵션 형식인 `paseo --host <target> plugin ls`·`paseo --host <target> plugin reload <runtime-id>`를 사용한다. Daemon과 app의 버전 요구 사항은 각각 검사한다. 신규 lifecycle/permission/terminal/provider API는 현재 두 플러그인의 읽기 전용 기능 범위를 자동으로 확장하지 않는다.

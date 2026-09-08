@@ -1,8 +1,10 @@
 # 실전 사용 예시
 
-이 문서는 Paseo `0.7.2` Plugin API로 **실제로 무엇을 만들 수 있는지** 빠르게 보여주는 아이디어 모음이다. 예제는 핵심 계약만 보여주며, 실제 Plugin에는 import, loading·empty·error 상태, 접근성 label과 cleanup을 함께 추가한다.
+이 문서는 Paseo **0.8.0-beta.1** Plugin API로 **실제로 무엇을 만들 수 있는지** 빠르게 보여주는 아이디어 모음이다. 예제는 핵심 계약만 보여주며, 실제 Plugin에는 import, loading·empty·error 상태, 접근성 label과 cleanup을 함께 추가한다.
 
-아래 예시는 현재 설치 가능한 제품 목록이 아니다. 이 저장소의 배포 대상은 [Branch Garden과 Provider Usage](../../README.md#plugins)이며, 그 밖의 예시는 API 활용 아이디어다.
+아래 예시는 현재 설치 가능한 제품 목록이나 실행 검증 결과가 아니다. 현재 저장소 구현은 0.7.2이며 [0.8 이관](../MIGRATION_0.8.md)은 후속 작업이다. 이 저장소의 배포 대상은 [Branch Garden과 Provider Usage](../../README.md#plugins)이며, 그 밖의 예시는 API 활용 아이디어다.
+
+등록 코드의 `client`는 `index.client.tsx`의 `PluginClientContext`, `server`는 `index.server.ts`의 `PluginServerContext`다. Context·props·훅은 `/client`, server context는 `/server`, `defineRpc`·`defineSettings`·`defineAttachmentSource`·`PluginTheme`·`PluginCleanup`은 SDK root에서 가져온다. `Icon`·`Modal`·`useToast`·`copyText` 등 UI는 `/client/react-native`에서 가져온다. 예제의 미정의 업무 함수는 해당 `client/` 또는 `server/`에서 구현해 연결한다.
 
 ## 30초 아이디어 지도
 
@@ -20,25 +22,30 @@
 | PR 전용 Workspace와 Agent 생성 | Plugin 버튼 | `usePaseo` SDK |
 | 검색 결과에서 기존 Agent·Workspace 열기 | Surface 또는 Panel 버튼 | optional host `navigation` |
 | 사내 브랜드 또는 눈이 편한 색상 | Settings → Appearance | Theme contribution |
-| Plugin 자체 설정 화면 | Sidebar/Panel 내부 | Surface + Modal + daemon-side file/DB |
+| Plugin 자체 설정 화면 | Settings → Plugins | Settings screen + host settings |
+| `/usage` 같은 명령 | Composer autocomplete | Client slash command |
+| Provider 계획 사용량 조회 | Surface·Composer pill | 제공된 `paseo.providers.listUsage` + query |
+| 장기 작업 완료 결과 | Agent timeline | Server timeline append + renderer |
+| Agent 종료 후 후속 처리 | App 없이 daemon에서 실행 | Lifecycle hook + SDK |
+| 사내 Provider/ACP CLI 연결 | Provider 선택과 채팅 | Provider registration + adapter |
 
 ## 1. Sidebar 운영 대시보드
 
 **만들 수 있는 것:** Branch Garden, GitHub Project board, 서버 상태판처럼 항상 접근 가능한 독립 화면.
 
 ```tsx
-function OpsDashboard({ theme, host }: PluginSurfaceProps) {
+function OpsDashboard({ theme, host, layout }: PluginSurfaceProps) {
   return (
-    <View style={{ flex: 1, padding: 24, backgroundColor: theme.colors.surface0 }}>
+    <View style={{ flex: 1, padding: layout.compact ? 16 : 24, backgroundColor: theme.colors.surface0 }}>
       <Text style={{ color: theme.colors.foreground }}>Operations</Text>
       <Text style={{ color: theme.colors.foregroundMuted }}>{host.label}</Text>
     </View>
   );
 }
 
-export default function contribute(plugin: PluginContext) {
-  plugin.addSurface("ops", OpsDashboard);
-  plugin.addSidebarItem({
+export default function contribute(client: PluginClientContext) {
+  client.addSurface("ops", OpsDashboard);
+  client.addSidebarItem({
     id: "ops",
     title: "Operations",
     icon: "Gauge",
@@ -55,19 +62,19 @@ export default function contribute(plugin: PluginContext) {
 **만들 수 있는 것:** 현재 작업 폴더의 테스트 현황, 현재 Agent의 리뷰 결과, 배포 체크리스트.
 
 ```tsx
-function ReviewPanel({ theme, workspaceId, agentId }: PluginAgentPanelProps) {
+function ReviewPanel({ theme, layout, workspaceId, agentId }: PluginAgentPanelProps) {
   const workspaceName = useWorkspace(workspaceId, (workspace) => workspace.name);
   const agentTitle = useAgent(agentId, (agent) => agent.title ?? agent.id);
 
   return (
-    <View style={{ padding: 24, backgroundColor: theme.colors.surface0 }}>
+    <View style={{ padding: layout.compact ? 16 : 24, backgroundColor: theme.colors.surface0 }}>
       <Text style={{ color: theme.colors.foreground }}>{workspaceName}</Text>
       <Text style={{ color: theme.colors.foregroundMuted }}>{agentTitle}</Text>
     </View>
   );
 }
 
-plugin.addWorkspacePanel({
+client.addWorkspacePanel({
   id: "review",
   title: "Review",
   icon: "ScanSearch",
@@ -84,7 +91,7 @@ plugin.addWorkspacePanel({
 **만들 수 있는 것:** 현재 Agent의 리뷰를 새로고침하고 결과 panel을 여는 Ctrl+K/⌘K 명령.
 
 ```ts
-plugin.addCommandCenterItem({
+client.addCommandCenterItem({
   id: "refresh-review",
   title: "Refresh agent review",
   icon: "RefreshCw",
@@ -102,7 +109,7 @@ plugin.addCommandCenterItem({
 전역 명령에서 Sidebar와 같은 화면을 바로 열 수도 있다.
 
 ```ts
-plugin.addCommandCenterItem({
+client.addCommandCenterItem({
   id: "open-operations",
   title: "Open operations dashboard",
   icon: "Gauge",
@@ -128,9 +135,18 @@ function ReviewPill({ theme }: PluginComposerPillProps) {
 }
 
 export function contributeClient(client: PluginClientContext) {
-  const removers = new Map<string, () => void>();
+  const removers = new Map<string, PluginCleanup>();
   const unsubscribe = client.paseo.agents.subscribe((update) => {
-    if (update.kind !== "upsert" || !update.agent.workspaceId) return;
+    if (update.kind === "remove") {
+      void removers.get(update.agentId)?.();
+      removers.delete(update.agentId);
+      return;
+    }
+    if (!update.agent.workspaceId || update.agent.archivedAt) {
+      void removers.get(update.agent.id)?.();
+      removers.delete(update.agent.id);
+      return;
+    }
     const { id: agentId, workspaceId } = update.agent;
 
     removers.get(agentId)?.();
@@ -155,8 +171,13 @@ export function contributeClient(client: PluginClientContext) {
   };
 }
 
-plugin.addClientSide(contributeClient);
+// index.client.tsx: 다른 UI 등록 뒤 helper의 cleanup을 반환한다.
+export default function contribute(client: PluginClientContext) {
+  return contributeClient(client);
+}
 ```
+
+이 조각은 live 변경 경로를 보여준다. 실제 제품에서는 최초 Agent 목록도 읽고, 목록 응답과 구독의 경합을 처리한다. 등록한 `review` panel과 pill 제거 함수를 entry cleanup에 연결한다.
 
 Paseo가 버튼 외형, pending/error 상태와 위치를 소유한다. Plugin은 언제 pill을 만들지, 안에 무엇을 보여줄지, 눌렀을 때 무엇을 할지만 정한다.
 
@@ -233,8 +254,17 @@ const tickets = defineAttachmentSource({
   search: searchTickets,
 });
 
-plugin.handle(searchTickets, ({ query }) => findTickets(query));
-plugin.addAttachmentSource(tickets);
+// 위 계약은 shared/tickets.ts에 둔다.
+```
+
+```ts
+// index.server.ts의 contribute 본문
+server.handle(searchTickets, ({ query }) => findTickets(query));
+```
+
+```ts
+// index.client.tsx의 contribute 본문
+client.addAttachmentSource(tickets);
 ```
 
 `findTickets`는 daemon-side code에서 credential을 사용해 vendor API를 호출하고 `{ items }`를 반환한다. 각 item의 `text`가 Agent에게 실제로 전달될 전체 내용이다.
@@ -257,7 +287,7 @@ function DeployCard({ item, theme }: PluginTimelineItemProps<z.output<typeof dep
   );
 }
 
-plugin.addTimelineTransformer({
+client.addTimelineTransformer({
   id: "deploy-card",
   query: { itemType: "tool_call" },
   transform({ item }) {
@@ -273,7 +303,7 @@ plugin.addTimelineTransformer({
   },
 });
 
-plugin.addTimelineRenderer({
+client.addTimelineRenderer({
   kind: "deploy-card",
   version: 1,
   schema: deployCardSchema,
@@ -288,7 +318,7 @@ Transformer에서 `undefined`를 반환하면 원본을 유지하고, `{ items: 
 **만들 수 있는 것:** 회사 브랜드 theme, OLED용 dark theme, 눈이 편한 저대비 theme.
 
 ```ts
-plugin.addTheme({
+client.addTheme({
   id: "midnight",
   name: "Midnight",
   appearance: "dark",
@@ -311,7 +341,7 @@ plugin.addTheme({
 
 **만들 수 있는 것:** 현재 branch, dirty file 수, test 결과, 로컬 service 상태처럼 client에서 직접 읽을 수 없는 정보.
 
-`git.shared.ts`:
+`shared/git.ts` (`defineRpc`는 SDK root에서 import):
 
 ```ts
 export const readBranch = defineRpc({
@@ -321,19 +351,28 @@ export const readBranch = defineRpc({
 });
 ```
 
-`git.server.ts`:
+`server/git.ts` (`execFileAsync`는 Node execFile을 promisify한 함수):
 
 ```ts
 export async function readCurrentBranch({ directory }: { directory: string }) {
-  const { stdout } = await execFileAsync("git", ["-C", directory, "branch", "--show-current"]);
+  const { stdout } = await execFileAsync(
+    "git",
+    ["-c", "core.fsmonitor=false", "-C", directory, "branch", "--show-current"],
+    { timeout: 5_000, maxBuffer: 64 * 1024, windowsHide: true },
+  );
   return { branch: stdout.trim() };
 }
 ```
 
-`index.ts`와 client component:
+`index.server.ts`의 contribute 본문:
+
+```ts
+server.handle(readBranch, readCurrentBranch);
+```
+
+`client/branch.tsx`:
 
 ```tsx
-plugin.handle(readBranch, readCurrentBranch);
 
 function BranchButton() {
   const getBranch = useRpc(readBranch);
@@ -341,6 +380,8 @@ function BranchButton() {
   return null;
 }
 ```
+
+위 Git 조각은 현재 Branch Garden 코드가 아니라 이관 후 예시다. 실제 제품에는 입력 경로와 read-only argv allowlist, 환경·오류 처리 및 Git 상태 무변경 검증을 함께 적용한다.
 
 Filesystem, process, credential과 vendor API 접근은 daemon-side handler에 둔다. Input과 output은 Zod schema로 양쪽에서 검사된다.
 
@@ -361,7 +402,8 @@ function StartReviewButton({ directory }: { directory: string }) {
     });
   }
 
-  return <Pressable accessibilityRole="button" onPress={() => void startReview()} />;
+  // 실제 client UI에서 pending·error를 처리하는 버튼에 연결한다.
+  return null;
 }
 ```
 
@@ -426,15 +468,16 @@ Surface와 workspace/agent panel의 `navigation`은 `openAgent({ agentId })`와 
 
 ## 14. Timer·Watcher·Subscription 정리
 
-**만들 수 있는 것:** 주기적 cache refresh, filesystem watcher, socket subscription처럼 Plugin이 실행되는 동안 유지되는 기능.
+Node 기반 cache와 watcher는 `index.server.ts`에서 시작하고 같은 entry에서 정리한다. 화면 등록은 별도의 `index.client.tsx`에 둔다.
 
 ```ts
-export default function contribute(plugin: PluginContext) {
-  const timer = setInterval(() => refreshCache(), 30_000);
+// index.server.ts
+import type { PluginServerContext } from "@getpaseo/plugin/server";
+import { refreshCache, watchRepository } from "./server/cache";
+
+export default function contribute(server: PluginServerContext) {
+  const timer = setInterval(() => void refreshCache(), 30_000);
   const stopWatching = watchRepository();
-
-  plugin.addSurface("cache", CacheSurface);
-
   return () => {
     clearInterval(timer);
     stopWatching();
@@ -442,7 +485,126 @@ export default function contribute(plugin: PluginContext) {
 }
 ```
 
-Reload, disable, remove와 daemon shutdown 때 cleanup이 실행된다. Plugin이 만든 timer, watcher, socket과 subscription만 직접 정리하면 등록된 surface, panel, RPC 등은 Paseo가 제거한다.
+`refreshCache`는 겹친 실행과 rejection을 자체 처리하도록 구현한다. Client 구독은 client entry cleanup에서 해제한다. Paseo는 각 entry cleanup 뒤 남은 등록을 제거한다.
+
+## 15. Settings 화면과 host 저장
+
+아래 세 조각은 서로 다른 파일에 둔다. Schema의 default는 `{}`를 유효한 설정으로 만든다.
+
+```ts
+// shared/preferences.ts
+import { defineSettings } from "@getpaseo/plugin";
+import { z } from "zod";
+
+export const preferences = defineSettings({
+  id: "display",
+  scope: "host",
+  version: 1,
+  schema: z.object({ showMetadata: z.boolean().default(true) }),
+});
+```
+
+```ts
+// index.server.ts의 contribute 본문
+server.registerSettings(preferences);
+```
+
+```tsx
+// client/settings.tsx
+import { useSettings } from "@getpaseo/plugin/client";
+import type { PluginSurfaceProps } from "@getpaseo/plugin/client";
+import { SettingsSection, SettingsCard, SettingsSwitch } from "@getpaseo/plugin/client/ui";
+import { Text } from "react-native";
+import { preferences } from "../shared/preferences";
+
+export function DisplaySettings({ theme }: PluginSurfaceProps) {
+  const settings = useSettings(preferences);
+  if (settings.status !== "ready") {
+    return <Text style={{ color: theme.colors.foregroundMuted }}>
+      {settings.status === "loading" ? "Loading settings" : settings.error}
+    </Text>;
+  }
+  return (
+    <SettingsSection title="Display">
+      <SettingsCard>
+        <SettingsSwitch
+          label="Show metadata"
+          value={settings.values.showMetadata}
+          disabled={settings.saving}
+          error={settings.saveError}
+          onValueChange={(showMetadata) => {
+            void settings.save({ ...settings.values, showMetadata }, settings.revision);
+          }}
+        />
+      </SettingsCard>
+    </SettingsSection>
+  );
+}
+```
+
+Client entry에서 `client.addSettingsScreen({ id: "display", title: "Display", icon: "Settings", Component: DisplaySettings })`를 등록한다. 실제 제품에는 읽기 재시도와 invalid/reset 복구 UI도 연결한다. Schema version과 revision은 다르며 충돌 시 사용자 draft를 유지한다. 이 저장소의 Provider Usage는 아직 이 설정을 구현하지 않았다.
+
+## 16. Slash command로 사용량 화면 열기
+
+```ts
+// index.client.tsx의 contribute 본문; main surface를 먼저 등록한다.
+client.addSlashCommand({
+  name: "usage",
+  description: "Open provider usage",
+  argumentHint: "",
+  context: "agent",
+  onSubmit({ openSurface }) {
+    openSurface("main");
+  },
+});
+```
+
+명령 text는 provider에 전송되지 않는다. Attachment가 있으면 실행되지 않으며 host가 긴 작업의 pending 상태를 제공하지 않으므로, RPC를 추가한다면 별도 UI 상태도 설계한다.
+
+## 17. 작업 결과를 durable timeline에 남기기
+
+```ts
+// server/publish.ts: plugin handler 또는 hook에서 주입받은 context를 사용한다.
+import type { PluginHandlerContext } from "@getpaseo/plugin/server";
+
+export async function publishReview(agentId: string, { paseo }: PluginHandlerContext) {
+  await paseo.agents.ref(agentId).timeline.append({
+    type: "plugin",
+    id: "latest-review",
+    kind: "review-result",
+    version: 1,
+    data: { verdict: "ready" },
+  });
+}
+```
+
+Client entry에는 동일 `kind`·`version`과 payload schema를 가진 renderer가 필요하다. 같은 ID로 다시 기록하면 이전 plugin row를 갱신한다. 기존 대화를 덮어쓰지 않으며 JSON payload는 최대 64 KiB다.
+
+## 18. Agent lifecycle 관찰
+
+```ts
+// index.server.ts
+import type { PluginServerContext } from "@getpaseo/plugin/server";
+
+export default function contribute(server: PluginServerContext) {
+  const remove = server.on("agent.turn_ended", (event) => {
+    console.log("Turn ended", event.outcome.kind);
+  });
+  return remove;
+}
+```
+
+이벤트는 live best effort이며 재전송·자동 retry가 없다. App을 닫아도 server hook은 실행되지만 daemon 중단을 넘어 workflow가 자동 복구되는 것은 아니다. Follow-up이나 permission 응답은 [lifecycle 조건](backend-and-sdk.md#lifecycle-hooks)을 먼저 설계한다.
+
+## 19. Host가 제공하는 계획 사용량 읽기
+
+```ts
+// client query의 queryFn 또는 주입된 paseo를 받은 server handler 내부
+const snapshot = await paseo.providers.listUsage();
+const codex = snapshot.providers.find((provider) => provider.providerId === "codex");
+```
+
+Client에서는 `usePaseo()`로 API를 얻고 TanStack Query의 loading/error/cache를 연결한다. `status`, window 잔여율·reset, balance의 nullable/optional 값을 처리하며 `agent.lastUsage`를 계획 잔여량으로 표시하지 않는다. Host 미지원 시 reject된다. 이 저장소의 Provider Usage는 아직 직접 벤더 GET을 사용하므로 SDK로의 전환은 실제 Codex/Grok 반환·갱신 정책을 비교한 뒤 별도 소스 변경으로 진행한다.
 
 ## 기능을 조합한 Plugin 아이디어
 
@@ -473,6 +635,12 @@ Reload, disable, remove와 daemon shutdown 때 cleanup이 실행된다. Plugin�
 - light/dark theme 등록
 - Sidebar surface에 palette preview와 사용 안내 제공
 - Plugin이 제거되면 Paseo가 기본 theme로 자동 복귀
+
+### 0.8에서 재검토할 기존 아이디어
+
+- [Provider Usage #58](https://github.com/NaruForge/Paseo-Plugin/issues/58): `providers.listUsage()`로 직접 벤더 조회를 대체할 수 있는지 비교하고, host settings로 표시 옵션·갱신 주기를 검토한다. Native header 고정 숫자 slot이 생긴 것은 아니다.
+- [Agent Graph #38](https://github.com/NaruForge/Paseo-Plugin/issues/38): lifecycle hook, permission 응답, durable timeline을 활용할 수 있다. Graph state·checkpoint·retry engine은 별도 설계가 필요하다.
+- Provider plugin은 [공식 provider 예제](https://paseo.sh/docs/plugins/v0.8/providers)의 session·prompt result·permission·persistence 계약부터 검증한다.
 
 ## 다음에 읽을 문서
 
