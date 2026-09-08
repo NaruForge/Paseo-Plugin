@@ -4,7 +4,7 @@ Inspect registered Git projects, active workspaces, local branches and worktrees
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Support](../../SUPPORT.md)
 
-**Paseo 0.8.0-beta.1:** this plugin still uses the 0.7.2 contract and cannot load on 0.8 until migrated. See the [migration plan](../../docs/MIGRATION_0.8.md) and [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77). The screenshots below are 0.7 evidence.
+**Current source targets Paseo 0.8.0-beta.1.** Runtime entries, imports and exact SDK dependencies have been migrated and checked with the beta compiler, including a copy without `node_modules`. Live daemon/app verification is still pending. See the [source verification](../../docs/verification/branch-garden-0.8-source.md) and [#82](https://github.com/NaruForge/Paseo-Plugin/issues/82). The screenshots and pinned release below remain 0.7 evidence.
 
 ## Screenshots
 
@@ -27,7 +27,7 @@ This pins the 0.7-compatible release; `update` does not advance a pinned tag. Om
 
 ## Requirements and configuration
 
-Paseo 0.7.2 and Git on the daemon host. No repository-specific configuration is required. The plugin reads the selected host's existing Paseo project/workspace registry. Windows is the primary runtime environment; macOS/Linux automated checks and live runtime evidence are tracked separately in [Compatibility](../../docs/COMPATIBILITY.md).
+For the pinned `v0.1.0-rc.2` release: Paseo 0.7.2. For current source: daemon and app compatible with `^0.8.0`, with development checks pinned to 0.8.0-beta.1; this is not a final 0.8 runtime certification. Git is required on the daemon host. No repository-specific configuration is required. The plugin reads the selected host's existing Paseo project/workspace registry. Windows is the primary runtime environment; macOS/Linux automated checks and live runtime evidence are tracked separately in [Compatibility](../../docs/COMPATIBILITY.md).
 
 ## Use
 
@@ -51,5 +51,5 @@ paseo plugin update branch-garden
 paseo plugin remove branch-garden
 ```
 
-Use the actual runtime ID if installed with `--id`. For 0.8 CLI remote diagnostics, the syntax is `paseo --host <host> plugin ls`; it does not make current source compatible with that daemon. Directory development installations use `reload` instead of `update`.
+Use the actual runtime ID if installed with `--id`. For 0.8 CLI remote diagnostics, the syntax is `paseo --host <host> plugin ls`; check the daemon and app versions independently. Directory development installations use `reload` instead of `update`.
 

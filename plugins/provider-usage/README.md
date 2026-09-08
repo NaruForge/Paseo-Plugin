@@ -1,56 +1,56 @@
 # Provider Usage
 
-Show Codex and Grok plan usage in the sidebar and on the matching agent composer. **Experimental:** provider usage endpoints are not a stable public integration contract.
+Show usage for every enabled Provider connection on the selected Host, using Paseo's official usage API. The optional sidebar and matching Agent Composer pills complement **Settings → Usage**.
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Support](../../SUPPORT.md)
 
-**Paseo 0.8.0-beta.1:** this plugin still uses the 0.7.2 contract and cannot load on 0.8 until migrated. See the [migration plan](../../docs/MIGRATION_0.8.md) and [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77). The beta's settings/provider APIs are not implemented features of this plugin.
+**Current source targets Paseo 0.8.0-beta.1.** Source and isolated UI checks are recorded in [verification](../../docs/verification/provider-usage-0.8-source.md). Live beta daemon/app verification is pending. The published `v0.1.0-rc.2` tag retains the previous 0.7.2 implementation.
 
-The beta SDK exposes `paseo.providers.listUsage()` for normalized host usage. Migration planning will compare its Codex/Grok coverage, authentication, refresh and error behavior against the direct requests below before changing the data source. See the [SDK usage contract](../../docs/plugin-capabilities/backend-and-sdk.md#provider-사용량-sdk).
+## Provider Usage Settings
 
-## Composer pill
+Open **Settings → Plugins → Provider Usage → Provider Usage Settings**, or the **Provider Usage Settings** Command Center item.
 
-The pill above the agent composer shows the provider and remaining usage percentage. Press it to refresh usage; the active query also refreshes every two minutes. The image below is a user-supplied capture of the actual Paseo composer. Its displayed quota is a snapshot, not a guaranteed allowance.
+| Group | Setting | Default |
+| --- | --- | --- |
+| Visibility | Composer pill | On |
+| Visibility | Sidebar | Off |
+| Pill | Show remaining % | On |
+| Pill | Show provider name | On |
+| Pill | Show reset time | Off |
+
+Changes save immediately to this Host and plugin installation, with revision conflict detection. Failed saves leave the previous values in effect; reload the latest settings before retrying. Invalid settings can be explicitly restored to defaults. Loading or invalid settings do not silently overwrite stored values.
+
+Pill fields follow the host's live settings hook. Visibility changes made in this screen apply after saving; changes from other clients converge within 30 seconds while connected. Turning the sidebar off leaves **Open provider usage** available in Command Center. Turning all pill fields off leaves an accessible gauge icon.
+
+Settings survive reload, disable, update and daemon restart. Removing the installation deletes its settings; reinstalling starts from defaults. Values are shared across authorized clients of the same Host and installation, without cross-host synchronization.
+
+## Usage and refresh
+
+The surface includes all connections with `enabled: true` in the host's global Provider catalog. It does not restrict Provider IDs to Codex/Grok, require a running Agent, or hide an enabled connection because its status is unavailable. A Provider without a usage result remains visible as unavailable. Disabled connections are excluded even if the host still has cached usage for them. Pills appear on non-archived Agents with a Workspace and an enabled matching connection.
+
+Open **Usage** from the optional sidebar or Command Center to inspect plans, usage windows, resets, balances and details. The pill shows the most consumed window's remaining percentage, falling back to a balance percentage when available. Reset time follows that window, with a balance fallback. Missing values display `—`; unavailable usage is never shown as zero. Provider-supplied missing-field defaults are owned by Paseo.
+
+The surface and pills share a query, refresh every two minutes while active, and offer manual refresh. **Paseo beta.1 caches usage for five minutes; its public API has no force-refresh option**, so refresh may return the same host reading. Background clients may pause polling. Connection updates trigger catalog refresh and a shared usage refresh.
+
+The image below records the previous 0.7 composer UI; it is not beta Settings verification.
 
 ![Provider Usage pill showing Codex 96% remaining above the Paseo agent composer](../../docs/screenshots/provider-usage/composer-pill.jpg)
 
-## Install
+## Installation
+
+Use a compatible beta daemon/app for current source, with the directory install/reload development flow in the [collection guide](../../README.ko.md). For the published 0.7 release:
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
 paseo plugin ls
 ```
 
-This pins the 0.7-compatible release; `update` does not advance a pinned tag. Omitting `--ref` tracks the default branch, including future compatibility changes. See [Git installation](../../docs/GIT_INSTALLATION.md).
+The tag is pinned and does not advance on update. See [Git installation](../../docs/GIT_INSTALLATION.md) before selecting a beta candidate ref.
 
-## Requirements
+## Data access and troubleshooting
 
-Paseo 0.7.2 and existing provider authentication on the selected daemon host. This complements Paseo's native usage/settings screen. No API key is requested by the plugin UI.
+The plugin calls only `paseo.providers.snapshot()` and `paseo.providers.listUsage()` for usage. It no longer reads credential files or environment tokens, issues vendor HTTP requests, or refreshes authentication. The selected Paseo daemon owns provider integrations, authentication, caching and HTTP policy. Sign in and enable connections through normal Paseo/provider tooling; the plugin requests no credentials.
 
-## Authentication
+Unavailable can mean unsupported usage, missing authentication or a temporary provider limitation. Errors from the host are shown with generic descriptions rather than raw backend messages. Values can lag the provider's own UI. Do not include credentials or raw account responses in issue reports.
 
-Codex uses the first syntactically parseable JSON in `CODEX_HOME/auth.json`, `~/.config/codex/auth.json`, or `~/.codex/auth.json`. Grok uses the daemon's existing `GROK_API_KEY`/`GROK_TOKEN` environment value or `~/.grok/auth.json`. If that Codex file has no supported token, Codex is unavailable; later files are not tried. Supported credential shapes are defined in source; keychain-only or changed storage may be unavailable.
-
-Sign in through the provider's normal tooling. Do not copy tokens into this repository, guides or bug reports. The plugin never refreshes or writes authentication.
-
-## Use
-
-Open **Usage** to inspect plans, usage windows, reset times and balances. A matching agent composer pill shows that provider's status; pressing the pill refreshes usage. The surface and pills share a cached snapshot and request a refresh every two minutes while their query is active; background clients may pause polling. The surface's refresh button also requests a new snapshot. Missing authentication appears as unavailable, not zero usage.
-
-## Data access and limitations
-
-Sends authenticated GETs only to Codex WHAM usage and Grok billing, with redirects rejected. See [Security](../../SECURITY.md) for exact endpoints. No inference, purchase, billing change or authentication refresh is performed.
-
-Values depend on the provider response and may lag its own UI. Missing fields remain unknown. The provider's own usage screen is the reference when results disagree.
-
-## Troubleshooting
-
-Missing credentials and authentication failures show unavailable; network/server failures show an error. Reauthenticate through provider tooling if needed. Report response-shape changes with sanitized descriptions, never raw authentication or account data.
-
-```sh
-paseo plugin logs provider-usage
-paseo plugin update provider-usage
-paseo plugin remove provider-usage
-```
-
-Use the actual runtime ID. For 0.8 CLI remote diagnostics use `paseo --host <host> plugin ls`; current source still needs migration before loading on that daemon. Directory sources use `reload` instead of `update`.
+Before lifecycle commands, run `paseo plugin ls` and use the actual runtime ID. For a remote Host, use `paseo --host <host> plugin ls`. Directory sources use `paseo plugin reload <runtime-id>`; Git sources use `paseo plugin update <runtime-id>`. Removal deletes the installation's settings.

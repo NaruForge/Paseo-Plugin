@@ -1,6 +1,6 @@
 # 지원 경계
 
-이 문서는 “화면에서 보이게 만들 수 있다”와 “Paseo가 그 위치를 정식 Plugin slot으로 공개했다”를 구분한다. 기준은 **Paseo 0.8.0-beta.1** 공식 문서와 exact SDK declaration이다. 현재 저장소 소스는 0.7.2이며, 이 표는 베타 기능의 실행 인증이 아니다.
+이 문서는 “화면에서 보이게 만들 수 있다”와 “Paseo가 그 위치를 정식 Plugin slot으로 공개했다”를 구분한다. 기준은 **Paseo 0.8.0-beta.1** 공식 문서와 exact SDK declaration이다. 플러그인별 소스 버전은 [호환성 기록](../COMPATIBILITY.md)을 따르며, 이 표는 베타 기능의 실행 인증이 아니다.
 
 ## 판정 기준
 
@@ -110,11 +110,11 @@
 
 ## Version drift와 유지되는 경계
 
-0.8의 새 기능은 현재 플러그인에 자동 등록되지 않는다. Provider Usage의 직접 벤더 GET, Branch Garden의 읽기 전용 Git allowlist는 별도 제품 계약이다. Lifecycle·Terminal·permission·provider API가 생겼다는 이유로 쓰기 동작을 추가하지 않는다.
+0.8의 새 기능은 현재 플러그인에 자동 등록되지 않는다. Provider Usage의 공식 usage SDK 조회·표시 Settings, Branch Garden의 읽기 전용 Git allowlist는 별도 제품 계약이다. Lifecycle·Terminal·permission·provider API가 생겼다는 이유로 쓰기 동작을 추가하지 않는다.
 
 Settings는 host·설치 범위이며 remove 시 삭제된다. User/device/cross-host 동기화나 secret vault를 제공하지 않는다. Durable timeline도 일반 이벤트 bus가 아니고 lifecycle hook도 영속 작업 큐가 아니다.
 
-`requirements.paseo`는 daemon과 app에서 각각 검사한다. Beta 버전은 stable core에 맞는 범위를 만족할 수 있다. 이관 후 Manifest의 권장 범위 `^0.8.0`은 beta.1을 포함하며, 이관 시 SDK dependency는 exact beta.1로 고정해 대조한다. 현재 source dependency는 아직 0.7.2다. Manifest만 추가하거나 ambient declaration으로 신 API를 만들어내지 않는다. [이관 안내](../MIGRATION_0.8.md)와 [호환성 기록](../COMPATIBILITY.md)을 확인한다.
+`requirements.paseo`는 daemon과 app에서 각각 검사한다. Beta 버전은 stable core에 맞는 범위를 만족할 수 있다. 이관 후 Manifest의 권장 범위 `^0.8.0`은 beta.1을 포함하며, 이관 시 SDK dependency는 exact beta.1로 고정해 대조한다. 현재 source dependency는 플러그인별 catalog와 package에 기록한다. Manifest만 추가하거나 ambient declaration으로 신 API를 만들어내지 않는다. [이관 안내](../MIGRATION_0.8.md)와 [호환성 기록](../COMPATIBILITY.md)을 확인한다.
 
 ## 관련 문서
 

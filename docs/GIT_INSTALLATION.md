@@ -1,6 +1,6 @@
 # Git source 설치와 업데이트
 
-이 문서는 현재 **Paseo 0.7.2용 소스의 설치**와 후속 **0.8.0-beta.1 이관 소스의 검증 조건**을 구분합니다. 현재 두 플러그인은 아직 0.8에서 로드되지 않습니다. Git source는 다른 daemon이나 PC에 배포하고 추적 ref를 업데이트하는 운영 경로입니다. 같은 컴퓨터에서 소스를 편집하는 동안에는 directory source 설치와 `plugin reload`를 사용하세요.
+이 문서는 기존 **Paseo 0.7.2용 태그 설치**와 **0.8.0-beta.1 이관 소스의 검증 조건**을 구분합니다. 현재 두 플러그인 소스는 0.8.0-beta.1을 대상으로 합니다. 실제 beta daemon/app 실행 검증은 후속 작업입니다. Git source는 다른 daemon이나 PC에 배포하고 추적 ref를 업데이트하는 운영 경로입니다. 같은 컴퓨터에서 소스를 편집하는 동안에는 directory source 설치와 `plugin reload`를 사용하세요.
 
 0.8의 runtime entry·SDK 경로·manifest 변경은 [이관 안내](MIGRATION_0.8.md)를 따릅니다. 아래 현재 릴리스 설치 명령은 0.7.2 daemon/client 대상이며, 이 문서 갱신은 beta runtime 검증 기록이 아닙니다.
 
@@ -34,9 +34,9 @@ npm run check:docs-sync
 npm run typecheck
 ```
 
-현재 자동 검사는 0.7 source의 테스트와 TypeScript declaration을 제외하고, `@getpaseo/plugin`, `/react-native`, `/server`, React·React Native·TanStack Query·Zod, Node 기본 모듈과 상대 runtime import를 허용합니다. `import type`은 이 저장소의 현재 검사 대상이 아닙니다.
+자동 검사는 각 workspace의 exact SDK에 맞춰 import를 검사하며 테스트와 TypeScript declaration 파일은 제외합니다. 0.7 source에는 기존 host runtime allowlist를 유지합니다. 0.8 source에는 runtime별 SDK 경로와 client/server/shared 상대 경계를 적용하며 `import type`, inline type import, re-export와 dynamic import도 검사합니다. Shared에서는 Node·React·runtime-specific SDK를 허용하지 않습니다.
 
-0.8에서는 `/client`, `/client/react-native`, `/client/ui`, `/server/provider`, `/server/acp`와 runtime별 허용 경계를 추가로 대조해야 합니다. 이관 시 검사 스크립트도 함께 갱신합니다. **Paseo 0.8 compiler는 type import와 전이 의존성에도 경계를 적용**하므로 현재 allowlist 검사만 통과했다고 0.8에서 compile 가능하다고 판단하지 않습니다. [런타임 모듈표](plugin-capabilities/backend-and-sdk.md#host-제공-모듈)를 참조하세요.
+**Paseo 0.8 compiler는 type import와 전이 의존성에도 경계를 적용**하므로 저장소의 정적 allowlist 검사만으로 compiler 검증을 대체하지 않습니다. Branch Garden은 `node_modules` 없는 사본에서도 beta.1 compiler를 통과했습니다. 이 환경에서는 직접 `@getpaseo/client` type import도 해석되지 않아, server entry는 공개 `PluginServerContext`의 타입 추론을 사용합니다. 개발용 exact client dependency는 SDK peer 타입 검사용으로 유지합니다. [런타임 모듈표](plugin-capabilities/backend-and-sdk.md#host-제공-모듈)를 참조하세요.
 
 ## Monorepo 플러그인 설치
 
@@ -119,7 +119,7 @@ Git source를 제거하면 runtime 설정과 managed checkout이 함께 제거�
 
 ## 0.8 beta 후보 검증
 
-이관된 별도 ref와 호환되는 daemon/app이 준비된 뒤 실행하는 절차입니다. 아직 현재 소스에 적용할 설치 명령이 아닙니다.
+이관된 별도 ref와 호환되는 daemon/app이 준비된 뒤 실행하는 절차입니다. Branch Garden 소스 검사는 완료됐지만 실제 Git 설치·업데이트 검증은 남아 있으며, Provider Usage에는 소스 이관도 필요합니다.
 
 1. 대상 beta CLI의 fresh scaffold와 exact SDK를 대조하고 root 검사를 통과시킵니다.
 2. `requirements.paseo`와 client/server entry가 갖춰진 후보 ref를 선택합니다. 권장 범위 `^0.8.0`은 Paseo의 prerelease 규칙에서 beta.1을 포함합니다.

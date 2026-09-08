@@ -11,9 +11,9 @@ Both plugins use one collection version and one Git tag (`v<version>`). Runtime 
 
 ## Validate runtime safely
 
-For **Paseo 0.8.0-beta.1**, apply the [migration checklist](MIGRATION_0.8.md) first. Current source and `v0.1.0-rc.2` remain on 0.7.2; the reference update is not a migrated release. Keep the previous tag and use an explicit candidate ref. Do not overwrite 0.7 release notes or runtime evidence with beta claims.
+For **Paseo 0.8.0-beta.1**, apply the [migration checklist](MIGRATION_0.8.md) first. Both plugin sources are migrated; the existing `v0.1.0-rc.2` release remains on 0.7.2. Source checks are not a new release or runtime certification. Keep the previous tag and use an explicit candidate ref. Do not overwrite 0.7 release notes or runtime evidence with beta claims.
 
-Require separate client/server entries, runtime directories, `requirements.paseo`, exact target SDK/client dependencies and matching `plugins.json.paseoVersion`/lockfile metadata. Update import checks and test stubs with the source migration. Recommended manifest range: `^0.8.0`; development SDK: exact `0.8.0-beta.1`.
+Require separate client/server entries, runtime directories, `requirements.paseo`, exact target SDK/client dependencies and matching catalog/lockfile metadata. A plugin entry’s `paseoVersion` overrides the root `plugins.json.paseoVersion` default; release checks enforce the effective exact SDK and client dependency for every workspace. Update import checks and test stubs with the source migration. Recommended manifest range: `^0.8.0`; development SDK: exact `0.8.0-beta.1`.
 
 Validate daemon and app versions independently, including host compiler boundaries, contribution removers and Provider Usage's pill registration/cleanup. For 0.8 remote operations use global `--host`, for example `paseo --host <target> plugin ls`. Recheck declarations if advancing beyond beta.1. Static docs/type checks do not establish beta runtime support.
 

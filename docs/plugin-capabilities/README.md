@@ -1,6 +1,6 @@
 # Paseo Plugin Capabilities
 
-이 문서는 **Paseo `0.8.0-beta.1`**의 공개 플러그인 계약을 정리한다. 현재 저장소 소스와 배포 태그 `v0.1.0-rc.2`는 여전히 **0.7.2** 대상이다. 이 기능표는 0.8 실행 검증 결과나 배포 플러그인 목록이 아니다. 유지보수 대상은 [Branch Garden과 Provider Usage](../../README.md#plugins) 두 개이며, 이관은 [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77)에서 추적한다.
+이 문서는 **Paseo `0.8.0-beta.1`**의 공개 플러그인 계약을 정리한다. 플러그인별 소스 이관 상태와 기존 배포 태그의 대상 버전은 [호환성 기록](../COMPATIBILITY.md)을 따른다. 이 기능표는 0.8 실행 검증 결과나 배포 플러그인 목록이 아니다. 유지보수 대상은 [Branch Garden과 Provider Usage](../../README.md#plugins) 두 개이며, 이관은 [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77)에서 추적한다.
 
 - 대조일: 2026-09-08 (Asia/Seoul)
 - 문서: [v0.8 quickstart](https://paseo.sh/docs/plugins/v0.8), [reference](https://paseo.sh/docs/plugins/v0.8/reference), [migration](https://paseo.sh/docs/plugins/v0.8/migration), [provider guide](https://paseo.sh/docs/plugins/v0.8/providers)

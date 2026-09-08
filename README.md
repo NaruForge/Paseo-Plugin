@@ -9,16 +9,16 @@ Two independently installable plugins focused on Git workspace visibility and pr
 
 Maintained by **NaruForge and contributors**. This is a community project, independently maintained and not endorsed or operated by the Paseo team.
 
-**Target: Paseo 0.7.2.** The Plugin API is experimental. See the [compatibility and verification record](docs/COMPATIBILITY.md) before using another version. The first public prerelease, [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2), includes pinned installation instructions and known limitations.
+**Published release target: Paseo 0.7.2.** The Plugin API is experimental. See the [compatibility and verification record](docs/COMPATIBILITY.md) before using another version. The first public prerelease, [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2), includes pinned installation instructions and known limitations.
 
-**Paseo 0.8.0-beta.1:** current plugins need migration before they can load. The [0.8 migration plan](docs/MIGRATION_0.8.md) and [updated API reference](docs/plugin-capabilities/README.md) describe the beta contract; source and runtime support remain on 0.7.2. Progress is tracked in [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77).
+**Current source:** Both plugins target exact **0.8.0-beta.1**. Provider Usage uses the official host usage API and adds display Settings. Live beta daemon/app verification is pending; see its [source verification](docs/verification/provider-usage-0.8-source.md). The existing `v0.1.0-rc.2` tag preserves both 0.7 plugins. See the [migration plan](docs/MIGRATION_0.8.md), [source verification](docs/verification/branch-garden-0.8-source.md) and [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77).
 
 ## Plugins
 
 | Plugin | What it does | Requirements | Maturity |
 | --- | --- | --- | --- |
-| [`branch-garden`](plugins/branch-garden/) | Inspect registered Git projects, workspaces, branches and worktrees without changing Git state. | Git; registered Paseo projects or workspaces | Preview |
-| [`provider-usage`](plugins/provider-usage/) | Inspect Codex and Grok plan usage from existing host credentials. | Existing provider authentication | Experimental |
+| [`branch-garden`](plugins/branch-garden/) | Inspect registered Git projects, workspaces, branches and worktrees without changing Git state. | Current source: Paseo 0.8.0-beta.1; Git; registered projects or workspaces | Preview |
+| [`provider-usage`](plugins/provider-usage/) | Inspect enabled Provider usage through Paseo, with configurable pills and sidebar. | Paseo 0.8.0-beta.1 source; enabled provider connections | Experimental |
 
 Both plugins are maintained as this repository's core offering; this does not imply Paseo-team support. Branch Garden's interface is in English. Provider Usage remains experimental at the provider integration boundary and still includes Korean status messages. Installation guides are available in English, with actual screenshots in each plugin guide.
 
@@ -41,7 +41,7 @@ paseo plugin logs branch-garden
 paseo plugin update branch-garden
 ```
 
-The manifest ID is the default runtime ID. If you install with `--id`, use that ID in later commands. Installations are per daemon. For 0.8 CLI operations, `--host` is global: `paseo --host <host> plugin ls`. Current source still requires a compatible 0.7 daemon and client.
+The manifest ID is the default runtime ID. If you install with `--id`, use that ID in later commands. Installations are per daemon. For 0.8 CLI operations, `--host` is global: `paseo --host <host> plugin ls`. Choose daemon and app versions for the plugin and ref being installed; the pinned commands above target 0.7.2.
 
 **Configuration:** Neither plugin needs a custom host settings file. See [prerequisites and removal guidance](docs/CONFIGURATION.md).
 
@@ -80,7 +80,7 @@ Node.js 22 and npm are used in CI. The check command validates documentation, Gi
 └── package.json
 ```
 
-[`plugins.json`](plugins.json) is this repository's descriptive catalog, checked against the actual manifests. It is not a Paseo registry format.
+[`plugins.json`](plugins.json) is this repository's descriptive catalog, checked against the actual manifests. It is not a Paseo registry format. A plugin entry’s `paseoVersion` overrides the catalog default, allowing independently migrated workspaces to retain exact SDK checks.
 
 ## Removed plugins
 
@@ -92,4 +92,4 @@ Five previously developed plugins have been removed before the first public rele
 
 Use the issue forms for bugs and proposals. English and Korean reports are welcome. The maintainer tracks work in GitHub Issues; you do not need access to the maintainer's private Project to contribute.
 
-Upstream: [Plugin versions](https://paseo.sh/docs/plugins) · [v0.7 reference for current source](https://paseo.sh/docs/plugins/v0.7/reference) · [v0.8 beta reference](https://paseo.sh/docs/plugins/v0.8/reference) · [Migration](https://paseo.sh/docs/plugins/v0.8/migration) · [Community projects](https://paseo.sh/docs/community)
+Upstream: [Plugin versions](https://paseo.sh/docs/plugins) · [v0.7 reference for the published release](https://paseo.sh/docs/plugins/v0.7/reference) · [v0.8 beta reference](https://paseo.sh/docs/plugins/v0.8/reference) · [Migration](https://paseo.sh/docs/plugins/v0.8/migration) · [Community projects](https://paseo.sh/docs/community)

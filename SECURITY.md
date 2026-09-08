@@ -10,18 +10,15 @@ NaruForge maintains this community project on a best-effort basis; there is no g
 
 Paseo plugins are trusted, unsandboxed code. Backend code runs with the daemon user's access; client contributions run inside Paseo. These plugins' allowlists constrain their implementation, not the operating system or other installed plugins. Inspect source and pin a reviewed commit/tag when appropriate.
 
-Paseo 0.8 adds compiler boundaries between client/server/shared modules and daemon/app version requirements; these are **not an OS sandbox**. Its lifecycle hooks, permission responses, provider contributions and terminal actions can change host/agent state. Those APIs are reference material for future work and do not expand this collection's current read-only operations. Built-in host settings are ordinary JSON and must not hold credentials. See the [0.8 migration scope](docs/MIGRATION_0.8.md).
+Paseo 0.8 adds compiler boundaries between client/server/shared modules and daemon/app version requirements; these are **not an OS sandbox**. Its lifecycle hooks, permission responses, provider contributions and terminal actions can change host/agent state. Usage and Git inspection remain read-only. Provider Usage additionally saves user-selected display preferences through built-in host settings. Built-in host settings are ordinary JSON and must not hold credentials. See the [0.8 migration scope](docs/MIGRATION_0.8.md).
 
 ## Data access by plugin
 
 | Plugin | Reads and connections | Writes and user actions |
 | --- | --- | --- |
 | Branch Garden | Selected host's Paseo projects/workspaces and read-only Git status, branches and worktrees | No Git writes; navigation stays on the selected host |
-| Provider Usage | Existing Codex/Grok credentials and two usage endpoints below | Does not refresh or write authentication; no inference calls |
+| Provider Usage | Host Provider catalog and normalized usage via official Paseo SDK | Saves display settings; no credential access, vendor HTTP, authentication refresh or inference calls |
 
-Provider Usage permits GET only to:
+Current Provider Usage source delegates usage retrieval to `paseo.providers.snapshot()` and `paseo.providers.listUsage()`. Paseo owns credential storage, usage integrations, caching and HTTP policy. The plugin has no vendor endpoint allowlist because it makes no direct HTTP requests; it sanitizes host failure messages and performs no credential logging. Tests guard this adapter boundary. The repository adds no analytics or telemetry service.
 
-- `https://chatgpt.com/backend-api/wham/usage`
-- `https://cli-chat-proxy.grok.com/v1/billing?format=credits`
-
-Redirects are rejected. These are provider-specific usage endpoints, not a stable public integration contract. The plugin is experimental; authentication or response changes can make it unavailable. Credentials remain server-side and are excluded from RPC output. The repository adds no analytics or telemetry service; provider requests and external links are described above.
+The published `v0.1.0-rc.2` implementation used authenticated GETs to Codex WHAM and Grok billing with redirects rejected. That policy is historical and does not describe Paseo's own HTTP implementation. Display settings are ordinary host JSON and must contain no credentials.

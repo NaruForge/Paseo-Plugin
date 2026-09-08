@@ -1,10 +1,11 @@
 {
   "schemaVersion": 1,
   "version": "0.1.0-rc.2",
-  "paseoVersion": "0.7.2",
+  "paseoVersion": "0.8.0-beta.1",
   "plugins": [
     {
       "id": "branch-garden",
+      "paseoVersion": "0.8.0-beta.1",
       "name": "Branch Garden",
       "path": "plugins/branch-garden",
       "description": "Inspect registered Git projects, workspaces, branches and worktrees without changing Git state.",
