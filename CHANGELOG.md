@@ -11,7 +11,7 @@ The collection uses one version/tag for all supported plugins. Published release
 - Update English/Korean documentation, Issue Forms and validation to cover the two remaining plugins. Removing the retired plugins did not change the retained plugins' runtime code; the subsequent Branch Garden language update is listed above.
 - Withdraw the unpublished seven-plugin release draft. Existing installs need explicit removal; see [removal and migration](docs/REMOVED_PLUGINS.md).
 
-See [compatibility](docs/COMPATIBILITY.md) and [verification](docs/verification/0.1.0-rc.2.md). No public release is created by this cleanup.
+See [compatibility](docs/COMPATIBILITY.md), [removal verification](docs/verification/0.1.0-rc.2.md) and [English UI verification](docs/verification/branch-garden-english.md). These changes do not publish a release.
 
 ## 0.1.0-rc.1 — withdrawn before publication
 

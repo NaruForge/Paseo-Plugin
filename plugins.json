@@ -7,7 +7,7 @@
       "id": "branch-garden",
       "name": "Branch Garden",
       "path": "plugins/branch-garden",
-      "description": "Inspect active Git workspaces, branches and worktrees without changing Git state.",
+      "description": "Inspect registered Git projects, workspaces, branches and worktrees without changing Git state.",
       "maturity": "preview",
       "daemonPlatforms": [
         "win32",

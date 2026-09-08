@@ -1,6 +1,6 @@
 # Branch Garden
 
-Inspect active Git workspaces, local branches and worktrees on the selected host. No branch is checked out, reset or deleted.
+Inspect registered Git projects, active workspaces, local branches and worktrees on the selected host. No branch is checked out, reset or deleted.
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Support](../../SUPPORT.md)
 
@@ -29,7 +29,7 @@ Paseo 0.7.2 and Git on the daemon host. No repository-specific configuration is 
 
 ## Use
 
-Open **Branch Garden** in the sidebar, select the intended host and refresh. Expand a project to inspect workspace state, dirty worktrees and branch information. Empty results mean there are no matching active Git workspaces, not that the filesystem is empty.
+Open **Branch Garden** in the sidebar, select the intended host and refresh. Expand a project to inspect workspace state, dirty worktrees and branch information. Registered projects can appear without active workspaces. Empty results mean no repositories matched the current scan or filter; they do not mean the filesystem is empty.
 
 The plugin's labels, accessibility text, warnings and error messages are in English. Scan times use a 24-hour clock in the client's local time zone. Project, workspace and branch names remain unchanged; diagnostic details returned by Git or the host may use that tool's language. Paseo's surrounding interface follows its own language setting.
 

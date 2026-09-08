@@ -15,19 +15,19 @@ Branch Garden과 Provider Usage 두 개의 [Paseo](https://paseo.sh) 플러그�
 
 | Runtime ID | 대상 | 역할 |
 | --- | --- | --- |
-| [`branch-garden`](plugins/branch-garden/) | Personal operations | 선택된 host의 활성 Git Workspace와 로컬 branch·worktree 상태를 읽기 전용으로 집계하는 전역 sidebar surface입니다. |
+| [`branch-garden`](plugins/branch-garden/) | Personal operations | 선택된 host의 등록된 Git Project·Workspace와 로컬 branch·worktree 상태를 읽기 전용으로 집계하는 전역 sidebar surface입니다. |
 | [`provider-usage`](plugins/provider-usage/) | Personal operations | 선택된 Host의 Codex와 Grok 계획 사용량을 읽기 전용으로 집계해 전역 sidebar와 Agent Composer pill에 보여 줍니다. |
 
 Runtime ID의 기준은 디렉터리명이나 package 이름이 아니라 각 플러그인의 `paseo-plugin.json`입니다.
 
-Branch Garden의 UI·접근성 문구·자체 오류와 경고는 영어로 표시됩니다. 사용자 이름과 외부 도구의 진단 원문은 바꾸지 않습니다. Provider Usage에는 한국어 상태 문구가 남아 있습니다. 각 플러그인의 README에서 실제 화면을 확인할 수 있습니다.
+Branch Garden의 UI·접근성 문구·자체 오류와 경고는 영어로 표시됩니다. 사용자가 정한 Project·Workspace·브랜치 이름과 외부 도구의 진단 원문은 바꾸지 않습니다. Provider Usage에는 한국어 상태 문구가 남아 있습니다. 각 플러그인의 README에서 실제 화면을 확인할 수 있습니다.
 
 ## 시작하기
 
 필요한 도구:
 
 - Paseo Desktop/daemon/CLI `0.7.2`
-- Branch Garden을 사용할 daemon host의 Git과 활성 Paseo Workspace
+- Branch Garden을 사용할 daemon host의 Git과 등록된 Paseo Project 또는 Workspace
 - 로컬 개발·검증에는 Node.js 22 이상과 npm (Git source 설치만 할 때는 npm 실행 불필요)
 - `provider-usage`는 선택된 host에 이미 저장된 Codex·Grok 인증만 읽으며, 인증이 없는 provider는 사용 불가 상태로 표시합니다.
 

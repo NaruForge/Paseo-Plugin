@@ -13,7 +13,7 @@ Target contracts: Paseo daemon/client/CLI and exact `@getpaseo/plugin` **0.7.2**
 
 ## Evidence
 
-See [the release verification record](verification/0.1.0-rc.2.md) and [GitHub Actions](https://github.com/SWBaek/Paseo-Plugin/actions/workflows/validate.yml). Records distinguish source checks, runtime activation, RPC actions, UI layouts/themes and untested environments. Historic `0.7.0-beta.1` Git-update evidence in [Git installation](GIT_INSTALLATION.md) is not evidence for a new release.
+See the [two-plugin removal verification](verification/0.1.0-rc.2.md), subsequent [Branch Garden English UI and screenshot verification](verification/branch-garden-english.md), and [GitHub Actions](https://github.com/SWBaek/Paseo-Plugin/actions/workflows/validate.yml). Records distinguish source checks, runtime activation, RPC actions, UI layouts/themes and untested environments. Historic `0.7.0-beta.1` Git-update evidence in [Git installation](GIT_INSTALLATION.md) is not evidence for a new release.
 
 ## Paseo v0.8 preparation
 
