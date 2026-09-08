@@ -24,10 +24,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SWBaek/Paseo-Plugin.git",
+    "url": "git+https://github.com/NaruForge/Paseo-Plugin.git",
     "directory": "plugins/branch-garden"
   },
   "bugs": {
-    "url": "https://github.com/SWBaek/Paseo-Plugin/issues"
+    "url": "https://github.com/NaruForge/Paseo-Plugin/issues"
   }
 }

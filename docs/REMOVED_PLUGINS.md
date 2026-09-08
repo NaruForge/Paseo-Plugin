@@ -26,7 +26,7 @@ paseo plugin ls
 
 These commands use the original default IDs. If you installed with `--id`, use the actual ID from the listing. On the 0.8 CLI, remote commands use global `--host`, for example `paseo --host <host> plugin ls`. Do not remove Branch Garden or Provider Usage. No daemon restart is required.
 
-Old Git installs can keep running their pinned source; an update into the removed subdirectory cannot migrate them. Remove them explicitly instead. Their source and documentation remain available in [the last seven-plugin commit](https://github.com/SWBaek/Paseo-Plugin/tree/5919ab16fad941d46f2a294e981154f76297cc49), but receive no further maintenance here.
+Old Git installs can keep running their pinned source; an update into the removed subdirectory cannot migrate them. Remove them explicitly instead. Their source and documentation remain available in [the last seven-plugin commit](https://github.com/NaruForge/Paseo-Plugin/tree/5919ab16fad941d46f2a294e981154f76297cc49), but receive no further maintenance here.
 
 That pinned-source statement assumes a compatible older Paseo runtime. Paseo 0.8 rejects old entry/manifest contracts, and these retired plugins are outside the [0.8 migration scope](MIGRATION_0.8.md). Their historical JSON files below are separate from the new built-in 0.8 Settings API, whose values are deleted when an installation is removed.
 
@@ -41,4 +41,4 @@ Delete those individual settings files only if you no longer need them. If a Tai
 
 ## Release history
 
-The unpublished seven-plugin `v0.1.0-rc.1` GitHub draft was withdrawn. The two-plugin collection was subsequently published as [v0.1.0-rc.2](https://github.com/SWBaek/Paseo-Plugin/releases/tag/v0.1.0-rc.2) on 2026-09-08.
+The unpublished seven-plugin `v0.1.0-rc.1` GitHub draft was withdrawn. The two-plugin collection was subsequently published as [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2) on 2026-09-08.

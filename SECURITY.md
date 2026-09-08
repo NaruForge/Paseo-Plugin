@@ -2,9 +2,9 @@
 
 ## Report a vulnerability privately
 
-Use GitHub's [Report a vulnerability](https://github.com/SWBaek/Paseo-Plugin/security/advisories/new) for this repository. Private vulnerability reporting is enabled. Do not open a public issue containing an exploit, credential, private file or unredacted log. If GitHub reporting is unavailable, open an issue asking for a private contact without including sensitive details.
+Use GitHub's [Report a vulnerability](https://github.com/NaruForge/Paseo-Plugin/security/advisories/new) for this repository. Private vulnerability reporting is enabled. Do not open a public issue containing an exploit, credential, private file or unredacted log. If GitHub reporting is unavailable, open an issue asking for a private contact without including sensitive details.
 
-SWBaek maintains this community project on a best-effort basis; there is no guaranteed response time. Security fixes target the latest supported release line. See [Support](SUPPORT.md).
+NaruForge maintains this community project on a best-effort basis; there is no guaranteed response time. Security fixes target the latest supported release line. See [Support](SUPPORT.md).
 
 ## Trust boundary
 

@@ -19,7 +19,7 @@ On a compact screen, workspace details and branch evidence stack vertically:
 ## Install
 
 ```sh
-paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
+paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
 paseo plugin ls
 ```
 

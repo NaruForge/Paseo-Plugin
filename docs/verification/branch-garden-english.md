@@ -1,6 +1,6 @@
 # Branch Garden English UI and plugin screenshots
 
-Date: 2026-09-08. Tracking: [Issue #74](https://github.com/SWBaek/Paseo-Plugin/issues/74) and [PR #75](https://github.com/SWBaek/Paseo-Plugin/pull/75). Target: Paseo 0.7.2 on the local Windows daemon and Chrome web client.
+Date: 2026-09-08. Tracking: [Issue #74](https://github.com/NaruForge/Paseo-Plugin/issues/74) and [PR #75](https://github.com/NaruForge/Paseo-Plugin/pull/75). Target: Paseo 0.7.2 on the local Windows daemon and Chrome web client.
 
 ## Scope and checks
 
@@ -8,7 +8,7 @@ Branch Garden's headings, filters, counts, branch reasons, workspace states, loa
 
 The change does not modify Git commands, scanning or branch-classification logic. Existing server tests now expect the translated messages; Unicode path fixtures remain unchanged. Workspace typechecking and all 27 Branch Garden tests passed, including the read-only command allowlist and real Git state-preservation tests. A runtime-source scan found no remaining Korean literals; Korean test descriptions and Unicode path fixtures are not UI copy.
 
-At implementation commit `8a87a24cf7e725d68cd43a6894b205ee63e966b8`, root `npm run check` also passed locally: documentation synchronization, Git-source imports, release metadata, both workspace typechecks and all 50 tests (27 Branch Garden, 23 Provider Usage). [Windows, macOS and Ubuntu CI](https://github.com/SWBaek/Paseo-Plugin/actions/runs/34180897224) passed for that commit. Later documentation corrections are tracked in PR #75; they do not change the runtime reviewed here.
+At implementation commit `8a87a24cf7e725d68cd43a6894b205ee63e966b8`, root `npm run check` also passed locally: documentation synchronization, Git-source imports, release metadata, both workspace typechecks and all 50 tests (27 Branch Garden, 23 Provider Usage). [Windows, macOS and Ubuntu CI](https://github.com/NaruForge/Paseo-Plugin/actions/runs/34180897224) passed for that commit. Later documentation corrections are tracked in PR #75; they do not change the runtime reviewed here.
 
 ## Live UI validation
 

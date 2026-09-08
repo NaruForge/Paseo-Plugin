@@ -43,15 +43,15 @@ npm run typecheck
 현재 0.7 호환 태그를 manifest의 기본 runtime ID로 설치합니다.
 
 ```powershell
-paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
-paseo plugin add SWBaek/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
+paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
+paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
 paseo plugin ls
 ```
 
 기존 runtime과 충돌하지 않는 검증 ID가 필요하면 다음처럼 지정합니다.
 
 ```powershell
-paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden `
+paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden `
   --ref v0.1.0-rc.2 --id branch-garden-git-verify
 ```
 
@@ -130,7 +130,7 @@ Git source를 제거하면 runtime 설정과 managed checkout이 함께 제거�
 
 ```powershell
 paseo --host <target> plugin ls
-paseo --host <target> plugin add SWBaek/Paseo-Plugin:plugins/branch-garden --ref <migrated-ref> --id branch-garden-beta-check
+paseo --host <target> plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref <migrated-ref> --id branch-garden-beta-check
 paseo --host <target> plugin ls
 paseo --host <target> plugin logs branch-garden-beta-check
 ```

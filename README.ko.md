@@ -4,7 +4,7 @@
 
 사용자 안내: [호환성](docs/COMPATIBILITY.md) · [설정](docs/CONFIGURATION.md) · [릴리스](docs/RELEASING.md) · [보안](SECURITY.md) · [지원](SUPPORT.md)
 
-첫 공개 사전 릴리스 [v0.1.0-rc.2](https://github.com/SWBaek/Paseo-Plugin/releases/tag/v0.1.0-rc.2)를 발행했습니다. 릴리스 노트에서 버전을 고정하는 설치 명령과 지원 범위·제한 사항을 확인할 수 있습니다.
+첫 공개 사전 릴리스 [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2)를 발행했습니다. 릴리스 노트에서 버전을 고정하는 설치 명령과 지원 범위·제한 사항을 확인할 수 있습니다.
 
 Branch Garden과 Provider Usage 두 개의 [Paseo](https://paseo.sh) 플러그인에 집중하는 npm workspace입니다. 이 저장소의 핵심 지원 대상이며, Paseo 팀의 공식 지원을 의미하지 않습니다. Provider Usage의 공급자 연동은 여전히 실험적입니다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위이며, 플러그인끼리 런타임 코드를 공유하지 않습니다.
 
@@ -91,8 +91,8 @@ npm run check:docs-sync
 npm run check:git-source-imports
 npm run typecheck
 paseo plugin ls
-paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
-paseo plugin add SWBaek/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
+paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
+paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
 paseo plugin ls
 paseo plugin status
 paseo plugin update --all
@@ -151,7 +151,7 @@ paseo plugin ls
 
 ## 이슈와 작업 관리
 
-아이디어, 개발 계획과 버그는 [GitHub Issues](https://github.com/SWBaek/Paseo-Plugin/issues)에서 관리합니다. 새 이슈는 `.github/ISSUE_TEMPLATE/`의 양식을 사용하고, 상태·우선순위·하위 Issue·PR 연결 방식은 [Issue 관리 규칙](.github/ISSUE_MANAGEMENT.md)을 따릅니다.
+아이디어, 개발 계획과 버그는 [GitHub Issues](https://github.com/NaruForge/Paseo-Plugin/issues)에서 관리합니다. 새 이슈는 `.github/ISSUE_TEMPLATE/`의 양식을 사용하고, 상태·우선순위·하위 Issue·PR 연결 방식은 [Issue 관리 규칙](.github/ISSUE_MANAGEMENT.md)을 따릅니다.
 
 ## 공식 문서
 

@@ -2,14 +2,14 @@
 
 [한국어](README.ko.md) · [Plugin guides](#plugins) · [Compatibility](docs/COMPATIBILITY.md) · [Contributing](CONTRIBUTING.md)
 
-[![Validate](https://github.com/SWBaek/Paseo-Plugin/actions/workflows/validate.yml/badge.svg)](https://github.com/SWBaek/Paseo-Plugin/actions/workflows/validate.yml)
+[![Validate](https://github.com/NaruForge/Paseo-Plugin/actions/workflows/validate.yml/badge.svg)](https://github.com/NaruForge/Paseo-Plugin/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Two independently installable plugins focused on Git workspace visibility and provider usage while working with Paseo agents.
 
-Maintained by **SWBaek and contributors**. This is a community project, independently maintained and not endorsed or operated by the Paseo team.
+Maintained by **NaruForge and contributors**. This is a community project, independently maintained and not endorsed or operated by the Paseo team.
 
-**Target: Paseo 0.7.2.** The Plugin API is experimental. See the [compatibility and verification record](docs/COMPATIBILITY.md) before using another version. The first public prerelease, [v0.1.0-rc.2](https://github.com/SWBaek/Paseo-Plugin/releases/tag/v0.1.0-rc.2), includes pinned installation instructions and known limitations.
+**Target: Paseo 0.7.2.** The Plugin API is experimental. See the [compatibility and verification record](docs/COMPATIBILITY.md) before using another version. The first public prerelease, [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2), includes pinned installation instructions and known limitations.
 
 **Paseo 0.8.0-beta.1:** current plugins need migration before they can load. The [0.8 migration plan](docs/MIGRATION_0.8.md) and [updated API reference](docs/plugin-capabilities/README.md) describe the beta contract; source and runtime support remain on 0.7.2. Progress is tracked in [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77).
 
@@ -29,11 +29,11 @@ Both plugins are maintained as this repository's core offering; this does not im
 3. Run the command for the plugin you want:
 
 ```sh
-paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
-paseo plugin add SWBaek/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
+paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
+paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
 ```
 
-Choose one command; there is no need to install the entire collection or run npm. These commands pin the 0.7-compatible release. Omitting `--ref` tracks the default branch and can pick up a future 0.8 migration. Select a reviewed compatible tag or commit from [Releases](https://github.com/SWBaek/Paseo-Plugin/releases). A pinned tag does not advance on `plugin update`. See [Git installation and rollback](docs/GIT_INSTALLATION.md).
+Choose one command; there is no need to install the entire collection or run npm. These commands pin the 0.7-compatible release. Omitting `--ref` tracks the default branch and can pick up a future 0.8 migration. Select a reviewed compatible tag or commit from [Releases](https://github.com/NaruForge/Paseo-Plugin/releases). A pinned tag does not advance on `plugin update`. See [Git installation and rollback](docs/GIT_INSTALLATION.md).
 
 ```sh
 paseo plugin ls
@@ -88,7 +88,7 @@ Five previously developed plugins have been removed before the first public rele
 
 ## Maintenance
 
-[Changelog](CHANGELOG.md) · [Release process](docs/RELEASING.md) · [Support](SUPPORT.md) · [Security reports](SECURITY.md) · [Issue tracker](https://github.com/SWBaek/Paseo-Plugin/issues)
+[Changelog](CHANGELOG.md) · [Release process](docs/RELEASING.md) · [Support](SUPPORT.md) · [Security reports](SECURITY.md) · [Issue tracker](https://github.com/NaruForge/Paseo-Plugin/issues)
 
 Use the issue forms for bugs and proposals. English and Korean reports are welcome. The maintainer tracks work in GitHub Issues; you do not need access to the maintainer's private Project to contribute.
 
