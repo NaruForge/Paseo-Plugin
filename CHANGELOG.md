@@ -4,6 +4,7 @@ The collection uses one version/tag for all supported plugins. Published release
 
 ## Unreleased
 
+- Add an exclusive Date and time / Time remaining preference for Provider Usage resets, with automatic countdown updates and compact pill values without Reset/Resets. Migrate display settings v1/v2 to v3 while preserving existing choices.
 - Delegate Provider Usage sidebar visibility to Paseo Settings → Layout. Always register the sidebar item, remove the duplicate plugin switch, and migrate v1 display settings to v2 while preserving all four remaining preferences.
 
 - Migrate Branch Garden source to Paseo 0.8.0-beta.1 runtime entries and SDK imports, preserving the existing UI and read-only Git scan.

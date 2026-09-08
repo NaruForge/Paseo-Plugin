@@ -16,7 +16,7 @@ function setup() {
 afterEach(() => vi.useRealTimers());
 describe("usage visibility settings", () => {
   it("uses the requested defaults and rejects invalid booleans", () => {
-    expect(UsageSettingsSchema.parse({})).toEqual({ visibility: { composerPill: true }, pill: { showRemainingPercent: true, showProviderName: true, showResetTime: false } });
+    expect(UsageSettingsSchema.parse({})).toEqual({ resetTimeFormat: "date-time", visibility: { composerPill: true }, pill: { showRemainingPercent: true, showProviderName: true, showResetTime: false } });
     expect(UsageSettingsSchema.safeParse({ visibility: { composerPill: "true" } }).success).toBe(false);
   });
 

@@ -1,5 +1,5 @@
 import { type PluginSurfaceProps, type SettingsState, useSettings } from "@getpaseo/plugin/client";
-import { SettingsAction, SettingsCard, SettingsRow, SettingsSection, SettingsSwitch } from "@getpaseo/plugin/client/ui";
+import { SettingsAction, SettingsCard, SettingsRow, SettingsSection, SettingsSelect, SettingsSwitch } from "@getpaseo/plugin/client/ui";
 import { useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { usageSettings, type UsageSettings, type UsageSettingsSchema } from "../shared/usage-settings";
@@ -91,6 +91,18 @@ export function UsageSettingsForm({ theme, settings, onChanged }: SettingsProps 
           <SettingsSwitch label="Show remaining %" value={values.pill.showRemainingPercent} onValueChange={(value) => setPill("showRemainingPercent", value)} disabled={disabled} />
           <SettingsSwitch label="Show provider name" value={values.pill.showProviderName} onValueChange={(value) => setPill("showProviderName", value)} disabled={disabled} />
           <SettingsSwitch label="Show reset time" value={values.pill.showResetTime} onValueChange={(value) => setPill("showResetTime", value)} disabled={disabled} />
+        </SettingsCard>
+      </SettingsSection>
+      <SettingsSection title="Reset time">
+        <SettingsCard>
+          <SettingsSelect<UsageSettings["resetTimeFormat"]>
+            label="Display format"
+            hint="Applies to Usage and the pill when its reset time is shown."
+            value={values.resetTimeFormat}
+            options={[{ label: "Date and time", value: "date-time" }, { label: "Time remaining", value: "time-remaining" }]}
+            onValueChange={(resetTimeFormat) => save({ ...values, resetTimeFormat })}
+            disabled={disabled}
+          />
         </SettingsCard>
       </SettingsSection>
       {disabled ? <Text accessibilityLiveRegion="polite" style={{ color: theme.colors.foregroundMuted, fontSize: 12 }}>Saving settings…</Text> : null}

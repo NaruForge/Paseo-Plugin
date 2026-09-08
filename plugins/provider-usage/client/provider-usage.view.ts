@@ -1,7 +1,7 @@
 import { pickPrimaryBalance, pickPrimaryWindow, remainingPercentForProvider } from "../shared/provider-usage.logic";
 import type { PluginTheme } from "@getpaseo/plugin";
 import type { ProviderUsage, UsageTone } from "../shared/provider-usage";
-import { DEFAULT_USAGE_SETTINGS, type PillSettings } from "../shared/usage-settings";
+import { DEFAULT_USAGE_SETTINGS, type PillSettings, type ResetTimeFormat } from "../shared/usage-settings";
 
 export type UsageViewStatus = "loading" | "empty" | "available" | "unavailable" | "error";
 
@@ -47,7 +47,8 @@ export function formatPercent(value: number | null | undefined): string {
   return `${Math.round(value)}%`;
 }
 
-export function formatResetAt(resetsAt: string | null | undefined, now = new Date()): string | null {
+export function formatResetAt(resetsAt: string | null | undefined, now = new Date(), format: ResetTimeFormat = "date-time"): string | null {
+  if (format === "time-remaining") return formatResetRemaining(resetsAt, now);
   if (!resetsAt) return null;
   const date = new Date(resetsAt);
   if (!Number.isFinite(date.getTime())) return null;
@@ -70,7 +71,21 @@ export function formatBalance(remaining: number | null, limit: number | null, un
   return "—";
 }
 
-export function formatPillResetAt(resetsAt: string | null | undefined, now = new Date()): string | null {
+export function formatResetRemaining(resetsAt: string | null | undefined, now = new Date(), compact = false): string | null {
+  if (!resetsAt) return null;
+  const remaining = new Date(resetsAt).getTime() - now.getTime();
+  if (!Number.isFinite(remaining)) return null;
+  if (remaining <= 0) return compact ? "Due" : "Reset due";
+  if (remaining < 60_000) return compact ? "<1m" : "Resets in <1m";
+  const minutes = Math.ceil(remaining / 60_000);
+  const days = Math.floor(minutes / 1440);
+  const hours = Math.floor((minutes % 1440) / 60);
+  const parts = [days ? `${days}d` : "", hours ? `${hours}h` : "", minutes % 60 ? `${minutes % 60}m` : ""].filter(Boolean);
+  return compact ? parts.slice(0, 2).join(" ") : `Resets in ${parts.join(" ")}`;
+}
+
+export function formatPillResetAt(resetsAt: string | null | undefined, now = new Date(), format: ResetTimeFormat = "date-time"): string | null {
+  if (format === "time-remaining") return formatResetRemaining(resetsAt, now, true);
   if (!resetsAt) return null;
   const date = new Date(resetsAt);
   if (!Number.isFinite(date.getTime())) return null;
@@ -79,7 +94,7 @@ export function formatPillResetAt(resetsAt: string | null | undefined, now = new
     ...(sameDay ? {} : { month: "short" as const, day: "numeric" as const }),
     hour: "2-digit", minute: "2-digit", hourCycle: "h23",
   }).format(date);
-  return `${date.getTime() <= now.getTime() ? "Reset" : "Resets"} ${label}`;
+  return label;
 }
 
 export function pillLabel(
@@ -87,6 +102,7 @@ export function pillLabel(
   providerId: string | null,
   settings: PillSettings = DEFAULT_USAGE_SETTINGS.pill,
   now = new Date(),
+  resetTimeFormat: ResetTimeFormat = "date-time",
 ): string {
   const name = provider?.label ?? displayNameForProviderId(providerId);
   const parts: string[] = [];
@@ -95,7 +111,7 @@ export function pillLabel(
   const label = parts.join(" ");
   if (!settings.showResetTime) return label;
   const resetsAt = provider?.status === "available" ? (pickPrimaryWindow(provider.windows)?.resetsAt ?? pickPrimaryBalance(provider.balances)?.resetsAt) : null;
-  const reset = formatPillResetAt(resetsAt, now) ?? "Reset —";
+  const reset = formatPillResetAt(resetsAt, now, resetTimeFormat) ?? "—";
   return label ? `${label} · ${reset}` : reset;
 }
 
