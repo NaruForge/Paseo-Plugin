@@ -2,7 +2,7 @@
 
 이 문서는 Paseo **0.8.0-beta.1** Plugin API로 **실제로 무엇을 만들 수 있는지** 빠르게 보여주는 아이디어 모음이다. 예제는 핵심 계약만 보여주며, 실제 Plugin에는 import, loading·empty·error 상태, 접근성 label과 cleanup을 함께 추가한다.
 
-아래 예시는 현재 설치 가능한 제품 목록이나 실행 검증 결과가 아니다. 현재 저장소 구현은 0.7.2이며 [0.8 이관](../MIGRATION_0.8.md)은 후속 작업이다. 이 저장소의 배포 대상은 [Branch Garden과 Provider Usage](../../README.md#plugins)이며, 그 밖의 예시는 API 활용 아이디어다.
+아래 예시는 현재 설치 가능한 제품 목록이나 실행 검증 결과가 아니다. 현재 구현의 버전과 검증 상태는 [호환성 기록](../COMPATIBILITY.md)과 [0.8 이관](../MIGRATION_0.8.md)을 따른다. 이 저장소의 배포 대상은 [Branch Garden과 Provider Usage](../../README.md#plugins)이며, 그 밖의 예시는 API 활용 아이디어다.
 
 등록 코드의 `client`는 `index.client.tsx`의 `PluginClientContext`, `server`는 `index.server.ts`의 `PluginServerContext`다. Context·props·훅은 `/client`, server context는 `/server`, `defineRpc`·`defineSettings`·`defineAttachmentSource`·`PluginTheme`·`PluginCleanup`은 SDK root에서 가져온다. `Icon`·`Modal`·`useToast`·`copyText` 등 UI는 `/client/react-native`에서 가져온다. 예제의 미정의 업무 함수는 해당 `client/` 또는 `server/`에서 구현해 연결한다.
 
@@ -542,7 +542,7 @@ export function DisplaySettings({ theme }: PluginSurfaceProps) {
 }
 ```
 
-Client entry에서 `client.addSettingsScreen({ id: "display", title: "Display", icon: "Settings", Component: DisplaySettings })`를 등록한다. 실제 제품에는 읽기 재시도와 invalid/reset 복구 UI도 연결한다. Schema version과 revision은 다르며 충돌 시 사용자 draft를 유지한다. 이 저장소의 Provider Usage는 아직 이 설정을 구현하지 않았다.
+Client entry에서 `client.addSettingsScreen({ id: "display", title: "Display", icon: "Settings", Component: DisplaySettings })`를 등록한다. 실제 제품에는 읽기 재시도와 invalid/reset 복구 UI도 연결한다. Schema version과 revision은 다르며 충돌 시 사용자 draft를 유지한다. 이 저장소의 Provider Usage는 host-scoped 표시 Settings를 구현하며, 다섯 스위치의 즉시 저장·실패·invalid 복구를 제공한다.
 
 ## 16. Slash command로 사용량 화면 열기
 
@@ -604,7 +604,7 @@ const snapshot = await paseo.providers.listUsage();
 const codex = snapshot.providers.find((provider) => provider.providerId === "codex");
 ```
 
-Client에서는 `usePaseo()`로 API를 얻고 TanStack Query의 loading/error/cache를 연결한다. `status`, window 잔여율·reset, balance의 nullable/optional 값을 처리하며 `agent.lastUsage`를 계획 잔여량으로 표시하지 않는다. Host 미지원 시 reject된다. 이 저장소의 Provider Usage는 아직 직접 벤더 GET을 사용하므로 SDK로의 전환은 실제 Codex/Grok 반환·갱신 정책을 비교한 뒤 별도 소스 변경으로 진행한다.
+Client에서는 `usePaseo()`로 API를 얻고 TanStack Query의 loading/error/cache를 연결한다. `status`, window 잔여율·reset, balance의 nullable/optional 값을 처리하며 `agent.lastUsage`를 계획 잔여량으로 표시하지 않는다. Host 미지원 시 reject된다. 이 저장소의 Provider Usage는 이 공식 SDK를 사용하며, global Provider catalog의 enabled 연결만 표시한다. 소스 검증과 실제 beta runtime 검증은 구분한다.
 
 ## 기능을 조합한 Plugin 아이디어
 
@@ -638,7 +638,7 @@ Client에서는 `usePaseo()`로 API를 얻고 TanStack Query의 loading/error/ca
 
 ### 0.8에서 재검토할 기존 아이디어
 
-- [Provider Usage #58](https://github.com/NaruForge/Paseo-Plugin/issues/58): `providers.listUsage()`로 직접 벤더 조회를 대체할 수 있는지 비교하고, host settings로 표시 옵션·갱신 주기를 검토한다. Native header 고정 숫자 slot이 생긴 것은 아니다.
+- [Provider Usage #84](https://github.com/NaruForge/Paseo-Plugin/issues/84): `providers.listUsage()`와 활성 연결 필터로 조회하고 host settings로 표시 옵션을 저장한다. 갱신 주기 설정은 이번 범위에 포함하지 않는다. Native header 고정 숫자 slot이 생긴 것은 아니다.
 - [Agent Graph #38](https://github.com/NaruForge/Paseo-Plugin/issues/38): lifecycle hook, permission 응답, durable timeline을 활용할 수 있다. Graph state·checkpoint·retry engine은 별도 설계가 필요하다.
 - Provider plugin은 [공식 provider 예제](https://paseo.sh/docs/plugins/v0.8/providers)의 session·prompt result·permission·persistence 계약부터 검증한다.
 

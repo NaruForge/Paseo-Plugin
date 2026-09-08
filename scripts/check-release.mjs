@@ -1,4 +1,5 @@
 import { readFile, readdir, access } from "node:fs/promises";
+import { validatePaseoMetadata, validateRuntimeEntries } from "./release-paseo.mjs";
 
 const root = new URL("../", import.meta.url);
 const json = async (name) => JSON.parse(await readFile(new URL(name, root), "utf8"));
@@ -22,7 +23,12 @@ for (const directory of directories) {
   const entry = catalog.plugins.find((plugin) => plugin.path === `plugins/${directory}`);
   if (pkg.version !== workspace.version || pkg.license !== workspace.license) errors.push(`${directory}: version/license mismatch.`);
   if (lock.packages?.[`plugins/${directory}`]?.version !== workspace.version) errors.push(`${directory}: lockfile version mismatch.`);
-  if (pkg.devDependencies?.["@getpaseo/plugin"] !== catalog.paseoVersion) errors.push(`${directory}: exact Paseo dependency must match catalog.`);
+  const { version: paseoVersion, errors: paseoErrors } = validatePaseoMetadata({ catalog, entry, pkg, manifest, locked: lock.packages?.[`plugins/${directory}`] });
+  errors.push(...paseoErrors.map((error) => `${directory}: ${error}`));
+  if (paseoVersion?.startsWith("0.8.")) {
+    const files = await readdir(new URL(`plugins/${directory}/`, root));
+    errors.push(...validateRuntimeEntries(files).map((error) => `${directory}: ${error}`));
+  }
   if (!pkg.scripts?.test || !pkg.scripts?.typecheck) errors.push(`${directory}: required test/typecheck scripts missing.`);
   if (entry?.id !== manifest.id || entry?.readme !== `plugins/${directory}/README.md`) errors.push(`${directory}: catalog identity/guide mismatch.`);
   if (!entry?.description || !["preview", "experimental", "stable"].includes(entry?.maturity)) errors.push(`${directory}: missing description or invalid maturity.`);

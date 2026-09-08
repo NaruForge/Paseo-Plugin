@@ -12,7 +12,7 @@ Prepared text for a future maintainer-approved submission; it has not been sent 
 
 **Compatibility:** Paseo 0.7.2, with per-plugin prerequisites and platform limitations documented. Provider Usage is experimental.
 
-**0.8 status:** Reference documentation has been updated for 0.8.0-beta.1, but source migration and runtime verification are pending in [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77). Do not describe the current release as 0.8-compatible in a submission; update this proposal after the [release verification](RELEASING.md#validate-runtime-safely) is complete.
+**0.8 status:** Reference documentation and Branch Garden source have been updated for 0.8.0-beta.1. Provider Usage migration and beta runtime verification are pending in [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77). Do not describe the current release as 0.8-compatible in a submission; update this proposal after the [release verification](RELEASING.md#validate-runtime-safely) is complete.
 
 **Maintenance:** NaruForge and contributors; MIT license; CI, release notes, configuration guides and private vulnerability reporting.
 

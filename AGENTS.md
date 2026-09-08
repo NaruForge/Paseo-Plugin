@@ -2,7 +2,7 @@
 
 이 저장소는 Branch Garden과 Provider Usage 두 개의 독립적인 Paseo 플러그인을 개발하는 npm workspace다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위다.
 
-현재 소스·SDK·manifest·배포 태그 `v0.1.0-rc.2`는 Paseo **0.7.2** 대상이다. 새 참조 문서는 **0.8.0-beta.1** 계약을 설명하며 소스 이관이나 실행 호환성 인증을 뜻하지 않는다. 이관 계획은 [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77), 파일·import·검증 순서는 [docs/MIGRATION_0.8.md](docs/MIGRATION_0.8.md)를 따른다.
+현재 두 플러그인 소스·SDK·manifest는 **0.8.0-beta.1** 대상이며 실제 beta daemon/app 실행 검증은 후속 작업이다. 기존 배포 태그 `v0.1.0-rc.2`의 두 플러그인은 **0.7.2** 대상이다. 참조 문서는 **0.8.0-beta.1** 계약을 설명한다. 이관 계획은 [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77), 파일·import·검증 순서는 [docs/MIGRATION_0.8.md](docs/MIGRATION_0.8.md)를 따른다.
 
 아이디어, 개발 계획과 버그의 이슈 관리는 GitHub Issues를 사용한다. 새 이슈는 `.github/ISSUE_TEMPLATE/`의 양식을 사용하고, 분류·Project 상태·PR 연결 규칙은 `.github/ISSUE_MANAGEMENT.md`를 따른다.
 
@@ -11,7 +11,7 @@
 - 실제 구현을 시작할 때 해당 이슈의 GitHub Project Status를 `In progress`로 변경한다.
 - 먼저 변경 대상 플러그인을 `plugins/`에서 고른다.
 - 해당 디렉터리의 `paseo-plugin.json`에서 기본 설치 ID를 확인한다.
-- 현재 0.7 소스는 `index.ts`, UI는 `*.client.tsx`에서 시작한다. 0.8 이관 후에는 `index.client.tsx`·`index.server.ts`와 `client/`·`server/`·`shared/`를 따른다.
+- 두 플러그인 소스는 `index.client.tsx`·`index.server.ts`와 `client/`·`server/`·`shared/`를 따른다.
 - 한 플러그인만 바꿨으면 해당 workspace를, 구조나 공통 설치 상태를 바꿨으면 루트 workspace 전체를 검증한다.
 
 플러그인 API는 실험 단계이므로 계약을 바꾸거나 새 기여 유형을 추가하기 전에 **대상 버전**의 문서를 확인한다. 0.8 작업은 [quickstart](https://paseo.sh/docs/plugins/v0.8), [reference](https://paseo.sh/docs/plugins/v0.8/reference), [migration](https://paseo.sh/docs/plugins/v0.8/migration)를, 기존 0.7 유지보수는 [v0.7 quickstart](https://paseo.sh/docs/plugins/v0.7)와 [reference](https://paseo.sh/docs/plugins/v0.7/reference)를 사용한다. Exact package declaration에 없는 API를 최신 문서만 보고 사용하지 않는다.
@@ -41,7 +41,7 @@ npm run typecheck --workspace branch-garden
 
 ## Adding a Plugin
 
-1. 지원할 Paseo 버전을 먼저 정하고 해당 CLI로 `plugins/<plugin-id>` 아래의 새 빈 디렉터리에 `paseo plugin init <absolute-directory> --id <plugin-id>`를 실행한다. 현재 collection의 0.7.2 계약에 0.8 scaffold를 혼합하지 않는다.
+1. 지원할 Paseo 버전을 먼저 정하고 해당 CLI로 `plugins/<plugin-id>` 아래의 새 빈 디렉터리에 `paseo plugin init <absolute-directory> --id <plugin-id>`를 실행한다. 각 workspace의 대상 SDK와 manifest를 맞추고 catalog의 플러그인별 `paseoVersion`을 기록한다.
 2. 생성된 `package.json`의 `name`과 `paseo-plugin.json`의 `id`가 이 저장소 안에서 고유한지 확인한다.
 3. 루트에서 `npm install`을 실행해 workspace 설치 상태를 갱신한다.
 4. 아래 Workspace Map, `README.md`, `README.ko.md`, `plugins.json`의 플러그인 목록·설치 예시·저장소 구조와 `.github/ISSUE_TEMPLATE/*.yml`의 대상 선택지를 갱신한다. Git source로 배포할 플러그인이면 `docs/GIT_INSTALLATION.md`의 설치 목록도 갱신한다.
@@ -56,11 +56,11 @@ npm run typecheck --workspace branch-garden
   Role: 선택된 호스트의 Git Workspace와 로컬 브랜치 상태를 읽기 전용으로 집계하는 전역 사이드바 surface를 제공한다.
 - `plugins/provider-usage/`
   Audience: **Personal operations**
-  Role: 선택된 호스트의 Codex와 Grok 계획 사용량을 읽기 전용으로 집계해 전역 사이드바 surface와 해당 Agent Composer pill에 표시한다. native 설정 → 사용량 화면을 대체하지 않는다.
+  Role: 선택된 Host의 활성 Provider 연결과 사용량을 공식 SDK로 읽어 surface와 해당 Agent Composer pill에 표시하고 host Settings에서 표시 여부·필드를 저장한다. native 설정 → 사용량 화면을 대체하지 않는다.
 
 ## Per-Plugin Change Routing
 
-아래 suffix 경로는 **현재 0.7 소스**를 찾는 기준이다. 0.8 이관에는 다음 runtime 규칙을 우선 적용한다.
+현재 두 플러그인은 다음 0.8 runtime 규칙을 따른다.
 
 - `index.client.ts[x]`: surface/sidebar/panel/command/slash/pill/attachment/theme/timeline/settings 등록과 client cleanup을 소유한다. `PluginClientContext`는 `@getpaseo/plugin/client`에서 가져온다. `addClientSide` wrapper 없이 helper cleanup을 직접 합성한다.
 - `index.server.ts[x]`: RPC handler, settings persistence, provider와 lifecycle 등록·server cleanup을 소유한다. `PluginServerContext`는 `@getpaseo/plugin/server`에서 가져온다.
@@ -69,19 +69,13 @@ npm run typecheck --workspace branch-garden
 - `*.logic.ts`, `*.view.ts`와 helper·테스트는 실제 소비자와 runtime 의존성에 따라 이동한다. 이름만으로 shared로 분류하지 않는다.
 - 이관 완료 소스는 manifest에 `requirements.paseo`를 선언한다. 권장 범위는 `^0.8.0`, 이관 기준 SDK는 exact `0.8.0-beta.1`이다. Manifest만 바꿔 호환성을 표시하지 않는다.
 
-현재 0.7 경로:
-
-- `index.ts`: daemon-side RPC·surface·sidebar와 client contribution의 연결을 소유한다. 기본 내보내기 함수는 정리 함수를 반환하고, 이 진입점이 만든 타이머·감시자·소켓은 그 함수에서 정리한다.
-- `*.client.ts`: client contribution 조립과 client-side 구독·controller 정리를 소유한다. 등록 함수가 반환한 cleanup은 이 계층에서 합성한다.
-- `*.client.tsx`: UI, 훅, React Native 스타일을 소유한다. 모든 `Text` 색상은 `theme.colors`에서 가져오고, 루트 배경에는 `theme.colors.surface0`, 좁은 화면 대응에는 `layout.compact`를 사용한다.
-- `*.server.ts`: 파일 시스템, 프로세스, 자격 증명, 외부 API처럼 데몬 측에서 실행해야 하는 동작을 소유한다.
-- `*.shared.ts`: 클라이언트와 서버가 함께 쓰는 Zod RPC 계약과 순수 값을 소유한다. Node 또는 React Native 런타임 코드를 넣지 않는다.
+- `client/*.tsx`: UI, 훅, React Native 스타일. 모든 `Text` 색상은 `theme.colors`, 루트 배경은 `theme.colors.surface0`, 좁은 화면은 `layout.compact`를 사용한다.
 - `*.logic.ts`, `*.view.ts`: 런타임에 의존하지 않는 도메인 판단과 표시용 파생 값을 소유한다. 동작을 바꾸면 같은 이름의 테스트를 함께 확인한다.
 - `*-registration.ts`, `*-query.ts`, `*-modal.ts`, `*-confirmation.ts`와 catalog·clipboard helper: client 등록, query와 비동기 controller 동작을 소유한다. 구독·pending state처럼 수명이 있는 자원은 만든 모듈에서 cleanup을 제공하고 동명 테스트를 함께 확인한다.
 - `paseo-plugin.json`: 설치 기본 ID를 소유한다. 디렉터리명이나 package 이름으로 런타임 ID를 추측하지 않는다.
 - `package.json`: 로컬 타입 검사용 exact `@getpaseo/plugin` 의존성을 소유한다. 공개 계약을 ambient declaration으로 임의 확장하지 않는다.
 
-클라이언트 모듈에서 `*.server.ts`를 가져오거나 서버 모듈에서 `*.client.tsx`를 가져오지 않는다. 화면 안에서 별도 Paseo 클라이언트를 만들지 않고 제공된 Paseo API를 사용한다.
+클라이언트 모듈에서 `server/`를 가져오거나 서버 모듈에서 `client/`를 가져오지 않는다. 화면 안에서 별도 Paseo 클라이언트를 만들지 않고 제공된 Paseo API를 사용한다.
 
 ## Synchronization Rules
 
@@ -91,14 +85,14 @@ npm run typecheck --workspace branch-garden
 - 플러그인 디렉터리를 추가·삭제·이름 변경하면 이 파일의 Workspace Map, `README.md`, `README.ko.md`, `plugins.json`의 플러그인 목록·설치 예시·저장소 구조, `.github/ISSUE_TEMPLATE/*.yml`의 대상 선택지와 루트 workspace 검증을 같은 변경에서 맞추고 `npm run check:docs-sync`를 실행한다. Git source 배포 목록에 영향을 주면 `docs/GIT_INSTALLATION.md`도 갱신한다.
 - 플러그인의 사용자용 설치 요구 사항, 운영 절차 또는 안전 경계를 바꾸면 해당 내용을 이미 설명하는 루트나 플러그인 `README.md`와 `docs/` 문서를 같은 변경에서 갱신한다. 과거 release·verification 기록은 당시 사실을 보존하고 새 버전 증거를 별도로 추가한다.
 - Paseo 플러그인 계약이 바뀌면 현재 CLI가 생성하는 새 스캐폴드, exact `@getpaseo/plugin` package declaration과 공식 참조 문서를 대조하고, 영향받는 각 플러그인의 타입 계약을 확인한다.
-- 0.8 source 이관은 runtime import allowlist, Vitest stub, exact SDK·client dependency, lockfile·catalog 일치도 함께 검증한다. 현재 검사 스크립트 통과만으로 0.8 host compiler나 실행 호환성을 인증하지 않는다.
+- 0.8 source 이관은 runtime import allowlist, Vitest stub, exact SDK·client dependency, lockfile·catalog 일치도 함께 검증한다. Catalog의 플러그인별 `paseoVersion`이 있으면 collection 기본 `paseoVersion`보다 우선한다. 현재 검사 스크립트 통과만으로 0.8 host compiler나 실행 호환성을 인증하지 않는다.
 
 ## Validation and Runtime Safety
 
 - 문서만 바꾸고 플러그인 소스, package declaration, workspace 구조와 설치 상태에 영향을 주지 않은 경우에는 typecheck와 테스트를 요구하지 않는다. 문서의 명령·경로·계약을 바꿨다면 해당 내용의 정적 대조나 필요한 최소 검증은 수행한다.
 - 한 플러그인의 소스 변경은 먼저 `npm run typecheck --workspace <package-name>`으로 검사한다.
 - `branch-garden`의 logic, server, shared 또는 view 동작을 바꾸면 `npm run typecheck --workspace branch-garden`과 `npm test --workspace branch-garden`을 모두 실행한다. Git 명령 변경은 read-only allowlist와 실제 Git 상태 무변경 테스트를 반드시 통과해야 한다.
-- `provider-usage`의 logic, server, shared, view, query, client 또는 registration 동작을 바꾸면 `npm run typecheck --workspace provider-usage`와 `npm test --workspace provider-usage`를 모두 실행한다. 사용량 HTTP 변경은 Codex WHAM과 Grok billing 읽기 전용 allowlist, 자격 증명 파일 무기록, 토큰 비로그 테스트를 반드시 통과해야 한다.
+- `provider-usage`의 logic, server, shared, view, query, client 또는 registration 동작을 바꾸면 `npm run typecheck --workspace provider-usage`와 `npm test --workspace provider-usage`를 모두 실행한다. 현재 사용량은 공식 `providers.snapshot`·`listUsage`만 호출한다. 활성 연결 필터, 누락 값·오류 정규화, 직접 HTTP·자격 증명 접근·토큰 로그 부재 테스트를 통과해야 한다. 0.7 ref의 직접 HTTP를 변경할 때는 기존 Codex WHAM·Grok billing GET allowlist와 자격 증명 무기록·토큰 비로그 검사를 유지한다.
 - workspace 구조, 설치 상태 또는 여러 플러그인에 걸친 변경은 루트에서 `npm run check:docs-sync`와 `npm run typecheck`로 검사한다.
 - Git source 설치나 업데이트 경로를 변경하거나 배포를 준비할 때는 루트에서 `npm run check:git-source-imports`를 실행한다. Paseo는 package manager와 install script를 자동 실행하지 않는다. Manifest에 `build`가 있으면 명시한 argv 명령만 staged plugin directory에서 실행하므로, 현재 플러그인처럼 `build`를 생략한 source의 runtime import는 host 제공 모듈, Node 기본 모듈과 플러그인 내부 상대 경로만 사용한다.
 - 같은 컴퓨터에서 소스를 편집하는 개발 흐름은 directory install과 `plugin reload`, 다른 daemon이나 PC에 배포하는 운영 흐름은 Git source의 `plugin add owner/repository:plugins/<id>`와 `plugin update`를 사용한다. `--path`는 legacy 호환 형식이다. 기존 directory runtime과 Git 검증 runtime에는 서로 다른 ID를 사용한다.

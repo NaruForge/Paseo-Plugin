@@ -8,7 +8,7 @@
 
 Branch Garden과 Provider Usage 두 개의 [Paseo](https://paseo.sh) 플러그인에 집중하는 npm workspace입니다. 이 저장소의 핵심 지원 대상이며, Paseo 팀의 공식 지원을 의미하지 않습니다. Provider Usage의 공급자 연동은 여전히 실험적입니다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위이며, 플러그인끼리 런타임 코드를 공유하지 않습니다.
 
-> **현재 소스·배포 대상: `0.7.2` / 새 참조 문서: `0.8.0-beta.1`** — 현재 두 플러그인은 0.8에서 그대로 로드되지 않습니다. [0.8 이관 안내](docs/MIGRATION_0.8.md)와 [대응 이슈 #77](https://github.com/NaruForge/Paseo-Plugin/issues/77)을 확인하세요. [Paseo Plugin Capabilities](docs/plugin-capabilities/README.md)는 새 베타 API를 설명하며 실행 호환성 인증이 아닙니다. 실제 이관 시 해당 CLI의 fresh scaffold와 exact SDK 선언을 다시 대조합니다.
+> **현재 소스: 두 플러그인 모두 `0.8.0-beta.1` / 기존 배포 태그: 둘 다 `0.7.2`** — Provider Usage는 공식 사용량 SDK와 표시 Settings를 적용했습니다. 실제 beta daemon/app 실행 검증은 남아 있습니다. [Provider Usage 검증 기록](docs/verification/provider-usage-0.8-source.md)을 확인하세요. [소스 검증 기록](docs/verification/branch-garden-0.8-source.md), [0.8 이관 안내](docs/MIGRATION_0.8.md)와 [대응 이슈 #77](https://github.com/NaruForge/Paseo-Plugin/issues/77)을 확인하세요.
 
 > [!WARNING]
 > Paseo 플러그인은 신뢰된 비격리 코드입니다. 서버 측 코드는 daemon이 실행되는 컴퓨터의 파일, 프로세스, 자격 증명과 네트워크에 접근할 수 있고, 클라이언트 코드는 Paseo 앱 안에서 실행됩니다. 검토하고 신뢰하는 소스만 설치하세요.
@@ -18,7 +18,7 @@ Branch Garden과 Provider Usage 두 개의 [Paseo](https://paseo.sh) 플러그�
 | Runtime ID | 대상 | 역할 |
 | --- | --- | --- |
 | [`branch-garden`](plugins/branch-garden/) | Personal operations | 선택된 host의 등록된 Git Project·Workspace와 로컬 branch·worktree 상태를 읽기 전용으로 집계하는 전역 sidebar surface입니다. |
-| [`provider-usage`](plugins/provider-usage/) | Personal operations | 선택된 Host의 Codex와 Grok 계획 사용량을 읽기 전용으로 집계해 전역 sidebar와 Agent Composer pill에 보여 줍니다. |
+| [`provider-usage`](plugins/provider-usage/) | Personal operations | 선택된 Host에서 활성화한 Provider 연결의 사용량을 공식 SDK로 읽어 표시합니다. Settings에서 sidebar와 Composer pill 표시를 조절합니다. |
 
 Runtime ID의 기준은 디렉터리명이나 package 이름이 아니라 각 플러그인의 `paseo-plugin.json`입니다.
 
@@ -28,10 +28,10 @@ Branch Garden의 UI·접근성 문구·자체 오류와 경고는 영어로 표�
 
 필요한 도구:
 
-- Paseo Desktop/daemon/CLI `0.7.2`
+- 현재 두 플러그인 소스 대상: Paseo daemon/app/CLI `0.8.0-beta.1`; 기존 `v0.1.0-rc.2` 태그 대상: `0.7.2`
 - Branch Garden을 사용할 daemon host의 Git과 등록된 Paseo Project 또는 Workspace
 - 로컬 개발·검증에는 Node.js 22 이상과 npm (Git source 설치만 할 때는 npm 실행 불필요)
-- `provider-usage`는 선택된 host에 이미 저장된 Codex·Grok 인증만 읽으며, 인증이 없는 provider는 사용 불가 상태로 표시합니다.
+- `provider-usage`는 Paseo의 활성 연결 목록과 공식 사용량 API만 호출합니다. 인증과 벤더 HTTP는 Paseo daemon이 담당하며, 사용량 미지원 연결은 조회 불가로 표시합니다.
 
 로컬 개발 시 루트에서 의존성을 설치하고 문서 동기화·Git-source runtime import·릴리스 메타데이터·모든 workspace 타입과 테스트를 검사합니다.
 
@@ -60,12 +60,21 @@ npm run typecheck --workspace branch-garden
 
 먼저 대상 daemon의 **Settings → Plugins**에서 플러그인이 활성화되어 있는지 확인하세요. 전역 플러그인 switch를 켜는 것은 해당 daemon에서 모든 신뢰된 플러그인 코드를 허용하는 보안 결정입니다.
 
-저장소 루트에서 절대 경로로 원하는 플러그인을 설치합니다.
+저장소 루트에서 절대 경로로 원하는 플러그인을 설치합니다. 아래 현재 소스 예시는 호환되는 0.8 beta daemon/app을 대상으로 합니다.
 
 ```powershell
 $repoRoot = (Resolve-Path .).Path
 paseo plugin ls
+# Branch Garden: 호환되는 0.8 beta 검증 daemon에서 실행
 paseo plugin install (Join-Path $repoRoot "plugins\branch-garden")
+paseo plugin ls
+```
+
+Provider Usage도 같은 호환 beta daemon에 설치할 수 있습니다. 표시 설정은 Settings → Plugins에서 열며 기본값은 Composer pill 켜짐, Sidebar 꺼짐입니다.
+
+```powershell
+$repoRoot = (Resolve-Path .).Path
+paseo plugin ls
 paseo plugin install (Join-Path $repoRoot "plugins\provider-usage")
 paseo plugin ls
 ```
@@ -80,7 +89,7 @@ paseo plugin ls
 paseo plugin logs branch-garden
 ```
 
-설치·reload·제거를 수행하기 전에는 `paseo plugin ls`로 대상 host와 runtime ID를 확인하세요. 0.8 CLI의 원격 옵션은 `paseo --host <host> plugin ls`처럼 명령 앞에 둡니다. 위 로컬 소스 설치 예시는 현재 소스와 호환되는 0.7.2 daemon/client를 전제로 합니다.
+설치·reload·제거를 수행하기 전에는 `paseo plugin ls`로 대상 host와 runtime ID를 확인하세요. 0.8 CLI의 원격 옵션은 `paseo --host <host> plugin ls`처럼 명령 앞에 둡니다. 현재 두 플러그인 소스는 0.8 beta daemon/app을 대상으로 합니다. 두 플러그인을 0.7.2에서 사용할 때는 기존 태그를 고정하세요.
 
 ## Git source 배포와 update
 
@@ -121,21 +130,21 @@ paseo plugin ls
 └── package.json
 ```
 
-아래 표는 아직 이관하지 않은 **현재 0.7 소스**의 경로입니다. 0.8에서는 `index.client.ts[x]`·`index.server.ts[x]`와 `client/`·`server/`·`shared/`로 이동합니다. 새 등록·import·cleanup 규칙은 [이관 안내](docs/MIGRATION_0.8.md#파일과-import-이동)를 따릅니다.
+두 플러그인은 `index.client.tsx`·`index.server.ts`와 `client/`·`server/`·`shared/`를 사용합니다. 아래 표는 현재 소스 경로입니다. 새 등록·import·cleanup 규칙은 [이관 안내](docs/MIGRATION_0.8.md#파일과-import-이동)를 따릅니다.
 
 | 파일 | 역할 |
 | --- | --- |
-| `index.ts` | 기여 등록, RPC handler 연결과 cleanup 수명주기 |
-| `*.client.ts` | client contribution 조립, 구독과 controller cleanup |
-| `*.client.tsx` | React Native UI, hook, theme와 responsive layout |
-| `*.server.ts` | 파일 시스템, 프로세스, 자격 증명과 외부 API 같은 daemon 측 동작 |
-| `*.shared.ts` | 클라이언트와 서버가 공유하는 Zod RPC 계약과 순수 값 |
+| `index.client.tsx`, `index.server.ts` | client 기여와 server RPC·Settings 등록, cleanup |
+| `client/*.ts` | client contribution 조립, 구독과 controller cleanup |
+| `client/*.tsx` | React Native UI, hook, theme와 responsive layout |
+| `server/*.ts` | 파일 시스템, 프로세스, 자격 증명과 외부 API 같은 daemon 측 동작 |
+| `shared/*.ts` | 클라이언트와 서버가 공유하는 Zod RPC 계약과 순수 값 |
 | `*.logic.ts`, `*.view.ts` | runtime에 의존하지 않는 판단과 표시용 파생 값 |
 | `*-registration.ts` 등 helper | client 등록, query, modal과 비동기 controller 수명주기 |
 | `paseo-plugin.json` | 기본 설치 runtime ID |
 | `package.json` | 로컬 타입 검사에 사용하는 exact `@getpaseo/plugin` 개발 의존성 |
 
-클라이언트 모듈에서 `*.server.ts`를 가져오거나 서버 모듈에서 `*.client.tsx`를 가져오지 않습니다. 화면 안에서 별도의 Paseo client를 생성하지 않고 host가 제공한 Paseo API와 plugin RPC를 사용합니다.
+클라이언트 모듈에서 `server/`를 가져오거나 서버 모듈에서 `client/`를 가져오지 않습니다. 화면 안에서 별도의 Paseo client를 생성하지 않고 host가 제공한 Paseo API와 plugin RPC를 사용합니다.
 
 ## 개발 원칙
 
