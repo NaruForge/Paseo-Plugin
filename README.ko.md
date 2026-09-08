@@ -20,6 +20,8 @@ Branch Garden과 Provider Usage 두 개의 [Paseo](https://paseo.sh) 플러그�
 
 Runtime ID의 기준은 디렉터리명이나 package 이름이 아니라 각 플러그인의 `paseo-plugin.json`입니다.
 
+Branch Garden의 UI·접근성 문구·자체 오류와 경고는 영어로 표시됩니다. 사용자 이름과 외부 도구의 진단 원문은 바꾸지 않습니다. Provider Usage에는 한국어 상태 문구가 남아 있습니다. 각 플러그인의 README에서 실제 화면을 확인할 수 있습니다.
+
 ## 시작하기
 
 필요한 도구:

@@ -322,7 +322,7 @@ async function tryDiscoverLocation(
   git: GitRunner,
 ): Promise<LocationDiscovery> {
   if (!directory.trim()) {
-    return { location: null, error: "경로가 비어 있습니다." };
+    return { location: null, error: "The path is empty." };
   }
   try {
     return { location: await discoverLocation(directory, priority, git), error: null };
@@ -358,7 +358,7 @@ async function discoverProjects(
       project.id,
       {
         project,
-        root: { location: null, error: "Project root를 조사하지 못했습니다." },
+        root: { location: null, error: "Could not scan the project root." },
         workspaces: [],
       },
     ]),
@@ -521,7 +521,7 @@ async function scanWorkspaceStatus(
     headOid: null,
     detached: false,
     isDirty: workspace.gitRuntime?.isDirty ?? null,
-    error: `Workspace 상태 조사 실패: ${attempt.error ?? "알 수 없는 오류"}`,
+    error: `Could not scan workspace status: ${attempt.error ?? "Unknown error"}`,
   };
 }
 
@@ -541,7 +541,7 @@ function failedRepository(
   const warnings = messages.filter(
     (message, index, collection) => collection.indexOf(message) === index,
   );
-  const error = warnings[0] ?? "Git 저장소를 조사할 수 없습니다.";
+  const error = warnings[0] ?? "Could not scan the Git repository.";
   return {
     id: `project:${project.id}`,
     name: projectName(project),
@@ -612,11 +612,11 @@ async function scanRepository(
     }
   }
   if (base.state === "unknown") {
-    warnings.push("기본 브랜치 ref를 판별하지 못해 정리 후보를 만들지 않았습니다.");
+    warnings.push("Could not determine the base branch ref. No cleanup candidates were identified.");
   }
 
   if (!branchAttempt.result) {
-    const error = `로컬 브랜치 조사 실패: ${branchAttempt.error ?? "알 수 없는 오류"}`;
+    const error = `Could not scan local branches: ${branchAttempt.error ?? "Unknown error"}`;
     warnings.push(error);
     return {
       id: representativeLocation.commonDirectoryKey,
@@ -641,7 +641,7 @@ async function scanRepository(
   const worktreeStateKnown = worktreeAttempt.result !== null;
   if (!worktreeStateKnown) {
     warnings.push(
-      `worktree 체크아웃 상태 조사 실패: ${worktreeAttempt.error ?? "알 수 없는 오류"}`,
+      `Could not scan worktree checkout status: ${worktreeAttempt.error ?? "Unknown error"}`,
     );
     for (const workspace of workspaces) {
       if (!workspace.currentBranch) {
@@ -667,7 +667,7 @@ async function scanRepository(
       mergedRefs = parseMergedRefs(mergedAttempt.result.stdout);
       mergeStateKnown = true;
     } else {
-      warnings.push(`병합 상태 조사 실패: ${mergedAttempt.error ?? "알 수 없는 오류"}`);
+      warnings.push(`Could not scan merge status: ${mergedAttempt.error ?? "Unknown error"}`);
     }
   }
 
@@ -783,7 +783,7 @@ export async function scanBranchGarden(
     }
     projectsById.set(workspace.projectId, projectFromWorkspace(workspace));
     warnings.push(
-      `${workspace.projectDisplayName}: Project 목록에 없어 활성 Workspace 정보로 복구했습니다.`,
+      `${workspace.projectDisplayName}: Not in the project list; recovered from active workspace data.`,
     );
   }
 
@@ -823,12 +823,12 @@ export async function scanBranchGarden(
 
     if (groupKeys.length === 0) {
       const messages = [
-        `${projectName(discovery.project)}: Project root Git 저장소 판별 실패: ${discovery.root.error ?? "알 수 없는 오류"}`,
+        `${projectName(discovery.project)}: Could not identify the Git repository at the project root: ${discovery.root.error ?? "Unknown error"}`,
         ...discovery.workspaces
           .filter(({ discovery: workspaceDiscovery }) => workspaceDiscovery.error)
           .map(
             ({ workspace, discovery: workspaceDiscovery }) =>
-              `${workspace.name}: Workspace Git 저장소 판별 실패: ${workspaceDiscovery.error}`,
+              `${workspace.name}: Could not identify the workspace Git repository: ${workspaceDiscovery.error}`,
           ),
       ];
       repositories.push(failedRepository(discovery.project, projectWorkspaces, messages));
@@ -846,7 +846,7 @@ export async function scanBranchGarden(
     const fallbackGroupKey = discovery.root.location?.commonDirectoryKey ?? groupKeys[0];
     if (discovery.root.error) {
       getRepositoryGroup(groups, fallbackGroupKey).warnings.push(
-        `${projectName(discovery.project)}: Project root 조사 실패: ${discovery.root.error}`,
+        `${projectName(discovery.project)}: Could not scan the project root: ${discovery.root.error}`,
       );
     }
     for (const { workspace, discovery: workspaceDiscovery } of discovery.workspaces) {
@@ -856,7 +856,7 @@ export async function scanBranchGarden(
       group.workspaces.set(workspace.id, workspace);
       if (workspaceDiscovery.error) {
         group.warnings.push(
-          `${workspace.name}: Workspace Git 저장소 판별 실패: ${workspaceDiscovery.error}`,
+          `${workspace.name}: Could not identify the workspace Git repository: ${workspaceDiscovery.error}`,
         );
       }
     }

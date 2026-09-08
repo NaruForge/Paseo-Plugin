@@ -330,7 +330,7 @@ describe("Project and Workspace discovery", () => {
     expect(result.skippedNonGitProjectCount).toBe(1);
     expect(result.repositories).toEqual([]);
     expect(result.warnings).toContain(
-      "Fixture Repository: Project 목록에 없어 활성 Workspace 정보로 복구했습니다.",
+      "Fixture Repository: Not in the project list; recovered from active workspace data.",
     );
   });
 });
@@ -485,7 +485,7 @@ describe("real Git fixture", () => {
       ref: "refs/heads/main",
       source: "local_main",
     });
-    expect(failed.error).toContain("Git 저장소 판별 실패");
+    expect(failed.error).toContain("Could not identify the Git repository");
     expect(result.summary.warningCount).toBeGreaterThan(0);
 
     expect(scanned.branches.find((branch) => branch.name === "main")).toMatchObject({

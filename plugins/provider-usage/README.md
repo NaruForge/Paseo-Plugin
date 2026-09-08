@@ -4,6 +4,12 @@ Show Codex and Grok plan usage in the sidebar and on the matching agent composer
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Support](../../SUPPORT.md)
 
+## Composer pill
+
+The pill above the agent composer shows the provider and remaining usage percentage. Press it to refresh usage; the active query also refreshes every two minutes. The image below is a user-supplied capture of the actual Paseo composer. Its displayed quota is a snapshot, not a guaranteed allowance.
+
+![Provider Usage pill showing Codex 96% remaining above the Paseo agent composer](../../docs/screenshots/provider-usage/composer-pill.jpg)
+
 ## Install
 
 ```sh

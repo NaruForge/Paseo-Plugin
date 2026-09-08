@@ -18,7 +18,7 @@ Maintained by **SWBaek and contributors**. This is a community project, independ
 | [`branch-garden`](plugins/branch-garden/) | Inspect active Git workspaces, branches and worktrees without changing Git state. | Git; active Paseo workspaces | Preview |
 | [`provider-usage`](plugins/provider-usage/) | Inspect Codex and Grok plan usage from existing host credentials. | Existing provider authentication | Experimental |
 
-Both plugins are maintained as this repository's core offering; this does not imply Paseo-team support. Provider Usage remains experimental at the provider integration boundary. UI text currently includes Korean; installation guides are available in English.
+Both plugins are maintained as this repository's core offering; this does not imply Paseo-team support. Branch Garden's interface is in English. Provider Usage remains experimental at the provider integration boundary and still includes Korean status messages. Installation guides are available in English, with actual screenshots in each plugin guide.
 
 ## Install one plugin
 
