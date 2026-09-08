@@ -1,9 +1,9 @@
 # Support and maintenance
 
-This repository is maintained by **SWBaek and contributors** as a community project. It is not operated or endorsed by the Paseo team. Support is best effort, with no service-level or response-time guarantee.
+This repository is maintained by **NaruForge and contributors** as a community project. It is not operated or endorsed by the Paseo team. Support is best effort, with no service-level or response-time guarantee.
 
-- Report reproducible problems with the [bug form](https://github.com/SWBaek/Paseo-Plugin/issues/new?template=03-bug.yml).
-- Propose changes with the [idea form](https://github.com/SWBaek/Paseo-Plugin/issues/new?template=01-idea.yml).
+- Report reproducible problems with the [bug form](https://github.com/NaruForge/Paseo-Plugin/issues/new?template=03-bug.yml).
+- Propose changes with the [idea form](https://github.com/NaruForge/Paseo-Plugin/issues/new?template=01-idea.yml).
 - Report vulnerabilities through the private route in [SECURITY.md](SECURITY.md).
 
 English and Korean reports are welcome. Include plugin runtime ID, installed commit/tag, Paseo daemon and client versions, daemon OS, client platform, reproduction steps and redacted logs. Do not attach authentication files or raw environment dumps.

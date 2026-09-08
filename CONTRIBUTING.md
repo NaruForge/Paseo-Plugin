@@ -1,6 +1,6 @@
 # Contributing
 
-English and Korean contributions are welcome. Start with an [issue](https://github.com/SWBaek/Paseo-Plugin/issues/new/choose) describing the user problem and an observable result. For large changes, agree on scope before implementation. The maintainer manages Project fields; contributors do not need access to the private GitHub Project.
+English and Korean contributions are welcome. Start with an [issue](https://github.com/NaruForge/Paseo-Plugin/issues/new/choose) describing the user problem and an observable result. For large changes, agree on scope before implementation. The maintainer manages Project fields; contributors do not need access to the private GitHub Project.
 
 ## Local development
 

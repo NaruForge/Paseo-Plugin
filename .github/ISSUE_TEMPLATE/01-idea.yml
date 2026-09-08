@@ -5,7 +5,7 @@ labels:
   - idea
   - needs-triage
 projects:
-  - SWBaek/1
+  - NaruForge/1
 body:
   - type: markdown
     attributes:

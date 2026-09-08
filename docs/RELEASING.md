@@ -20,7 +20,7 @@ Validate daemon and app versions independently, including host compiler boundari
 Use an authorized test daemon with plugins already enabled. Check `paseo plugin ls`; use unique runtime IDs. A Git branch candidate can be tested before a tag exists:
 
 ```sh
-paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden --ref <candidate-branch> --id branch-garden-release-check
+paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref <candidate-branch> --id branch-garden-release-check
 paseo plugin ls
 paseo plugin status branch-garden-release-check
 paseo plugin logs branch-garden-release-check

@@ -17,7 +17,7 @@ The pill above the agent composer shows the provider and remaining usage percent
 ## Install
 
 ```sh
-paseo plugin add SWBaek/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
+paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
 paseo plugin ls
 ```
 
