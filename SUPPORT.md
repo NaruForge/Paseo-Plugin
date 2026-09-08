@@ -1,0 +1,21 @@
+# Support and maintenance
+
+This repository is maintained by **SWBaek and contributors** as a community project. It is not operated or endorsed by the Paseo team. Support is best effort, with no service-level or response-time guarantee.
+
+- Report reproducible problems with the [bug form](https://github.com/SWBaek/Paseo-Plugin/issues/new?template=03-bug.yml).
+- Propose changes with the [idea form](https://github.com/SWBaek/Paseo-Plugin/issues/new?template=01-idea.yml).
+- Report vulnerabilities through the private route in [SECURITY.md](SECURITY.md).
+
+English and Korean reports are welcome. Include plugin runtime ID, installed commit/tag, Paseo daemon and client versions, daemon OS, client platform, reproduction steps and redacted logs. Do not attach authentication files or raw environment dumps.
+
+## Support policy
+
+The initial release line targets Paseo **0.7.2**. Newer or preview APIs are not assumed compatible. We prioritize reproducible problems on the Windows daemon and web client used for runtime validation. macOS/Linux automated checks and native mobile support have separate evidence in [Compatibility](docs/COMPATIBILITY.md).
+
+Before 1.0, breaking changes can occur in minor releases and are documented in the changelog. Release candidates are for evaluation. Only the latest release in the active minor line receives routine fixes; use a reviewed tag/commit and retain the previous source reference for rollback.
+
+If a plugin cannot follow upstream safely, mark it experimental or deprecated in the catalog and guide. Announce deprecation with migration/removal instructions in the changelog before removal in a later minor release. No fixed calendar commitment is made. Preserve prior tags and release notes.
+
+## Troubleshooting first steps
+
+Run `paseo plugin ls` against the intended host, then `paseo plugin logs <runtime-id>`. Check the plugin's prerequisites and host configuration. After editing directory source, use `paseo plugin reload <runtime-id>`; after updating Git source, use `paseo plugin update <runtime-id>`. Restarting the daemon is not a plugin troubleshooting step.

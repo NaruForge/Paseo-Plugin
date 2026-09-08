@@ -1,0 +1,67 @@
+name: Draft release
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Full reviewed commit SHA
+        required: true
+        type: string
+      tag:
+        description: Tag matching package version (for example v0.1.0-rc.1)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+  draft:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ inputs.ref }}
+      - name: Validate inputs and create a draft prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+          RELEASE_REF: ${{ inputs.ref }}
+        run: |
+          [[ "$RELEASE_REF" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-z0-9.-]+)?$ ]] || exit 1
+          test "$(git rev-parse HEAD)" = "$RELEASE_REF"
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG"; then
+            echo "Refusing to reuse an existing release tag."
+            exit 1
+          else
+            status=$?
+            test "$status" = 2
+          fi
+          gh release create "$RELEASE_TAG" --target "$RELEASE_REF" --draft --prerelease --title "$RELEASE_TAG" --notes-file CHANGELOG.md

@@ -1,22 +1,34 @@
 name: Validate
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches:
       - main
 
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 20
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 22
           cache: npm
@@ -30,8 +42,11 @@ jobs:
       - name: Check Git-source imports
         run: npm run check:git-source-imports
 
+      - name: Check release metadata
+        run: npm run check:release
+
       - name: Typecheck workspaces
         run: npm run typecheck
 
       - name: Test workspaces
-        run: npm test --workspaces --if-present
+        run: npm test

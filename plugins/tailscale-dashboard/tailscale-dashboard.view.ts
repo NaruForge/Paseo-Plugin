@@ -18,8 +18,8 @@ const COPY: Record<DashboardViewStatus, { title: string; description: string }> 
     description: "TailscaleOps의 핵심 상태를 Paseo 안에 표시합니다.",
   },
   not_found: {
-    title: "Dashboard를 찾지 못함",
-    description: "이 Host에 현재 DNS 이름과 일치하는 HTTPS Serve mapping이 없습니다.",
+    title: "기본 Tailscale 현황",
+    description: "연결과 피어 현황을 표시합니다. 확장 Dashboard는 선택 사항입니다.",
   },
   multiple: {
     title: "Dashboard 후보가 여러 개임",
@@ -55,6 +55,7 @@ export function discoveryTone(
   status: DashboardDiscoveryStatus,
   health: DashboardHealth | null,
 ): DashboardTone {
+  if (status === "not_found") return "neutral";
   if (status === "available") {
     return health === "healthy" ? "success" : health === "warning" ? "warning" : "danger";
   }

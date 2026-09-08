@@ -130,7 +130,7 @@ describe("GitHub CLI errors", () => {
   it("returns actionable messages for missing CLI, login, scope, and project", () => {
     expect(githubCliErrorMessage(Object.assign(new Error("spawn gh ENOENT"), { code: "ENOENT" }))).toContain("설치");
     expect(githubCliErrorMessage(new Error("not logged into any GitHub hosts; run gh auth login"))).toContain("gh auth login");
-    expect(githubCliErrorMessage(new Error("missing required scopes [project]"))).toContain("gh auth refresh -s project");
+    expect(githubCliErrorMessage(new Error("missing required scopes [project]"))).toContain("gh auth refresh -s read:project");
     expect(githubCliErrorMessage(new Error("Could not resolve to a ProjectV2"), 3)).toContain("Project #3");
   });
 
@@ -175,7 +175,7 @@ describe("project scan", () => {
       throw new Error("missing required scopes [project]");
     };
 
-    await expect(scanGithubProject(3, { gh })).rejects.toThrow("gh auth refresh -s project");
+    await expect(scanGithubProject(3, { gh })).rejects.toThrow("gh auth refresh -s read:project");
   });
 });
 

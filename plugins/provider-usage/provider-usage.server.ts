@@ -162,6 +162,8 @@ async function fetchAllowedJson(
   assertAllowedUsageUrl(url);
   const response = await fetchApi(url, {
     method: "GET",
+    redirect: "error",
+    cache: "no-store",
     headers,
     signal: AbortSignal.timeout(HTTP_TIMEOUT_MS),
   });

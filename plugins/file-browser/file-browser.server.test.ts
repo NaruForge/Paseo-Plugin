@@ -58,6 +58,22 @@ describe("file-browser server", () => {
     expect(() => DirectoryPageSchema.parse(page)).not.toThrow();
   });
 
+  it("rejects a junction in a configured root ancestor, including after replacement", async () => {
+    const parent = path.join(root, "allowed-parent");
+    const nested = path.join(parent, "nested");
+    await mkdir(nested, { recursive: true });
+    await mkdir(path.join(outside, "nested"));
+    await writeFile(path.join(outside, "nested", "outside.txt"), "must not be exposed");
+    const browser = createFileBrowserService({ platform: "win32", roots: [{ id: "nested", label: "Nested", path: nested }] });
+    expect((await browser.listDirectory({ rootId: "nested", segments: [], cursor: null })).entries).toEqual([]);
+    await rm(parent, { recursive: true });
+    await symlink(outside, parent, "junction");
+    await expect(browser.listDirectory({ rootId: "nested", segments: [], cursor: null })).rejects.toThrow(/junction|링크/);
+    await expect(browser.openDownloadFile({ rootId: "nested", segments: ["outside.txt"] })).rejects.toThrow(/junction|링크/);
+    const fresh = createFileBrowserService({ platform: "win32", roots: [{ id: "nested", label: "Nested", path: nested }] });
+    await expect(fresh.previewFile({ rootId: "nested", segments: ["outside.txt"] })).rejects.toThrow(/junction|링크/);
+  });
+
   it("rejects unknown roots and Windows path escape syntax", async () => {
     const browser = service();
 

@@ -504,12 +504,12 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
     : [];
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+    <ScrollView testID="tailscale-dashboard-surface" style={styles.screen} contentContainerStyle={styles.content}>
       <View style={styles.shell}>
         <View style={styles.introduction}>
           <Text style={styles.description}>
-            선택한 Paseo Host에서 검증된 TailscaleOps 상태를 읽어 핵심 Tailnet 현황을
-            표시합니다.
+            선택한 Host의 Tailscale 연결과 피어 현황을 표시합니다. 확장 Dashboard가
+            있으면 서비스 상태도 함께 확인할 수 있습니다.
           </Text>
           <Text style={styles.metadata}>선택된 Host · {host.label}</Text>
         </View>
@@ -594,6 +594,23 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
             </Pressable>
           </View>
         </View>
+
+        {query.data?.tailnet ? (
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <View style={styles.sectionHeadingCopy}>
+                <Text style={styles.sectionTitle}>Tailscale 연결</Text>
+                <Text style={styles.sectionDescription}>{query.data.tailnet.deviceName}</Text>
+              </View>
+              <Text style={styles.sectionCount}>{query.data.tailnet.backendState}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.rowDetail}>
+                온라인 피어 {query.data.tailnet.onlinePeers}/{query.data.tailnet.totalPeers} · Tailscale CLI 기준
+              </Text>
+            </View>
+          </View>
+        ) : null}
 
         {dashboard ? (
           <>

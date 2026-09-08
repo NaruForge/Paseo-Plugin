@@ -1,4 +1,6 @@
 import { join } from "node:path";
+import { createServer } from "node:http";
+import { once } from "node:events";
 import { describe, expect, it, vi } from "vitest";
 import {
   ALLOWED_USAGE_URLS,
@@ -74,6 +76,38 @@ function setup(options: {
 }
 
 describe("provider usage fetchers", () => {
+  it("does not follow an upstream redirect or forward credentials to its target", async () => {
+    let redirectedRequests = 0;
+    const upstream = createServer((request, response) => {
+      if (request.url === "/redirect-target") {
+        redirectedRequests += 1;
+        response.end("{}");
+      } else {
+        response.writeHead(302, { Location: "/redirect-target" });
+        response.end();
+      }
+    });
+    upstream.listen(0, "127.0.0.1");
+    await once(upstream, "listening");
+    const address = upstream.address();
+    if (!address || typeof address === "string") throw new Error("Missing test listener");
+    try {
+      const context = setup({
+        env: { GROK_API_KEY: "test-credential" },
+        fetchImpl: async (url, init) => {
+          expect(url).toBe(GROK_USAGE_URL);
+          return fetch(`http://127.0.0.1:${address.port}/usage`, init);
+        },
+      });
+      const result = await listProviderUsageSnapshot({ providerId: "grok" }, context.options);
+      expect(result.providers[0]?.status).toBe("error");
+      expect(redirectedRequests).toBe(0);
+      expect(JSON.stringify(result)).not.toContain("test-credential");
+    } finally {
+      upstream.closeAllConnections();
+      await new Promise<void>((resolve) => upstream.close(() => resolve()));
+    }
+  });
   it("allows only the Settings usage endpoints", () => {
     expect(ALLOWED_USAGE_URLS).toEqual([CODEX_USAGE_URL, GROK_USAGE_URL]);
     expect(() => assertAllowedUsageUrl(CODEX_USAGE_URL)).not.toThrow();

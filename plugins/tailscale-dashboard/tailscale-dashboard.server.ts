@@ -15,10 +15,12 @@ const MAX_CANDIDATES = 16;
 const TailscaleStatusSchema = z
   .object({
     BackendState: z.string(),
+    Peer: z.record(z.string(), z.object({ Online: z.boolean().optional() }).loose()).nullable().optional(),
     Self: z
       .object({
         Online: z.boolean().optional(),
         DNSName: z.string().optional(),
+        HostName: z.string().optional(),
       })
       .nullable()
       .optional(),
@@ -529,19 +531,30 @@ export async function discoverTailscaleDashboard(
     return unavailableResult("command_failed", options);
   }
 
+  const peers = Object.values(status.Peer ?? {});
+  const tailnet = {
+    deviceName: (status.Self?.HostName ?? status.Self?.DNSName ?? "This host").slice(0, 160),
+    backendState: status.BackendState.slice(0, 80),
+    onlinePeers: peers.filter((peer) => peer.Online === true).length,
+    totalPeers: peers.length,
+  };
+  const withTailnet = (...args: Parameters<typeof unavailableResult>): DashboardDiscoveryResult => ({
+    ...unavailableResult(...args), tailnet,
+  });
+
   if (status.BackendState !== "Running" || status.Self?.Online !== true) {
-    return unavailableResult("tailscale_disconnected", options);
+    return withTailnet("tailscale_disconnected", options);
   }
   const selfDnsName = status.Self.DNSName?.trim();
   if (!selfDnsName) {
-    return unavailableResult("command_failed", options);
+    return withTailnet("command_failed", options);
   }
 
   let serveResult: TailscaleCommandResult;
   try {
     serveResult = await runTailscale(["serve", "status", "--json"]);
   } catch (error) {
-    return unavailableResult(
+    return withTailnet(
       isExecutableUnavailable(error) ? "tailscale_unavailable" : "command_failed",
       options,
     );
@@ -551,13 +564,13 @@ export async function discoverTailscaleDashboard(
   try {
     candidates = collectServeCandidates(parseServeDocument(serveResult.stdout), selfDnsName);
   } catch {
-    return unavailableResult("command_failed", options);
+    return withTailnet("command_failed", options);
   }
   if (candidates.length === 0) {
-    return unavailableResult("not_found", options);
+    return withTailnet("not_found", options);
   }
   if (candidates.length > MAX_CANDIDATES) {
-    return unavailableResult("multiple", options, candidates.length);
+    return withTailnet("multiple", options, candidates.length);
   }
 
   const fetchImpl = options.fetchImpl ?? fetch;
@@ -585,13 +598,14 @@ export async function discoverTailscaleDashboard(
       url: verified[0].candidate.publicUrl,
       dashboardHealth: verified[0].health,
       dashboard: verified[0].dashboard,
+      tailnet,
     };
   }
   if (verified.length > 1) {
-    return unavailableResult("multiple", options, candidates.length, verified.length);
+    return withTailnet("multiple", options, candidates.length, verified.length);
   }
   if (probeResults.some((result) => result.outcome === "timeout")) {
-    return unavailableResult("verification_timeout", options, candidates.length);
+    return withTailnet("verification_timeout", options, candidates.length);
   }
-  return unavailableResult("verification_failed", options, candidates.length);
+  return withTailnet("verification_failed", options, candidates.length);
 }

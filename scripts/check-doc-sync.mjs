@@ -78,7 +78,7 @@ expectSet(
   expectedDirectories,
 );
 
-const includedPlugins = section(readme, "포함된 플러그인");
+const includedPlugins = section(readme, "Plugins");
 const readmePluginRows = [...includedPlugins.matchAll(/\[`([^`]+)`\]\(plugins\/([^/)]+)\/\)/g)];
 expectSet("README runtime IDs", readmePluginRows.map((match) => match[1]), expectedIds);
 expectSet("README plugin links", readmePluginRows.map((match) => match[2]), expectedDirectories);
@@ -89,7 +89,7 @@ for (const [, id, directory] of readmePluginRows) {
   }
 }
 
-const repositoryStructure = section(readme, "저장소 구조");
+const repositoryStructure = section(readme, "Repository structure");
 const pluginBlockStart = repositoryStructure.indexOf("├── plugins/");
 const pluginBlockEnd = repositoryStructure.indexOf("├── docs/", pluginBlockStart);
 const pluginTree = repositoryStructure.slice(pluginBlockStart, pluginBlockEnd);
@@ -101,7 +101,7 @@ expectSet(
 
 expectSet(
   "README directory-install examples",
-  [...readme.matchAll(/paseo plugin install .*"plugins\\([^"\\]+)"/g)].map((match) => match[1]),
+  [...(await readRepositoryFile("README.ko.md")).matchAll(/paseo plugin install .*"plugins\\([^"\\]+)"/g)].map((match) => match[1]),
   expectedDirectories,
 );
 expectSet(

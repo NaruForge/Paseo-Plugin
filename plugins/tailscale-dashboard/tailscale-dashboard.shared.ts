@@ -77,6 +77,12 @@ export const DashboardDiscoveryResultSchema = z
   .object({
     status: DashboardDiscoveryStatusSchema,
     checkedAt: z.iso.datetime(),
+    tailnet: z.object({
+      deviceName: z.string().max(160),
+      backendState: z.string().max(80),
+      onlinePeers: z.number().int().nonnegative(),
+      totalPeers: z.number().int().nonnegative(),
+    }).optional(),
     candidateCount: z.number().int().nonnegative(),
     verifiedCount: z.number().int().nonnegative(),
     url: z.url().nullable(),

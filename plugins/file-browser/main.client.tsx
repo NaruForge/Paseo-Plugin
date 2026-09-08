@@ -19,8 +19,6 @@ import {
   parentDirectory,
 } from "./file-browser.view";
 
-const ROOT_ID = "projects";
-
 function errorMessage(error: unknown): string {
   if (!(error instanceof Error)) return "요청을 완료하지 못했습니다.";
   const rpcMessage = /^Request failed:\s*(.*?)\s+requestType=/.exec(error.message)?.[1];
@@ -262,7 +260,50 @@ function createStyles(theme: PluginTheme, compact: boolean) {
   });
 }
 
-export function MainSurface({ theme, host, layout }: PluginSurfaceProps) {
+export function MainSurface(props: PluginSurfaceProps) {
+  const { theme, layout, host } = props;
+  const listRoots = useRpc(fileBrowserListRoots);
+  const rootsQuery = useQuery({
+    queryKey: ["file-browser", host.id, "roots"],
+    queryFn: () => listRoots({}),
+  });
+  const [choice, setChoice] = useState<{ hostId: string; rootId: string } | null>(null);
+  const roots = rootsQuery.data?.roots ?? [];
+  const selected = roots.find((root) => choice?.hostId === host.id && root.id === choice.rootId)
+    ?? roots.find((root) => root.available) ?? roots[0];
+  const rootId = selected?.id ?? "";
+  return (
+    <View testID="file-browser-surface" style={{ flex: 1, backgroundColor: theme.colors.surface0 }}>
+      {roots.length > 1 ? (
+        <ScrollView
+          horizontal
+          style={{ flexGrow: 0, maxHeight: 60 }}
+          contentContainerStyle={{ paddingHorizontal: layout.compact ? 16 : 24, paddingTop: 8, gap: 8 }}
+        >
+          {roots.map((root) => (
+            <Pressable
+              key={root.id}
+              accessibilityRole="button"
+              accessibilityLabel={`${root.label} 루트 선택`}
+              accessibilityState={{ selected: root.id === rootId }}
+              onPress={() => setChoice({ hostId: host.id, rootId: root.id })}
+              style={({ pressed }) => ({
+                minHeight: 44, paddingHorizontal: 12, justifyContent: "center", borderRadius: 8,
+                borderWidth: 1, borderColor: root.id === rootId ? theme.colors.accent : theme.colors.border,
+                backgroundColor: theme.colors.surface2, opacity: pressed ? 0.76 : 1,
+              })}
+            >
+              <Text style={{ color: theme.colors.foreground, fontSize: 13 }}>{root.label}</Text>
+            </Pressable>
+          ))}
+        </ScrollView>
+      ) : null}
+      <RootBrowser key={`${host.id}/${rootId}`} {...props} rootId={rootId} />
+    </View>
+  );
+}
+
+function RootBrowser({ theme, host, layout, rootId }: PluginSurfaceProps & { rootId: string }) {
   const styles = useMemo(() => createStyles(theme, layout.compact), [theme, layout.compact]);
   const listRoots = useRpc(fileBrowserListRoots);
   const listDirectory = useRpc(fileBrowserListDirectory);
@@ -338,13 +379,13 @@ export function MainSurface({ theme, host, layout }: PluginSurfaceProps) {
     queryKey: ["file-browser", host.id, "roots"],
     queryFn: () => listRoots({}),
   });
-  const activeRoot = rootsQuery.data?.roots.find((root) => root.id === ROOT_ID);
+  const activeRoot = rootsQuery.data?.roots.find((root) => root.id === rootId);
 
   const directoryQuery = useInfiniteQuery({
-    queryKey: ["file-browser", host.id, ROOT_ID, "directory", ...segments],
+    queryKey: ["file-browser", host.id, rootId, "directory", ...segments],
     initialPageParam: null as string | null,
     queryFn: ({ pageParam }) =>
-      listDirectory({ rootId: ROOT_ID, segments, cursor: pageParam }),
+      listDirectory({ rootId: rootId, segments, cursor: pageParam }),
     getNextPageParam: (lastPage) => lastPage.pageInfo.nextCursor ?? undefined,
     enabled: activeRoot?.available === true,
   });
@@ -353,13 +394,13 @@ export function MainSurface({ theme, host, layout }: PluginSurfaceProps) {
     queryKey: [
       "file-browser",
       host.id,
-      ROOT_ID,
+      rootId,
       "preview",
       ...segments,
       selectedEntry?.name ?? "",
     ],
     queryFn: () =>
-      previewFile({ rootId: ROOT_ID, segments: [...segments, selectedEntry!.name] }),
+      previewFile({ rootId: rootId, segments: [...segments, selectedEntry!.name] }),
     enabled: selectedEntry?.kind === "file" && selectedEntry.previewStatus === "available",
   });
 
@@ -388,7 +429,7 @@ export function MainSurface({ theme, host, layout }: PluginSurfaceProps) {
   function startDownload() {
     if (!selectedEntry || downloadMutation.isPending) return;
     downloadMutation.mutate({
-      rootId: ROOT_ID,
+      rootId: rootId,
       segments: [...segments, selectedEntry.name],
     });
   }
@@ -430,7 +471,7 @@ export function MainSurface({ theme, host, layout }: PluginSurfaceProps) {
       directoryDownloadMutation.isPending ||
       selectionDownloadMutation.isPending
     ) return;
-    directoryDownloadMutation.mutate({ rootId: ROOT_ID, segments: [...segments] });
+    directoryDownloadMutation.mutate({ rootId: rootId, segments: [...segments] });
   }
 
   function renderDirectoryDownloadButton() {
@@ -506,7 +547,7 @@ export function MainSurface({ theme, host, layout }: PluginSurfaceProps) {
         ? entries.find((entry) => entry.name === selectedNames[0])
         : undefined;
     selectionDownloadMutation.mutate({
-      rootId: ROOT_ID,
+      rootId: rootId,
       segments: [...segments],
       names: [...selectedNames],
       singleFile: onlyEntry?.kind === "file",
@@ -639,7 +680,7 @@ export function MainSurface({ theme, host, layout }: PluginSurfaceProps) {
       <View style={styles.screen}>
         <View style={styles.state}>
           <Icon name="FolderX" size={24} color={theme.colors.statusDanger} />
-          <Text style={styles.stateTitle}>C:\Projects를 열 수 없습니다</Text>
+          <Text style={styles.stateTitle}>허용된 폴더를 열 수 없습니다</Text>
           <Text style={styles.errorText}>
             {rootsQuery.isError ? errorMessage(rootsQuery.error) : "선택한 Host에서 폴더를 찾을 수 없습니다."}
           </Text>
@@ -667,7 +708,7 @@ export function MainSurface({ theme, host, layout }: PluginSurfaceProps) {
         >
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Projects 루트로 이동"
+            accessibilityLabel={`${activeRoot.label} 루트로 이동`}
             onPress={() => navigate([])}
             style={styles.breadcrumbButton}
           >
