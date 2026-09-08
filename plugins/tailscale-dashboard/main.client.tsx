@@ -595,6 +595,23 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
           </View>
         </View>
 
+        {query.data?.tailnet ? (
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <View style={styles.sectionHeadingCopy}>
+                <Text style={styles.sectionTitle}>Tailscale 연결</Text>
+                <Text style={styles.sectionDescription}>{query.data.tailnet.deviceName}</Text>
+              </View>
+              <Text style={styles.sectionCount}>{query.data.tailnet.backendState}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.rowDetail}>
+                온라인 피어 {query.data.tailnet.onlinePeers}/{query.data.tailnet.totalPeers} · Tailscale CLI 기준
+              </Text>
+            </View>
+          </View>
+        ) : null}
+
         {dashboard ? (
           <>
             <View style={styles.summaryGrid}>

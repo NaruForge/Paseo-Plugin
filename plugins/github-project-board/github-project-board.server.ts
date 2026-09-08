@@ -1,3 +1,4 @@
+import { DEFAULT_PROJECT_OWNER, configuredProjectOwner, validateProjectOwner } from "./configuration.server";
 import { execFile } from "node:child_process";
 import { z } from "zod";
 import { normalizeProjectBoard } from "./github-project-board.logic";
@@ -8,23 +9,28 @@ import {
   type GithubProjectListResult,
 } from "./github-project-board.shared";
 
-export const PROJECT_OWNER = "SWBaek";
+export const PROJECT_OWNER = DEFAULT_PROJECT_OWNER;
 export const PROJECT_LIST_LIMIT = 100;
 export const PROJECT_ITEM_LIMIT = 1_000;
 
 const GH_TIMEOUT_MS = 30_000;
 const GH_MAX_BUFFER_BYTES = 8 * 1024 * 1024;
 
-export const GH_PROJECT_LIST_ARGS = [
-  "project",
-  "list",
-  "--owner",
-  PROJECT_OWNER,
-  "--format",
-  "json",
-  "--limit",
-  String(PROJECT_LIST_LIMIT),
-] as const;
+export function githubProjectListArgs(owner = PROJECT_OWNER): readonly string[] {
+  validateProjectOwner(owner);
+  return [
+    "project",
+    "list",
+    "--owner",
+    owner,
+    "--format",
+    "json",
+    "--limit",
+    String(PROJECT_LIST_LIMIT),
+  ];
+}
+
+export const GH_PROJECT_LIST_ARGS = githubProjectListArgs();
 
 function validProjectNumber(projectNumber: number): boolean {
   return Number.isSafeInteger(projectNumber) && projectNumber > 0;
@@ -36,27 +42,29 @@ function requireProjectNumber(projectNumber: number): void {
   }
 }
 
-export function githubProjectViewArgs(projectNumber: number): readonly string[] {
+export function githubProjectViewArgs(projectNumber: number, owner = PROJECT_OWNER): readonly string[] {
   requireProjectNumber(projectNumber);
+  validateProjectOwner(owner);
   return [
     "project",
     "view",
     String(projectNumber),
     "--owner",
-    PROJECT_OWNER,
+    owner,
     "--format",
     "json",
   ];
 }
 
-export function githubProjectFieldListArgs(projectNumber: number): readonly string[] {
+export function githubProjectFieldListArgs(projectNumber: number, owner = PROJECT_OWNER): readonly string[] {
   requireProjectNumber(projectNumber);
+  validateProjectOwner(owner);
   return [
     "project",
     "field-list",
     String(projectNumber),
     "--owner",
-    PROJECT_OWNER,
+    owner,
     "--format",
     "json",
     "--limit",
@@ -64,14 +72,15 @@ export function githubProjectFieldListArgs(projectNumber: number): readonly stri
   ];
 }
 
-export function githubProjectItemListArgs(projectNumber: number): readonly string[] {
+export function githubProjectItemListArgs(projectNumber: number, owner = PROJECT_OWNER): readonly string[] {
   requireProjectNumber(projectNumber);
+  validateProjectOwner(owner);
   return [
     "project",
     "item-list",
     String(projectNumber),
     "--owner",
-    PROJECT_OWNER,
+    owner,
     "--format",
     "json",
     "--limit",
@@ -146,11 +155,13 @@ export type GhRunner = (args: readonly string[]) => Promise<GhCommandResult>;
 
 export interface GithubProjectScanOptions {
   gh?: GhRunner;
+  owner?: string;
   now?: () => Date;
 }
 
 export interface GithubProjectListOptions {
   gh?: GhRunner;
+  owner?: string;
 }
 
 function executeGhProcess(
@@ -176,9 +187,14 @@ function argsEqual(left: readonly string[], right: readonly string[]): boolean {
 
 export function assertReadOnlyGhArgs(args: readonly string[]): void {
   const projectNumber = Number(args[2]);
-  const isProjectList = argsEqual(args, GH_PROJECT_LIST_ARGS);
+  const ownerIndex = args.indexOf("--owner");
+  let owner: string;
+  try { owner = validateProjectOwner(ownerIndex < 0 ? undefined : args[ownerIndex + 1]); } catch {
+    throw new Error("Blocked non-read-only GitHub CLI command");
+  }
+  const isProjectList = argsEqual(args, githubProjectListArgs(owner));
   const isProjectRead = validProjectNumber(projectNumber) && PROJECT_COMMAND_BUILDERS.some(
-    (buildArgs) => argsEqual(args, buildArgs(projectNumber)),
+    (buildArgs) => argsEqual(args, buildArgs(projectNumber, owner)),
   );
 
   if (!isProjectList && !isProjectRead) {
@@ -217,7 +233,7 @@ function redactSensitiveText(value: string): string {
     .slice(0, 700);
 }
 
-export function githubCliErrorMessage(error: unknown, projectNumber?: number): string {
+export function githubCliErrorMessage(error: unknown, projectNumber?: number, owner = PROJECT_OWNER): string {
   const processError = error as Partial<ProcessError>;
   const rawMessage = [
     error instanceof Error ? error.message : String(error),
@@ -245,7 +261,7 @@ export function githubCliErrorMessage(error: unknown, projectNumber?: number): s
     lower.includes("insufficient scope") ||
     lower.includes("resource not accessible by personal access token")
   ) {
-    return "GitHub Project 읽기 권한이 없습니다. 선택한 Paseo 호스트에서 `gh auth refresh -s project`를 실행해 주세요.";
+    return "GitHub Project 읽기 권한이 없습니다. 선택한 Paseo 호스트에서 `gh auth refresh -s read:project`를 실행해 주세요.";
   }
   if (
     lower.includes("could not resolve to a projectv2") ||
@@ -253,8 +269,8 @@ export function githubCliErrorMessage(error: unknown, projectNumber?: number): s
     lower.includes("could not resolve to a user")
   ) {
     return projectNumber
-      ? `${PROJECT_OWNER}의 GitHub Project #${projectNumber}에 접근하지 못했습니다. Project 존재 여부와 현재 계정 권한을 확인해 주세요.`
-      : `${PROJECT_OWNER}의 GitHub Project 목록에 접근하지 못했습니다. 사용자와 현재 계정 권한을 확인해 주세요.`;
+      ? `${owner}의 GitHub Project #${projectNumber}에 접근하지 못했습니다. Project 존재 여부와 현재 계정 권한을 확인해 주세요.`
+      : `${owner}의 GitHub Project 목록에 접근하지 못했습니다. 사용자와 현재 계정 권한을 확인해 주세요.`;
   }
   if (
     processError.code === "ERR_CHILD_PROCESS_STDIO_MAXBUFFER" ||
@@ -292,6 +308,7 @@ export async function scanGithubProject(
   options: GithubProjectScanOptions = {},
 ): Promise<GithubProjectBoardScanResult> {
   requireProjectNumber(projectNumber);
+  const owner = validateProjectOwner(options.owner ?? configuredProjectOwner());
   const gh = options.gh ?? createGhRunner();
   let viewResult: GhCommandResult;
   let fieldResult: GhCommandResult;
@@ -299,12 +316,12 @@ export async function scanGithubProject(
 
   try {
     [viewResult, fieldResult, itemResult] = await Promise.all([
-      gh(githubProjectViewArgs(projectNumber)),
-      gh(githubProjectFieldListArgs(projectNumber)),
-      gh(githubProjectItemListArgs(projectNumber)),
+      gh(githubProjectViewArgs(projectNumber, owner)),
+      gh(githubProjectFieldListArgs(projectNumber, owner)),
+      gh(githubProjectItemListArgs(projectNumber, owner)),
     ]);
   } catch (error) {
-    throw new Error(githubCliErrorMessage(error, projectNumber));
+    throw new Error(githubCliErrorMessage(error, projectNumber, owner));
   }
 
   const view = parseJson("gh project view", viewResult.stdout, ProjectViewSchema);
@@ -342,13 +359,14 @@ export async function scanGithubProject(
 export async function listGithubProjects(
   options: GithubProjectListOptions = {},
 ): Promise<GithubProjectListResult> {
+  const owner = validateProjectOwner(options.owner ?? configuredProjectOwner());
   const gh = options.gh ?? createGhRunner();
   let listResult: GhCommandResult;
 
   try {
-    listResult = await gh(GH_PROJECT_LIST_ARGS);
+    listResult = await gh(githubProjectListArgs(owner));
   } catch (error) {
-    throw new Error(githubCliErrorMessage(error));
+    throw new Error(githubCliErrorMessage(error, undefined, owner));
   }
 
   const list = parseJson("gh project list", listResult.stdout, ProjectListSchema);

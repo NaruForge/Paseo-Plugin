@@ -1,7 +1,7 @@
 {
   "name": "github-project-board",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0-rc.1",
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
@@ -16,5 +16,17 @@
     "typescript": "^5.9.3",
     "vitest": "^4.1.11",
     "zod": "^4.4.3"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SWBaek/Paseo-Plugin.git",
+    "directory": "plugins/github-project-board"
+  },
+  "bugs": {
+    "url": "https://github.com/SWBaek/Paseo-Plugin/issues"
   }
 }

@@ -1,3 +1,4 @@
+import { readFileBrowserRoots } from "./configuration.server";
 import { lstat, open, readdir, realpath } from "node:fs/promises";
 import type { Dirent } from "node:fs";
 import type { FileHandle } from "node:fs/promises";
@@ -62,9 +63,7 @@ export interface DirectoryDownloadLimits {
   maxDepth: number;
 }
 
-const DEFAULT_ROOTS: readonly FileBrowserRootConfig[] = [
-  { id: "projects", label: "Projects", path: "C:\\Projects" },
-];
+const DEFAULT_ROOTS: readonly FileBrowserRootConfig[] = [];
 
 const WINDOWS_RESERVED_NAME = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i;
 const SENSITIVE_EXACT_NAMES = new Set([
@@ -224,9 +223,16 @@ export function createFileBrowserService(options: FileBrowserServiceOptions = {}
     }
 
     try {
-      const rootInfo = await lstat(lexicalRoot);
-      if (!rootInfo.isDirectory() || rootInfo.isSymbolicLink()) {
-        throw publicError("허용된 파일 루트를 열 수 없습니다.");
+      // A nested configured root must not establish trust through a junction
+      // in one of its ancestors. Repeat this walk for every access/redemption.
+      const drive = path.win32.parse(lexicalRoot).root;
+      let ancestor = drive;
+      for (const segment of ["", ...lexicalRoot.slice(drive.length).split(/[\\/]/).filter(Boolean)]) {
+        if (segment) ancestor = path.win32.join(ancestor, segment);
+        const rootInfo = await lstat(ancestor);
+        if (!rootInfo.isDirectory() || rootInfo.isSymbolicLink()) {
+          throw publicError("허용된 파일 루트와 상위 경로에 링크 또는 junction을 사용할 수 없습니다.");
+        }
       }
       const physicalRoot = await realpath(lexicalRoot);
 
@@ -249,6 +255,7 @@ export function createFileBrowserService(options: FileBrowserServiceOptions = {}
         error instanceof Error &&
         [
           "허용된 파일 루트를 열 수 없습니다.",
+          "허용된 파일 루트와 상위 경로에 링크 또는 junction을 사용할 수 없습니다.",
           "링크와 junction은 열 수 없습니다.",
           "경로가 허용된 파일 루트를 벗어났습니다.",
         ].includes(error.message)
@@ -265,8 +272,8 @@ export function createFileBrowserService(options: FileBrowserServiceOptions = {}
       roots.map(async (root): Promise<FileBrowserRoot> => {
         let available = false;
         try {
-          const info = await lstat(path.win32.resolve(root.path));
-          available = info.isDirectory() && !info.isSymbolicLink();
+          await resolveExisting(root.id, []);
+          available = true;
         } catch {
           available = false;
         }
@@ -630,7 +637,7 @@ export function createFileBrowserService(options: FileBrowserServiceOptions = {}
     segments: string[];
   }): Promise<DownloadDirectoryManifest> {
     const name = input.segments.at(-1);
-    if (!name) throw publicError("C:\\Projects 루트 전체는 다운로드할 수 없습니다.");
+    if (!name) throw publicError("허용된 루트 전체는 다운로드할 수 없습니다.");
     const accumulator = createArchiveAccumulator();
     await appendSmartDirectory(input.rootId, [...input.segments], name, accumulator);
     const snapshot = accumulator.snapshot();
@@ -776,10 +783,15 @@ export function createFileBrowserService(options: FileBrowserServiceOptions = {}
   };
 }
 
-const defaultFileBrowserService = createFileBrowserService();
+let configuredService: ReturnType<typeof createFileBrowserService> | undefined;
+function configuredFileBrowserService() {
+  // Pin all RPC and token-redemption paths to one allowlist until plugin reload.
+  // Reload also stops the download server and invalidates every issued token.
+  return configuredService ??= createFileBrowserService({ roots: readFileBrowserRoots() });
+}
 
 export function listFileBrowserRoots() {
-  return defaultFileBrowserService.listRoots();
+  return configuredFileBrowserService().listRoots();
 }
 
 export function listFileBrowserDirectory(input: {
@@ -787,28 +799,28 @@ export function listFileBrowserDirectory(input: {
   segments: string[];
   cursor: string | null;
 }) {
-  return defaultFileBrowserService.listDirectory(input);
+  return configuredFileBrowserService().listDirectory(input);
 }
 
 export function previewFileBrowserFile(input: {
   rootId: string;
   segments: string[];
 }) {
-  return defaultFileBrowserService.previewFile(input);
+  return configuredFileBrowserService().previewFile(input);
 }
 
 export function openFileBrowserDownload(input: {
   rootId: string;
   segments: string[];
 }) {
-  return defaultFileBrowserService.openDownloadFile(input);
+  return configuredFileBrowserService().openDownloadFile(input);
 }
 
 export function prepareFileBrowserDirectoryDownload(input: {
   rootId: string;
   segments: string[];
 }) {
-  return defaultFileBrowserService.prepareDownloadDirectory(input);
+  return configuredFileBrowserService().prepareDownloadDirectory(input);
 }
 
 export function prepareFileBrowserSelectionDownload(input: {
@@ -816,18 +828,18 @@ export function prepareFileBrowserSelectionDownload(input: {
   segments: string[];
   names: string[];
 }) {
-  return defaultFileBrowserService.prepareDownloadSelection(input);
+  return configuredFileBrowserService().prepareDownloadSelection(input);
 }
 
 export function revalidateFileBrowserDirectoryDownload(
   manifest: DownloadDirectoryManifest,
 ) {
-  return defaultFileBrowserService.revalidateDownloadDirectory(manifest);
+  return configuredFileBrowserService().revalidateDownloadDirectory(manifest);
 }
 
 export function openFileBrowserArchiveEntry(
   manifest: DownloadDirectoryManifest,
   entry: DownloadDirectoryEntry,
 ) {
-  return defaultFileBrowserService.openDownloadArchiveFile(manifest, entry);
+  return configuredFileBrowserService().openDownloadArchiveFile(manifest, entry);
 }

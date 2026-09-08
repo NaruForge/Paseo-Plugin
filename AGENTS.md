@@ -42,7 +42,7 @@ npm run typecheck --workspace branch-garden
 1. `plugins/<plugin-id>` 아래의 새 빈 디렉터리를 대상으로 `paseo plugin init <absolute-directory> --id <plugin-id>`를 실행한다.
 2. 생성된 `package.json`의 `name`과 `paseo-plugin.json`의 `id`가 이 저장소 안에서 고유한지 확인한다.
 3. 루트에서 `npm install`을 실행해 workspace 설치 상태를 갱신한다.
-4. 아래 Workspace Map, `README.md`의 플러그인 목록·설치 예시·저장소 구조와 `.github/ISSUE_TEMPLATE/*.yml`의 대상 선택지를 갱신한다. Git source로 배포할 플러그인이면 `docs/GIT_INSTALLATION.md`의 설치 목록도 갱신한다.
+4. 아래 Workspace Map, `README.md`, `README.ko.md`, `plugins.json`의 플러그인 목록·설치 예시·저장소 구조와 `.github/ISSUE_TEMPLATE/*.yml`의 대상 선택지를 갱신한다. Git source로 배포할 플러그인이면 `docs/GIT_INSTALLATION.md`의 설치 목록도 갱신한다.
 5. `npm run check:docs-sync`, 새 플러그인의 workspace 타입 검사와 루트 전체 타입 검사를 실행한다.
 
 기존 플러그인을 복사해 새 플러그인을 만들지 않는다. 현재 Paseo CLI가 생성하는 스캐폴드와 exact `@getpaseo/plugin` 의존성을 사용해야 플러그인 계약이 설치된 CLI 버전에 맞는다.
@@ -54,10 +54,10 @@ npm run typecheck --workspace branch-garden
   Role: 선택된 호스트의 Git Workspace와 로컬 브랜치 상태를 읽기 전용으로 집계하는 전역 사이드바 surface를 제공한다.
 - `plugins/github-project-board/`
   Audience: **Personal operations**
-  Role: `SWBaek`의 개인 GitHub Project 목록을 GitHub CLI의 기존 인증으로 조회하고, 선택한 Project를 읽기 전용 칸반으로 표시하는 전역 사이드바 surface를 제공한다.
+  Role: 설정한 사용자·조직(기본값: 로그인 사용자)의 GitHub Project 목록을 GitHub CLI의 기존 인증으로 조회하고, 선택한 Project를 읽기 전용 칸반으로 표시하는 전역 사이드바 surface를 제공한다.
 - `plugins/tailscale-dashboard/`
   Audience: **Personal operations**
-  Role: 선택된 호스트의 Tailscale Serve 구성을 읽기 전용으로 조사해 검증된 TailscaleOps 핵심 현황을 네이티브 카드로 표시하고, 전체 Dashboard를 선택적으로 시스템 브라우저에서 여는 전역 사이드바 surface를 제공한다.
+  Role: 선택된 호스트의 Tailscale Serve 구성을 읽기 전용으로 조사해 검증된 TailscaleOps 핵심 현황을 네이티브 카드로 표시하고, 기본 연결·피어 현황을 제공하며, 전체 Dashboard를 선택적으로 시스템 브라우저에서 여는 전역 사이드바 surface를 제공한다.
 - `plugins/composer-compact/`
   Audience: **Personal productivity**
   Role: 각 Agent의 Composer track bar에 `Compact` pill을 추가하고 확인 Modal에서 승인한 경우에만 해당 Agent에 `/compact` 명령을 전송한다.
@@ -66,7 +66,7 @@ npm run typecheck --workspace branch-garden
   Role: 각 Agent의 Composer track bar에 `Skills` pill을 추가하고, 현재 세션이 로드한 Skill을 Modal에서 고른 뒤 최종 문장을 클립보드에 복사한다. Composer 입력창에 직접 넣거나 자동 전송하지 않는다.
 - `plugins/file-browser/`
   Audience: **Personal operations**
-  Role: 선택된 Windows daemon host의 `C:\Projects` 아래 폴더와 작은 텍스트 파일을 읽기 전용으로 탐색하고, 일반 파일과 Git ignore를 반영한 선택 파일·폴더 ZIP을 Tailnet 전용 일회용 HTTPS URL로 내려받는 전역 사이드바 surface를 제공한다. daemon-side allowlist 밖의 경로와 link·junction 대상은 열지 않는다.
+  Role: 선택된 Windows daemon host의 데몬 설정의 허용 루트 아래 폴더와 작은 텍스트 파일을 읽기 전용으로 탐색하고, 일반 파일과 Git ignore를 반영한 선택 파일·폴더 ZIP을 Tailnet 전용 일회용 HTTPS URL로 내려받는 전역 사이드바 surface를 제공한다. daemon-side allowlist 밖의 경로와 link·junction 대상은 열지 않는다.
 - `plugins/provider-usage/`
   Audience: **Personal operations**
   Role: 선택된 호스트의 Codex와 Grok 계획 사용량을 읽기 전용으로 집계해 전역 사이드바 surface와 해당 Agent Composer pill에 표시한다. native 설정 → 사용량 화면을 대체하지 않는다.
@@ -89,7 +89,7 @@ npm run typecheck --workspace branch-garden
 
 - 기여 ID, surface ID, sidebar의 surface 연결 또는 등록 방식은 같은 플러그인의 `index.ts`에서 함께 갱신한다. 연결된 컴포넌트의 export나 props가 영향을 받을 때만 해당 `*.client.tsx`를 함께 바꾼다.
 - RPC 입력·출력이 바뀌면 실제 영향 범위에 따라 같은 플러그인의 `*.shared.ts` 계약, `*.server.ts` 구현, `index.ts`의 `plugin.handle` 등록과 `*.client.tsx` 호출부를 함께 갱신한다.
-- 플러그인 디렉터리를 추가·삭제·이름 변경하면 이 파일의 Workspace Map, `README.md`의 플러그인 목록·설치 예시·저장소 구조, `.github/ISSUE_TEMPLATE/*.yml`의 대상 선택지와 루트 workspace 검증을 같은 변경에서 맞추고 `npm run check:docs-sync`를 실행한다. Git source 배포 목록에 영향을 주면 `docs/GIT_INSTALLATION.md`도 갱신한다.
+- 플러그인 디렉터리를 추가·삭제·이름 변경하면 이 파일의 Workspace Map, `README.md`, `README.ko.md`, `plugins.json`의 플러그인 목록·설치 예시·저장소 구조, `.github/ISSUE_TEMPLATE/*.yml`의 대상 선택지와 루트 workspace 검증을 같은 변경에서 맞추고 `npm run check:docs-sync`를 실행한다. Git source 배포 목록에 영향을 주면 `docs/GIT_INSTALLATION.md`도 갱신한다.
 - 플러그인의 사용자용 설치 요구 사항, 운영 절차 또는 안전 경계를 바꾸면 해당 내용을 이미 설명하는 루트나 플러그인 `README.md`와 `docs/` 문서를 같은 변경에서 갱신한다.
 - Paseo 플러그인 계약이 바뀌면 현재 CLI가 생성하는 새 스캐폴드, exact `@getpaseo/plugin` package declaration과 공식 참조 문서를 대조하고, 영향받는 각 플러그인의 타입 계약을 확인한다.
 

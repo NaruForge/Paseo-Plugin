@@ -193,6 +193,24 @@ describe("Serve candidate parsing", () => {
 });
 
 describe("Dashboard discovery", () => {
+  it("shows CLI connection and peer counts without any optional Dashboard", async () => {
+    const fetchImpl = vi.fn();
+    const result = await discoverTailscaleDashboard({
+      runTailscale: async (args) => ({
+        stdout: JSON.stringify(args[0] === "status" ? {
+          BackendState: "Running",
+          Self: { Online: true, DNSName: "example.tailnet.ts.net.", HostName: "Example host" },
+          Peer: { first: { Online: true }, second: { Online: false } },
+        } : {}),
+        stderr: "",
+      }),
+      fetchImpl,
+    });
+    expect(result).toMatchObject({ status: "not_found", url: null, dashboard: null,
+      tailnet: { deviceName: "Example host", backendState: "Running", onlinePeers: 1, totalPeers: 2 } });
+    expect(DashboardDiscoveryResultSchema.safeParse(result).success).toBe(true);
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
   it("returns one verified dashboard and validates the RPC output", async () => {
     const fetchImpl = vi.fn<DashboardFetch>(async () => jsonResponse(dashboardDocument("warning")));
 
@@ -204,6 +222,7 @@ describe("Dashboard discovery", () => {
 
     expect(result).toEqual({
       status: "available",
+      tailnet: { deviceName: `${DNS_NAME}.`, backendState: "Running", onlinePeers: 0, totalPeers: 0 },
       checkedAt: NOW.toISOString(),
       candidateCount: 1,
       verifiedCount: 1,
