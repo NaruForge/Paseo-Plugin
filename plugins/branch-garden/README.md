@@ -1,8 +1,18 @@
 # Branch Garden
 
-Inspect active Git workspaces, local branches and worktrees on the selected host. No branch is checked out, reset or deleted.
+Inspect registered Git projects, active workspaces, local branches and worktrees on the selected host. No branch is checked out, reset or deleted.
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Support](../../SUPPORT.md)
+
+## Screenshots
+
+Actual Paseo 0.7.2 web client, showing this public repository. The overview combines scan totals, warnings and repository filters; expanding a repository shows workspaces and the reasons branches need review.
+
+![Branch Garden overview with scan totals, review filter and expanded repository](../../docs/screenshots/branch-garden/overview.png)
+
+On a compact screen, workspace details and branch evidence stack vertically:
+
+![Branch Garden repository details on a compact screen](../../docs/screenshots/branch-garden/repository-compact.png)
 
 ## Install
 
@@ -19,7 +29,11 @@ Paseo 0.7.2 and Git on the daemon host. No repository-specific configuration is 
 
 ## Use
 
-Open **Branch Garden** in the sidebar, select the intended host and refresh. Expand a project to inspect workspace state, dirty worktrees and branch information. Empty results mean there are no matching active Git workspaces, not that the filesystem is empty.
+Open **Branch Garden** in the sidebar, select the intended host and refresh. Expand a project to inspect workspace state, dirty worktrees and branch information. Registered projects can appear without active workspaces. Empty results mean no repositories matched the current scan or filter; they do not mean the filesystem is empty.
+
+The plugin's labels, accessibility text, warnings and error messages are in English. Scan times use a 24-hour clock in the client's local time zone. Project, workspace and branch names remain unchanged; diagnostic details returned by Git or the host may use that tool's language. Paseo's surrounding interface follows its own language setting.
+
+Use **All**, **Cleanup candidates** or **Needs review** to filter repositories. Expand **Kept branches** to see branches retained because they are the default branch, checked out, or unmerged with an existing upstream. Classification is advisory; this plugin never deletes branches.
 
 ## Data access and limitations
 
@@ -36,3 +50,4 @@ paseo plugin remove branch-garden
 ```
 
 Use the actual runtime ID if installed with `--id`; add `--host <host>` for another daemon. Directory development installations use `reload` instead of `update`.
+

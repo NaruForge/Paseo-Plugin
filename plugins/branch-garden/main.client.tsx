@@ -20,25 +20,25 @@ import {
 import { filterRepositories, type RepositoryFilter } from "./branch-garden.view";
 
 const CATEGORY_LABELS: Record<BranchCategory, string> = {
-  cleanup_candidate: "정리 후보",
-  review: "검토 필요",
-  keep: "유지",
+  cleanup_candidate: "Cleanup candidates",
+  review: "Needs review",
+  keep: "Keep",
 };
 
 const REASON_LABELS: Record<BranchReason, string> = {
-  default_branch: "기본 브랜치",
-  checked_out: "worktree에서 사용 중",
-  insufficient_data: "판단 정보 부족",
-  unmerged_tracked: "미병합 · upstream 정상",
-  unmerged_orphaned: "미병합 · upstream 없음",
-  merged_tracked: "병합 완료 · upstream 정상",
-  merged_orphaned: "병합 완료 · upstream 없음",
+  default_branch: "Default branch",
+  checked_out: "In use by a worktree",
+  insufficient_data: "Not enough information",
+  unmerged_tracked: "Unmerged · upstream exists",
+  unmerged_orphaned: "Unmerged · no upstream",
+  merged_tracked: "Merged · upstream exists",
+  merged_orphaned: "Merged · no upstream",
 };
 
 const FILTERS: ReadonlyArray<{ id: RepositoryFilter; label: string }> = [
-  { id: "all", label: "전체" },
-  { id: "cleanup_candidate", label: "정리 후보" },
-  { id: "review", label: "검토 필요" },
+  { id: "all", label: "All" },
+  { id: "cleanup_candidate", label: "Cleanup candidates" },
+  { id: "review", label: "Needs review" },
 ];
 
 function createStyles(theme: PluginTheme, compact: boolean) {
@@ -378,11 +378,11 @@ function Notice({ children, styles, theme, title, tone }: NoticeProps) {
 }
 
 function formatScanTime(value: string): string {
-  return new Date(value).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  return new Date(value).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false });
 }
 
 function errorMessage(error: unknown): string {
-  return error instanceof Error && error.message ? error.message : "알 수 없는 오류가 발생했습니다.";
+  return error instanceof Error && error.message ? error.message : "An unexpected error occurred.";
 }
 
 function repositoryStatus(repository: RepositorySnapshot): {
@@ -391,19 +391,19 @@ function repositoryStatus(repository: RepositorySnapshot): {
   value: string;
 } {
   if (repository.error) {
-    return { value: "조사 필요", caption: "저장소 오류", tone: "error" };
+    return { value: "Scan needed", caption: "Repository error", tone: "error" };
   }
   if (repository.cleanupCandidateCount > 0) {
     return {
-      value: `정리 후보 ${repository.cleanupCandidateCount}`,
-      caption: repository.reviewCount > 0 ? `검토 필요 ${repository.reviewCount}` : "병합 · 미체크아웃",
+      value: `Cleanup: ${repository.cleanupCandidateCount}`,
+      caption: repository.reviewCount > 0 ? `Review: ${repository.reviewCount}` : "Merged · not checked out",
       tone: "warning",
     };
   }
   if (repository.reviewCount > 0) {
-    return { value: `검토 필요 ${repository.reviewCount}`, caption: "판단 근거 확인", tone: "warning" };
+    return { value: `Review: ${repository.reviewCount}`, caption: "Check branch details", tone: "warning" };
   }
-  return { value: "정돈됨", caption: "확인 항목 없음", tone: "success" };
+  return { value: "No action needed", caption: "Nothing to review", tone: "success" };
 }
 
 function workspaceHead(workspace: WorkspaceSnapshot): string {
@@ -413,26 +413,26 @@ function workspaceHead(workspace: WorkspaceSnapshot): string {
   if (workspace.detached) {
     return `detached${workspace.headOid ? ` · ${workspace.headOid.slice(0, 8)}` : ""}`;
   }
-  return "HEAD 미확인";
+  return "HEAD unknown";
 }
 
 function branchEvidence(branch: BranchSnapshot): string {
   const merge = branch.mergeState === "merged"
-    ? "병합됨"
+    ? "Merged"
     : branch.mergeState === "unmerged"
-      ? "미병합"
-      : "병합 미확인";
+      ? "Unmerged"
+      : "Merge status unknown";
   const upstream = branch.upstreamState === "tracked"
-    ? branch.upstreamRef ?? "upstream 정상"
+    ? branch.upstreamRef ?? "Upstream exists"
     : branch.upstreamState === "gone"
-      ? "upstream 소실"
+      ? "Upstream gone"
       : branch.upstreamState === "local_only"
-        ? "로컬 전용"
-        : "upstream 미확인";
+        ? "Local only"
+        : "Upstream unknown";
   const checkout = branch.checkoutState === "checked_out"
     ? `checkout ${branch.checkedOutAt.length}`
     : branch.checkoutState === "unknown"
-      ? "checkout 미확인"
+      ? "Checkout status unknown"
       : null;
   return [merge, upstream, checkout].filter(Boolean).join(" · ");
 }
@@ -471,10 +471,10 @@ function WorkspaceRow({
   workspace: WorkspaceSnapshot;
 }) {
   const dirtyLabel = workspace.isDirty === true
-    ? "변경 있음"
+    ? "Uncommitted changes"
     : workspace.isDirty === false
       ? "clean"
-      : "상태 미확인";
+      : "Status unknown";
 
   return (
     <View style={styles.dataRow}>
@@ -569,15 +569,16 @@ function RepositoryNode({
   const reviewBranches = repository.branches.filter((branch) => branch.category === "review");
   const keepBranches = repository.branches.filter((branch) => branch.category === "keep");
   const baseLabel = repository.base.state === "resolved"
-    ? repository.base.ref ?? "기본 ref 미확인"
-    : "기본 ref 미확인";
+    ? repository.base.ref ?? "Base ref unknown"
+    : "Base ref unknown";
 
   return (
     <View>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={`${repository.name} 저장소 ${open ? "접기" : "펼치기"}`}
+        accessibilityLabel={`${open ? "Collapse" : "Expand"} ${repository.name} repository`}
         accessibilityState={{ expanded: open }}
+        aria-expanded={open}
         onPress={() => setOpen((value) => !value)}
         style={({ pressed }) => [styles.repositoryRow, pressed ? styles.pressed : null]}
       >
@@ -604,7 +605,7 @@ function RepositoryNode({
                 {status.value}
               </Text>
               <Text style={styles.compactFacts} numberOfLines={1}>
-                브랜치 {repository.branchCount} · 활성 Workspace {repository.workspaces.length}
+                Branches {repository.branchCount} · Active workspaces {repository.workspaces.length}
               </Text>
             </>
           ) : null}
@@ -632,9 +633,9 @@ function RepositoryNode({
       {open ? (
         <View style={styles.details}>
           <View style={styles.detailMeta}>
-            <Text style={styles.detailMetaText}>브랜치 {repository.branchCount}</Text>
+            <Text style={styles.detailMetaText}>Branches {repository.branchCount}</Text>
             <View style={styles.dotSeparator} />
-            <Text style={styles.detailMetaText}>활성 Workspace {repository.workspaces.length}</Text>
+            <Text style={styles.detailMetaText}>Active workspaces {repository.workspaces.length}</Text>
             {compact ? (
               <>
                 <View style={styles.dotSeparator} />
@@ -648,7 +649,7 @@ function RepositoryNode({
           {repository.workspaces.length > 0 ? (
             <View style={styles.group}>
               <View style={styles.groupHeader}>
-                <Text style={styles.groupLabel}>활성 Workspace</Text>
+                <Text style={styles.groupLabel}>Active workspaces</Text>
                 <Text style={styles.groupCount}>{repository.workspaces.length}</Text>
               </View>
               {repository.workspaces.map((workspace) => (
@@ -657,7 +658,7 @@ function RepositoryNode({
             </View>
           ) : (
             <Text style={styles.detailMetaText}>
-              활성 Workspace 없이 등록 Project root에서 조사했습니다.
+              Scanned the project root; no active workspaces.
             </Text>
           )}
 
@@ -677,8 +678,9 @@ function RepositoryNode({
             <View style={styles.group}>
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={`${repository.name} 유지 브랜치 ${showKeep ? "접기" : "펼치기"}`}
+                accessibilityLabel={`${showKeep ? "Collapse" : "Expand"} kept branches in ${repository.name}`}
                 accessibilityState={{ expanded: showKeep }}
+                aria-expanded={showKeep}
                 onPress={() => setShowKeep((value) => !value)}
                 style={({ pressed }) => [styles.keepToggle, pressed ? styles.pressed : null]}
               >
@@ -689,8 +691,8 @@ function RepositoryNode({
                     color={theme.colors.foregroundMuted}
                   />
                 </View>
-                <Text style={styles.keepToggleText}>유지 브랜치 {keepBranches.length}</Text>
-                <Text style={styles.keepToggleHint}>{showKeep ? "접기" : "펼치기"}</Text>
+                <Text style={styles.keepToggleText}>Kept branches {keepBranches.length}</Text>
+                <Text style={styles.keepToggleHint}>{showKeep ? "Collapse" : "Expand"}</Text>
               </Pressable>
               {showKeep
                 ? keepBranches.map((branch) => (
@@ -701,7 +703,7 @@ function RepositoryNode({
           ) : null}
 
           {repository.branches.length === 0 && !repository.error ? (
-            <Text style={styles.detailMetaText}>표시할 로컬 브랜치가 없습니다.</Text>
+            <Text style={styles.detailMetaText}>No local branches to show.</Text>
           ) : null}
         </View>
       ) : null}
@@ -728,7 +730,7 @@ function FullScreenState({
   title: string;
 }) {
   return (
-    <View style={[styles.screen, styles.content]}>
+    <View style={[styles.screen, styles.content]} testID="branch-garden-surface">
       <View style={styles.shell}>
         <View style={styles.statePanel}>
           <View style={styles.stateIcon}>
@@ -743,7 +745,7 @@ function FullScreenState({
           {onRetry ? (
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Branch Garden 조사 다시 시도"
+              accessibilityLabel="Retry Branch Garden scan"
               disabled={retrying}
               onPress={onRetry}
               style={({ pressed }) => [
@@ -753,7 +755,7 @@ function FullScreenState({
               ]}
             >
               <Icon name="RefreshCw" size={16} color={theme.colors.accentForeground} />
-              <Text style={styles.primaryButtonText}>{retrying ? "조사 중…" : "다시 시도"}</Text>
+              <Text style={styles.primaryButtonText}>{retrying ? "Scanning…" : "Try again"}</Text>
             </Pressable>
           ) : null}
         </View>
@@ -779,10 +781,10 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
   if (query.isPending && !query.data) {
     return (
       <FullScreenState
-        message="선택한 Host의 등록 Project, 활성 Workspace와 로컬 Git 정보를 읽고 있습니다."
+        message="Reading projects, active workspaces and local Git data on the selected host."
         styles={styles}
         theme={theme}
-        title="Project와 브랜치를 불러오는 중"
+        title="Loading projects and branches"
       />
     );
   }
@@ -796,7 +798,7 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
         retrying={query.isFetching}
         styles={styles}
         theme={theme}
-        title="브랜치 현황을 불러오지 못했습니다"
+        title="Could not load branch status"
       />
     );
   }
@@ -810,22 +812,22 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
   };
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+    <ScrollView style={styles.screen} contentContainerStyle={styles.content} testID="branch-garden-surface">
       <View style={styles.shell}>
         <View style={styles.overview}>
           <View style={styles.overviewCopy}>
             <Text style={styles.description}>
-              선택한 Host의 등록 Project, 활성 Workspace와 로컬 브랜치 상태를 읽기 전용으로 보여줍니다.
+              Read-only Git status for the selected host’s projects and active workspaces.
             </Text>
             <View style={styles.metadata}>
-              <Text style={styles.metaText}>읽기 전용</Text>
+              <Text style={styles.metaText}>Read-only</Text>
               <View style={styles.dotSeparator} />
-              <Text style={styles.metaText}>마지막 조사 {formatScanTime(result.scannedAt)}</Text>
+              <Text style={styles.metaText}>Last scanned {formatScanTime(result.scannedAt)}</Text>
               {result.skippedNonGitProjectCount > 0 ? (
                 <>
                   <View style={styles.dotSeparator} />
                   <Text style={styles.metaText}>
-                    non-Git Project {result.skippedNonGitProjectCount}개 제외
+                    Non-Git projects skipped: {result.skippedNonGitProjectCount}
                   </Text>
                 </>
               ) : null}
@@ -833,7 +835,7 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
           </View>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="브랜치 현황 새로고침"
+            accessibilityLabel="Refresh branch status"
             accessibilityState={{ disabled: query.isFetching }}
             disabled={query.isFetching}
             onPress={() => void query.refetch()}
@@ -844,31 +846,31 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
             ]}
           >
             <Icon name="RefreshCw" size={16} color={theme.colors.accentForeground} />
-            <Text style={styles.primaryButtonText}>{query.isFetching ? "조사 중…" : "새로고침"}</Text>
+            <Text style={styles.primaryButtonText}>{query.isFetching ? "Scanning…" : "Refresh"}</Text>
           </Pressable>
         </View>
 
         <View style={styles.section}>
           <View style={styles.sectionCopy}>
-            <Text style={styles.sectionTitle}>개요</Text>
-            <Text style={styles.sectionDescription}>현재 조사 결과의 전체 규모입니다.</Text>
+            <Text style={styles.sectionTitle}>Overview</Text>
+            <Text style={styles.sectionDescription}>Totals from the current scan.</Text>
           </View>
           <View style={styles.summary}>
             <SummaryMetric
-              label="정리 후보"
+              label="Cleanup candidates"
               styles={styles}
               tone="warning"
               value={result.summary.cleanupCandidateCount}
             />
-            <SummaryMetric label="등록 Git Project" styles={styles} value={result.summary.projectCount} />
+            <SummaryMetric label="Git projects" styles={styles} value={result.summary.projectCount} />
             <SummaryMetric
-              label="활성 Workspace"
+              label="Active workspaces"
               styles={styles}
               value={result.summary.workspaceCount}
             />
-            <SummaryMetric label="저장소" styles={styles} value={result.summary.repositoryCount} />
-            <SummaryMetric label="로컬 브랜치" styles={styles} value={result.summary.branchCount} />
-            <SummaryMetric label="경고" styles={styles} tone="warning" value={result.summary.warningCount} />
+            <SummaryMetric label="Repositories" styles={styles} value={result.summary.repositoryCount} />
+            <SummaryMetric label="Local branches" styles={styles} value={result.summary.branchCount} />
+            <SummaryMetric label="Warnings" styles={styles} tone="warning" value={result.summary.warningCount} />
           </View>
         </View>
 
@@ -876,10 +878,10 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
           <Notice
             styles={styles}
             theme={theme}
-            title="마지막 성공 결과를 표시하고 있습니다"
+            title="Showing the last successful scan"
             tone="error"
           >
-            <Text style={styles.noticeText}>새로고침 실패: {errorMessage(query.error)}</Text>
+            <Text style={styles.noticeText}>Refresh failed: {errorMessage(query.error)}</Text>
           </Notice>
         ) : null}
 
@@ -887,7 +889,7 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
           <Notice
             styles={styles}
             theme={theme}
-            title={`일부 항목을 완전히 조사하지 못했습니다 · ${result.warnings.length}`}
+            title={`Some items could not be fully scanned · ${result.warnings.length}`}
             tone="warning"
           >
             {result.warnings.map((warning, index) => (
@@ -899,9 +901,9 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <View style={styles.sectionCopy}>
-              <Text style={styles.sectionTitle}>저장소</Text>
+              <Text style={styles.sectionTitle}>Repositories</Text>
               <Text style={styles.sectionDescription}>
-                저장소를 펼쳐 활성 Workspace와 판단 근거를 확인합니다.
+                Expand a repository to inspect its active workspaces and branch details.
               </Text>
             </View>
             <View accessibilityRole="tablist" style={styles.filters}>
@@ -911,8 +913,9 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
                   <Pressable
                     key={item.id}
                     accessibilityRole="tab"
-                    accessibilityLabel={`${item.label} 저장소 ${filterCounts[item.id]}개`}
+                    accessibilityLabel={`${item.label}: ${filterCounts[item.id]} ${filterCounts[item.id] === 1 ? "repository" : "repositories"}`}
                     accessibilityState={{ selected }}
+                    aria-selected={selected}
                     onPress={() => setFilter(item.id)}
                     style={({ pressed }) => [
                       styles.filterButton,
@@ -934,9 +937,9 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
               <View style={styles.stateIcon}>
                 <Icon name="GitBranch" size={24} color={theme.colors.foregroundMuted} />
               </View>
-              <Text style={styles.stateTitle}>표시할 Git 저장소가 없습니다</Text>
+              <Text style={styles.stateTitle}>No Git repositories to show</Text>
               <Text style={styles.stateText}>
-                선택한 Host에 Git Project가 등록되면 이곳에 표시됩니다.
+                Git projects registered on the selected host will appear here.
               </Text>
             </View>
           ) : visibleRepositories.length === 0 ? (
@@ -944,17 +947,17 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
               <View style={styles.stateIcon}>
                 <Icon name="Search" size={24} color={theme.colors.foregroundMuted} />
               </View>
-              <Text style={styles.stateTitle}>이 필터에 해당하는 저장소가 없습니다</Text>
-              <Text style={styles.stateText}>다른 필터를 선택해 전체 저장소를 확인하세요.</Text>
+              <Text style={styles.stateTitle}>No repositories match this filter</Text>
+              <Text style={styles.stateText}>Select another filter to see more repositories.</Text>
             </View>
           ) : (
             <View style={styles.tree}>
               {!layout.compact ? (
                 <>
                   <View style={styles.treeHeader}>
-                    <Text style={[styles.treeHeaderText, styles.treeHeaderMain]}>저장소</Text>
-                    <Text style={[styles.treeHeaderText, styles.treeHeaderStatus]}>상태</Text>
-                    <Text style={[styles.treeHeaderText, styles.treeHeaderBase]}>기준 ref</Text>
+                    <Text style={[styles.treeHeaderText, styles.treeHeaderMain]}>Repositories</Text>
+                    <Text style={[styles.treeHeaderText, styles.treeHeaderStatus]}>Status</Text>
+                    <Text style={[styles.treeHeaderText, styles.treeHeaderBase]}>Base ref</Text>
                   </View>
                   <View style={styles.divider} />
                 </>
@@ -973,7 +976,7 @@ export function MainSurface({ theme, layout, host }: PluginSurfaceProps) {
           )}
         </View>
 
-        <Text style={styles.footnote}>Project, Workspace와 Git ref는 변경하지 않습니다.</Text>
+        <Text style={styles.footnote}>Projects, workspaces and Git refs are never modified.</Text>
       </View>
     </ScrollView>
   );

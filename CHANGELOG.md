@@ -4,12 +4,14 @@ The collection uses one version/tag for all supported plugins. Published release
 
 ## 0.1.0-rc.2 — two-plugin candidate
 
+- Convert Branch Garden's interface, accessibility labels, generated warnings/errors and scan-time display to English. Preserve user-provided names and read-only Git behavior. Explicit web accessibility states expose filter selection and repository expansion.
+- Add actual Branch Garden screenshots and a user-supplied Provider Usage composer-pill image to the plugin guides.
 - Focus maintenance on Branch Garden and Provider Usage. This is repository-maintainer support, not Paseo-team endorsement. Provider Usage's external integration remains experimental.
 - Remove GitHub Project Board, Tailscale Dashboard, Composer Compact, Composer Skills and File Browser, including their sources, tests, guides, screenshots, catalog entries and workspace dependencies.
-- Update English/Korean documentation, Issue Forms and validation to cover the two remaining plugins. Their runtime code and API are unchanged.
+- Update English/Korean documentation, Issue Forms and validation to cover the two remaining plugins. Removing the retired plugins did not change the retained plugins' runtime code; the subsequent Branch Garden language update is listed above.
 - Withdraw the unpublished seven-plugin release draft. Existing installs need explicit removal; see [removal and migration](docs/REMOVED_PLUGINS.md).
 
-See [compatibility](docs/COMPATIBILITY.md) and [verification](docs/verification/0.1.0-rc.2.md). No public release is created by this cleanup.
+See [compatibility](docs/COMPATIBILITY.md), [removal verification](docs/verification/0.1.0-rc.2.md) and [English UI verification](docs/verification/branch-garden-english.md). These changes do not publish a release.
 
 ## 0.1.0-rc.1 — withdrawn before publication
 
