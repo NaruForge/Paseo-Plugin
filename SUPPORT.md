@@ -10,11 +10,13 @@ English and Korean reports are welcome. Include plugin runtime ID, installed com
 
 ## Support policy
 
+Core support covers Branch Garden and Provider Usage. Provider Usage still depends on experimental supplier endpoints. Other plugins were removed before the first public release; see [removal guidance](docs/REMOVED_PLUGINS.md).
+
 The initial release line targets Paseo **0.7.2**. Newer or preview APIs are not assumed compatible. We prioritize reproducible problems on the Windows daemon and web client used for runtime validation. macOS/Linux automated checks and native mobile support have separate evidence in [Compatibility](docs/COMPATIBILITY.md).
 
 Before 1.0, breaking changes can occur in minor releases and are documented in the changelog. Release candidates are for evaluation. Only the latest release in the active minor line receives routine fixes; use a reviewed tag/commit and retain the previous source reference for rollback.
 
-If a plugin cannot follow upstream safely, mark it experimental or deprecated in the catalog and guide. Announce deprecation with migration/removal instructions in the changelog before removal in a later minor release. No fixed calendar commitment is made. Preserve prior tags and release notes.
+For published releases, if a plugin cannot follow upstream safely, mark it experimental or deprecated in the catalog and guide. Announce deprecation with migration/removal instructions in the changelog before removal in a later minor release. No fixed calendar commitment is made. Preserve prior tags and release notes.
 
 ## Troubleshooting first steps
 

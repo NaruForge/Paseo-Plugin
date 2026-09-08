@@ -6,11 +6,11 @@ Prepared text for a future maintainer-approved submission; it has not been sent 
 
 **Repository:** https://github.com/SWBaek/Paseo-Plugin
 
-**Suggested description:** A community-maintained collection of seven independently installable Paseo plugins for Git workspace visibility, read-only GitHub Project boards, Tailscale status, composer actions, Windows file browsing and provider usage.
+**Suggested description:** Two community-maintained Paseo plugins for Git workspace visibility (Branch Garden) and provider usage (Provider Usage).
 
 **Installation example:** `paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden`
 
-**Compatibility:** Paseo 0.7.2, with per-plugin prerequisites and platform limitations documented. File Browser requires a Windows daemon. Provider Usage is experimental.
+**Compatibility:** Paseo 0.7.2, with per-plugin prerequisites and platform limitations documented. Provider Usage is experimental.
 
 **Maintenance:** SWBaek and contributors; MIT license; CI, release notes, configuration guides and private vulnerability reporting.
 

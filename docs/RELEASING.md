@@ -1,6 +1,6 @@
 # Releasing the collection
 
-All seven plugins use one collection version and one Git tag (`v<version>`). Runtime IDs remain unchanged. Keep versions in root/workspace packages, the lockfile, `plugins.json` and the changelog in sync. A catalog is descriptive metadata, not a Paseo registry submission.
+Both plugins use one collection version and one Git tag (`v<version>`). Runtime IDs remain unchanged. Keep versions in root/workspace packages, the lockfile, `plugins.json` and the changelog in sync. A catalog is descriptive metadata, not a Paseo registry submission.
 
 ## Prepare
 
@@ -22,7 +22,7 @@ paseo plugin logs branch-garden-release-check
 
 Repeat for each plugin, exercise its RPC/UI, and verify install without `node_modules` in the managed plugin directory. Test successful updates and failed-candidate rollback in a controlled test repository or branch; never inject a failure into the release branch. Directory reload has different failure semantics and does not prove Git rollback behavior.
 
-Clean up only your temporary IDs with `paseo plugin remove <id>` and confirm existing installations remain running. Do not start simultaneous File Browser downloads from duplicate instances on port 9292.
+Clean up only your temporary IDs with `paseo plugin remove <id>` and confirm existing installations remain running.
 
 ## Draft and publish
 

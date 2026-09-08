@@ -40,11 +40,6 @@ manifest의 기본 runtime ID로 설치합니다.
 
 ```powershell
 paseo plugin add SWBaek/Paseo-Plugin:plugins/branch-garden
-paseo plugin add SWBaek/Paseo-Plugin:plugins/github-project-board
-paseo plugin add SWBaek/Paseo-Plugin:plugins/tailscale-dashboard
-paseo plugin add SWBaek/Paseo-Plugin:plugins/composer-compact
-paseo plugin add SWBaek/Paseo-Plugin:plugins/composer-skills
-paseo plugin add SWBaek/Paseo-Plugin:plugins/file-browser
 paseo plugin add SWBaek/Paseo-Plugin:plugins/provider-usage
 paseo plugin ls
 ```
@@ -118,7 +113,7 @@ Git source를 제거하면 runtime 설정과 managed checkout이 함께 제거�
 
 아래 내용은 현재 기준 버전인 `0.7.2`의 검증 결과가 아니라, Git source 흐름을 처음 도입할 때 남긴 역사적 기록입니다. 2026-08-28에 로컬 Paseo `0.7.0-beta.1` daemon에서 다음 경로를 실제 검증했습니다.
 
-- `plugins/branch-garden`과 `plugins/github-project-board`를 서로 다른 임시 runtime ID로 설치했습니다.
+- 당시 `plugins/branch-garden`과 현재 제거된 `plugins/github-project-board`를 서로 다른 임시 runtime ID로 설치했습니다.
 - 두 managed checkout에 `node_modules`가 없는 상태에서 모두 `running`이 되었습니다.
 - 추적 branch를 한 commit 진행했을 때 `plugin status`가 `commitsBehind: 1`, `updateAvailable: true`를 보고했습니다.
 - `plugin update --all`이 업데이트 대상만 새 commit으로 전환했고 기존 directory runtime은 변경하지 않았습니다.

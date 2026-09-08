@@ -1,16 +1,16 @@
 # Changelog
 
-The collection uses one version/tag for all plugins. Plugin-specific changes are listed under that release. Published releases are listed on [GitHub](https://github.com/SWBaek/Paseo-Plugin/releases).
+The collection uses one version/tag for all supported plugins. Published releases are listed on [GitHub](https://github.com/SWBaek/Paseo-Plugin/releases).
 
-## 0.1.0-rc.1 — release candidate
+## 0.1.0-rc.2 — two-plugin candidate
 
-First versioned community-distribution candidate, targeting Paseo 0.7.2. The release is not stable or upstream-endorsed.
+- Focus maintenance on Branch Garden and Provider Usage. This is repository-maintainer support, not Paseo-team endorsement. Provider Usage's external integration remains experimental.
+- Remove GitHub Project Board, Tailscale Dashboard, Composer Compact, Composer Skills and File Browser, including their sources, tests, guides, screenshots, catalog entries and workspace dependencies.
+- Update English/Korean documentation, Issue Forms and validation to cover the two remaining plugins. Their runtime code and API are unchanged.
+- Withdraw the unpublished seven-plugin release draft. Existing installs need explicit removal; see [removal and migration](docs/REMOVED_PLUGINS.md).
 
-- Add MIT licensing, English and Korean entry guides, individual plugin guides, catalog, support/security/contribution policies and a release process.
-- GitHub Board defaults to the authenticated user and accepts a host-configured user or organization; scope guidance uses `read:project`.
-- **Migration required:** File Browser no longer implicitly exposes `C:\Projects`. Configure explicit allowed folders as described in [configuration](docs/CONFIGURATION.md). Reload applies changes and revokes outstanding download URLs.
-- Tailscale Dashboard shows CLI connection and peer counts without an extended TailscaleOps service.
-- Provider Usage rejects HTTP redirects to keep authenticated requests within its two-endpoint allowlist.
-- Add configuration and redirect regression checks, OS-aware tests and release metadata validation.
+See [compatibility](docs/COMPATIBILITY.md) and [verification](docs/verification/0.1.0-rc.2.md). No public release is created by this cleanup.
 
-Known limitations: UI text includes Korean; native mobile clipboard copying is unavailable; File Browser remains Windows-only; usage endpoints are experimental. See [Compatibility](docs/COMPATIBILITY.md) and the [verification record](docs/verification/0.1.0-rc.1.md).
+## 0.1.0-rc.1 — withdrawn before publication
+
+The first seven-plugin candidate introduced MIT licensing, public user/contributor documentation, release checks and security improvements. Its draft was withdrawn when the project scope narrowed. Historical source and verification remain in [Git history](https://github.com/SWBaek/Paseo-Plugin/tree/5919ab16fad941d46f2a294e981154f76297cc49).

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "0.1.0-rc.1",
+  "version": "0.1.0-rc.2",
   "paseoVersion": "0.7.2",
   "plugins": [
     {
@@ -15,69 +15,6 @@
         "linux"
       ],
       "readme": "plugins/branch-garden/README.md"
-    },
-    {
-      "id": "github-project-board",
-      "name": "GitHub Board",
-      "path": "plugins/github-project-board",
-      "description": "Browse your GitHub Projects as a read-only Kanban board.",
-      "maturity": "preview",
-      "daemonPlatforms": [
-        "win32",
-        "darwin",
-        "linux"
-      ],
-      "readme": "plugins/github-project-board/README.md"
-    },
-    {
-      "id": "tailscale-dashboard",
-      "name": "Tailscale Dashboard",
-      "path": "plugins/tailscale-dashboard",
-      "description": "See Tailscale connection and peer counts, with an optional verified operations dashboard.",
-      "maturity": "preview",
-      "daemonPlatforms": [
-        "win32",
-        "darwin",
-        "linux"
-      ],
-      "readme": "plugins/tailscale-dashboard/README.md"
-    },
-    {
-      "id": "composer-compact",
-      "name": "Composer Compact",
-      "path": "plugins/composer-compact",
-      "description": "Confirm and send /compact to the selected agent.",
-      "maturity": "preview",
-      "daemonPlatforms": [
-        "win32",
-        "darwin",
-        "linux"
-      ],
-      "readme": "plugins/composer-compact/README.md"
-    },
-    {
-      "id": "composer-skills",
-      "name": "Composer Skills",
-      "path": "plugins/composer-skills",
-      "description": "Choose session skills and copy a prompt draft.",
-      "maturity": "preview",
-      "daemonPlatforms": [
-        "win32",
-        "darwin",
-        "linux"
-      ],
-      "readme": "plugins/composer-skills/README.md"
-    },
-    {
-      "id": "file-browser",
-      "name": "File Browser",
-      "path": "plugins/file-browser",
-      "description": "Browse allowed Windows folders and download files or ZIPs over your Tailnet.",
-      "maturity": "preview",
-      "daemonPlatforms": [
-        "win32"
-      ],
-      "readme": "plugins/file-browser/README.md"
     },
     {
       "id": "provider-usage",
