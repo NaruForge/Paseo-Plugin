@@ -2,7 +2,7 @@
 
 이 저장소는 Branch Garden, Provider Usage, Prompt Palette, Command Deck 네 개의 독립적인 Paseo 플러그인을 개발하는 npm workspace다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위다.
 
-현재 네 플러그인 소스·SDK·manifest는 **0.8.0-beta.1** 대상이다. 기존 Branch Garden·Provider Usage·Prompt Palette는 사용자가 Paseo 0.8에서 Runtime 검증을 완료했다. Command Deck의 소스·Windows 터미널 검증과 남은 앱 runtime 검증은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 따른다. 환경과 범위는 [검증 기록](docs/verification/paseo-0.8-runtime.md)을 따른다. Git 배포 경로 검증은 [기록](docs/verification/paseo-0.8-git-source.md)을 따른다. Command Deck Git 활성화는 그 기록에 없다. 기존 배포 태그 `v0.1.0-rc.2`의 두 플러그인은 **0.7.2** 대상이다. 참조 문서는 **0.8.0-beta.1** 계약을 설명한다. 이관 계획은 [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77), 파일·import·검증 순서는 [docs/MIGRATION_0.8.md](docs/MIGRATION_0.8.md)를 따른다.
+현재 소스와 개발 SDK는 exact **0.8.0-beta.1**이고, manifest `requirements.paseo`는 **^0.8.0**이다. 공개 태그 `v0.1.0-rc.2`의 Branch Garden과 Provider Usage는 **0.7.2**다. 파일·import·검증 순서는 [docs/MIGRATION_0.8.md](docs/MIGRATION_0.8.md)를 본다. 검증 범위는 [Runtime](docs/verification/paseo-0.8-runtime.md), [Git source](docs/verification/paseo-0.8-git-source.md), Command Deck은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 본다.
 
 아이디어, 개발 계획과 버그의 이슈 관리는 GitHub Issues를 사용한다. 새 이슈는 `.github/ISSUE_TEMPLATE/`의 양식을 사용하고, 분류·Project 상태·PR 연결 규칙은 `.github/ISSUE_MANAGEMENT.md`를 따른다.
 
@@ -77,9 +77,9 @@ npm test --workspace branch-garden
 
 - `client/*.tsx`: UI, 훅, React Native 스타일. 모든 `Text` 색상은 `theme.colors`, 루트 배경은 `theme.colors.surface0`, 좁은 화면은 `layout.compact`를 사용한다.
 - `*.logic.ts`, `*.view.ts`: 런타임에 의존하지 않는 도메인 판단과 표시용 파생 값을 소유한다. 동작을 바꾸면 같은 이름의 테스트를 함께 확인한다.
-- Provider Usage의 `client/usage-registration.ts`·`usage-query.ts`·`usage-visibility.ts`: pill 등록, query와 표시 설정의 주기적 조회·반영을 소유한다. 구독·timer·pending state처럼 수명이 있는 자원은 만든 모듈에서 cleanup을 제공하고 동명 테스트를 함께 확인한다. `client/usage-settings.tsx`는 설정 UI를, `shared/usage-settings.ts`는 schema·migration을 소유하며 Settings 변경 시 아래 동기화 규칙을 따른다.
+- Provider Usage의 `client/usage-registration.ts`는 Composer pill 등록 수명을 소유한다. `usage-query.ts`는 공식 usage snapshot을 요청 시에만 읽고 폴링하지 않는다. `usage-visibility.ts`는 Settings의 Composer pill 표시 여부를 주기적으로 읽어 반영한다. 구독·timer·pending state처럼 수명이 있는 자원은 만든 모듈에서 cleanup을 제공하고 동명 테스트를 함께 확인한다. `client/usage-settings.tsx`는 설정 UI를, `shared/usage-settings.ts`는 schema·migration을 소유하며 Settings 변경 시 아래 동기화 규칙을 따른다.
 - Prompt Palette의 `shared/prompt-settings.ts`는 schema를, `client/prompt-settings.tsx`는 revision을 고정한 draft 편집을, `prompt-registration.ts`·`prompt-controller.ts`·`prompt-send.ts`는 등록·Modal·전송 수명을 소유한다. 변경 시 workspace typecheck와 테스트를 실행한다. 전송은 공식 Agent `send()`만 사용하며 자동 재전송하지 않는다.
-- Command Deck의 `shared/commands.ts`는 workspaceId별 Settings·RPC 계약을, `server/runner.ts`는 실행 직렬화·터미널 소유권 확인·재발견을 소유한다. `client/run-controller.ts`·`registration.ts`는 조회·기여 수명을 소유한다. 변경 시 workspace typecheck와 테스트를 실행한다. 명령 실행은 공식 Terminal SDK만 사용하며 응답 유실 시 자동 재전송하지 않는다. Cleanup은 터미널을 종료하지 않는다.
+- Command Deck의 `shared/commands.ts`는 Project(`projectId`) Settings와 실행 RPC 계약을 소유한다. v1 `workspaceId`는 `legacyWorkspaceId`로만 이전한다. 실행·터미널 소유권은 현재 Workspace다. `server/runner.ts`는 실행 직렬화·터미널 소유권 확인·재발견을 소유한다. `client/run-controller.ts`·`registration.ts`는 조회·기여 수명을 소유한다. 변경 시 workspace typecheck와 테스트를 실행한다. 명령 실행은 공식 Terminal SDK만 사용하며 응답 유실 시 자동 재전송하지 않는다. Cleanup은 터미널을 종료하지 않는다.
 - `paseo-plugin.json`: 설치 기본 ID를 소유한다. 디렉터리명이나 package 이름으로 런타임 ID를 추측하지 않는다.
 - `package.json`: 로컬 타입 검사용 exact `@getpaseo/plugin` 의존성을 소유한다. 공개 계약을 ambient declaration으로 임의 확장하지 않는다.
 
@@ -87,8 +87,8 @@ npm test --workspace branch-garden
 
 ## Synchronization Rules
 
-- 기여 ID, surface ID, sidebar의 surface 연결 또는 등록 방식은 같은 플러그인의 client 등록 entry에서 함께 갱신한다. 0.7은 `index.ts`, 0.8은 `index.client.ts[x]`다. 연결된 컴포넌트의 export나 props가 영향을 받을 때만 해당 UI 모듈을 함께 바꾼다.
-- RPC 입력·출력이 바뀌면 공유 계약, server 구현, handler 등록과 client 호출부를 영향 범위에 맞춰 갱신한다. 0.7은 suffix 모듈과 `plugin.handle`, 0.8은 runtime 디렉터리와 `index.server.ts[x]`의 `server.handle`을 사용한다.
+- 기여 ID, surface ID, sidebar의 surface 연결 또는 등록 방식은 같은 플러그인의 `index.client.ts[x]`에서 함께 갱신한다. 연결된 컴포넌트의 export나 props가 영향을 받을 때만 해당 UI 모듈을 함께 바꾼다. 현재 소스에 구형 루트 `index.ts`를 추가하지 않는다. `v0.1.0-rc.2` 태그 유지보수는 [v0.7 quickstart](https://paseo.sh/docs/plugins/v0.7)와 [reference](https://paseo.sh/docs/plugins/v0.7/reference)를 따른다.
+- RPC 입력·출력이 바뀌면 공유 계약, server 구현, `index.server.ts[x]`의 `server.handle` 등록과 client 호출부를 영향 범위에 맞춰 갱신한다.
 - 0.8 Settings 변경은 공유 definition·schema version·migration, server `registerSettings`, client `useSettings`와 draft/revision 충돌 처리를 함께 대조한다. Settings 제거 시 값도 삭제되므로 운영 문서를 갱신한다.
 - 플러그인 디렉터리를 추가·삭제·이름 변경하면 이 파일의 Workspace Map, `README.md`, `README.ko.md`, `plugins.json`의 플러그인 목록·설치 예시·저장소 구조, `.github/ISSUE_TEMPLATE/*.yml`의 대상 선택지와 `docs/GIT_INSTALLATION.md`의 설치 목록을 같은 변경에서 맞춘다. `npm run check:docs-sync`는 모든 플러그인의 설치 예시를 대조한다. Workspace Map 제목과 목록 형식도 이 검사기가 읽으므로 구조를 바꿀 때 함께 대조한다.
 - 플러그인의 사용자용 설치 요구 사항, 운영 절차 또는 안전 경계를 바꾸면 해당 내용을 이미 설명하는 루트나 플러그인 `README.md`와 `docs/` 문서를 같은 변경에서 갱신한다. 과거 release·verification 기록은 당시 사실을 보존하고 새 버전 증거를 별도로 추가한다.
@@ -100,7 +100,9 @@ npm test --workspace branch-garden
 - 문서만 바꾸고 플러그인 소스, package declaration, workspace 구조와 설치 상태에 영향을 주지 않은 경우에는 typecheck와 테스트를 요구하지 않는다. 문서의 명령·경로·계약을 바꿨다면 해당 내용의 정적 대조나 필요한 최소 검증은 수행한다.
 - 한 플러그인의 소스 변경은 먼저 `npm run typecheck --workspace <package-name>`으로 검사한다.
 - `branch-garden`의 logic, server, shared 또는 view 동작을 바꾸면 `npm run typecheck --workspace branch-garden`과 `npm test --workspace branch-garden`을 모두 실행한다. Git 명령 변경은 read-only allowlist와 실제 Git 상태 무변경 테스트를 반드시 통과해야 한다.
-- `provider-usage`의 logic, server, shared, view, query, client 또는 registration 동작을 바꾸면 `npm run typecheck --workspace provider-usage`와 `npm test --workspace provider-usage`를 모두 실행한다. 현재 사용량은 공식 `providers.snapshot`·`listUsage`만 호출한다. 활성 연결 필터, 누락 값·오류 정규화, 직접 HTTP·자격 증명 접근·토큰 로그 부재 테스트를 통과해야 한다. 0.7 ref의 직접 HTTP를 변경할 때는 기존 Codex WHAM·Grok billing GET allowlist와 자격 증명 무기록·토큰 비로그 검사를 유지한다.
+- `provider-usage`의 logic, server, shared, view, query, client 또는 registration 동작을 바꾸면 `npm run typecheck --workspace provider-usage`와 `npm test --workspace provider-usage`를 모두 실행한다. 현재 사용량은 공식 `providers.snapshot`·`listUsage`만 호출한다. 활성 연결 필터, 누락 값·오류 정규화, 직접 HTTP·자격 증명 접근·토큰 로그 부재 테스트를 통과해야 한다. `v0.1.0-rc.2` 태그의 직접 HTTP를 변경할 때만 기존 Codex WHAM·Grok billing GET allowlist와 자격 증명 무기록·토큰 비로그 검사를 유지한다.
+- `prompt-palette`의 settings, registration, controller 또는 send 동작을 바꾸면 `npm run typecheck --workspace prompt-palette`와 `npm test --workspace prompt-palette`를 모두 실행한다. 전송은 공식 Agent `send()`만 사용하며 자동 재전송하지 않는다.
+- `command-deck`의 settings, runner, controller 또는 registration 동작을 바꾸면 `npm run typecheck --workspace command-deck`과 `npm test --workspace command-deck`을 모두 실행한다. 명령 실행은 공식 Terminal SDK만 사용하며 응답 유실 시 자동 재전송하지 않는다. Cleanup은 터미널을 종료하지 않는다.
 - workspace 구조, 설치 상태 또는 여러 플러그인 소스에 걸친 변경은 루트에서 `npm run check`로 검사한다. 문서만 바꾼 경우에는 위 문서 전용 변경 기준을 적용한다.
 - `scripts/check-git-source-imports.mjs`·`release-paseo.mjs`와 해당 테스트를 바꾸면 `npm run test:scripts`를 실행하고, 각각 `npm run check:git-source-imports`·`npm run check:release`로 현재 저장소도 검사한다. `scripts/check-doc-sync.mjs`는 `npm run check:docs-sync`, `scripts/check-release.mjs`는 `npm run test:scripts`와 `npm run check:release`, `scripts/run-tests.mjs`는 `npm test`로 검사한다. `scripts/check-plugin-compiler.mjs`의 exact compiler 검증은 [이관 문서](docs/MIGRATION_0.8.md)의 명령과 전제 조건을 따른다.
 - Git source 설치나 업데이트 경로를 변경하거나 배포를 준비할 때는 루트에서 `npm run check:git-source-imports`를 실행한다. Paseo는 package manager와 install script를 자동 실행하지 않는다. Manifest에 `build`가 있으면 명시한 argv 명령만 staged plugin directory에서 실행하므로, 현재 플러그인처럼 `build`를 생략한 source의 runtime import는 host 제공 모듈, Node 기본 모듈과 플러그인 내부 상대 경로만 사용한다.
