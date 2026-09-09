@@ -2,9 +2,21 @@
 
 Show usage for every enabled Provider connection on the selected Host, using Paseo's official usage API. The optional sidebar and matching Agent Composer pills complement **Settings → Usage**.
 
-[Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Support](../../SUPPORT.md)
+[Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Install](#installation) · [Support](../../SUPPORT.md)
 
 **Current source targets Paseo 0.8.0-beta.1.** Source and isolated UI checks are recorded in [verification](../../docs/verification/provider-usage-0.8-source.md). The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). The published `v0.1.0-rc.2` tag retains the previous 0.7.2 implementation.
+
+## Screenshots
+
+These **0.8.0-beta.1 source previews** were captured on 2026-09-09 with simulated host controls, settings and provider data. They show functionality, not a live Paseo installation or actual account quotas. Original images are included unchanged from the [reset display review](../../docs/verification/provider-usage-reset-time.md).
+
+![Provider Usage source preview with pill fields and Time remaining selected](../../docs/screenshots/provider-usage/settings-preview.png)
+
+This example enables Show reset time and selects Time remaining; the defaults remain reset time off and Date and time. “Save requests” is preview instrumentation, not a Paseo setting.
+
+![Provider Usage source preview showing a usage window, unsupported connection, credit balance and unavailable provider](../../docs/screenshots/provider-usage/usage-preview.png)
+
+The sample Usage screen distinguishes available values from unsupported or failed readings. The historical live Composer image is retained under Usage and refresh.
 
 ## Provider Usage Settings
 
@@ -46,14 +58,25 @@ The image below records the previous 0.7 composer UI; it is not beta Settings ve
 
 ## Installation
 
-Use a compatible beta daemon/app for current source, with the directory install/reload development flow in the [collection guide](../../README.ko.md). For the published 0.7 release:
+This guide’s Settings and official-API behavior describe current **0.8.0-beta.1 source**. For the published **0.7.2** release, use the [versioned usage guide](https://github.com/NaruForge/Paseo-Plugin/blob/v0.1.0-rc.2/plugins/provider-usage/README.md#use). Its old command examples are historical; use the installation and maintenance commands here. Enable trusted plugins in the target daemon’s Settings → Plugins, then install the release with:
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
 paseo plugin ls
 ```
 
-The tag is pinned and does not advance on update. See [Git installation](../../docs/GIT_INSTALLATION.md) before selecting a beta candidate ref.
+The tag is pinned and does not advance on update.
+
+For current source evaluation, both daemon and app must match the beta target. Enable the Provider connections through normal Paseo tooling. Follow the [source checkout steps](../../README.md#evaluate-current-08-source), then run PowerShell from the repository root on the daemon host:
+
+```powershell
+$repoRoot = (Resolve-Path .).Path
+paseo plugin ls
+paseo plugin install (Join-Path $repoRoot "plugins/provider-usage")
+paseo plugin ls
+```
+
+Expect `provider-usage` to be `running` without load errors. If the ID already exists, use a distinct `--id provider-usage-dev`. Open **Usage** from Command Center; sidebar visibility belongs to **Settings → Layout**. A matching enabled connection is required for an Agent pill. No enabled connections means there is no usage to show; unsupported connections stay visible as unavailable. See [Git installation](../../docs/GIT_INSTALLATION.md) before selecting a beta candidate ref.
 
 ## Data access and troubleshooting
 
@@ -61,4 +84,27 @@ The plugin calls only `paseo.providers.snapshot()` and `paseo.providers.listUsag
 
 Unavailable can mean unsupported usage, missing authentication or a temporary provider limitation. Errors from the host are shown with generic descriptions rather than raw backend messages. Values can lag the provider's own UI. Do not include credentials or raw account responses in issue reports.
 
-Before lifecycle commands, run `paseo plugin ls` and use the actual runtime ID. For a remote Host, use `paseo --host <host> plugin ls`. Directory sources use `paseo plugin reload <runtime-id>`; Git sources use `paseo plugin update <runtime-id>`. Removal deletes the installation's settings.
+Before lifecycle commands, run `paseo plugin ls` and use the actual runtime ID. For a remote Host, use `paseo --host <host> plugin ls`. Directory sources use `paseo plugin reload <runtime-id>`; Git sources use `paseo plugin update <runtime-id>`. Removal deletes the installation's settings. For a missing pill, check the matching enabled connection, non-archived Agent with a Workspace, and Composer pill setting. For initialization failures, use `paseo plugin logs <runtime-id>`. If the symptom persists, use [Support](../../SUPPORT.md#troubleshooting-first-steps) with versions and redacted logs.
+
+## Update and remove
+
+Run `paseo plugin ls` against the intended Host before changing an installation. These examples use the default ID `provider-usage`; replace it with your actual ID if you used `--id`. On the 0.8 CLI, put remote selection before the command: `paseo --host <host> plugin ls`.
+
+For a **Git source** installation, check the tracked ref and update it:
+
+```sh
+paseo plugin status provider-usage
+paseo plugin update provider-usage
+paseo plugin ls
+```
+
+Branches advance; fixed tags and commits do not. For a **directory source**, after reviewing changes to the local checkout use `paseo plugin reload provider-usage`, then `paseo plugin ls`. Settings survive update/reload. See [ref changes and rollback](../../docs/RELEASING.md#rollback) before switching a pinned installation.
+
+Removal is optional and separate from troubleshooting. **Removal deletes this installation’s display settings.** Record your choices first; reinstalling starts from defaults. Provider authentication is not removed. A Git-source removal deletes the managed checkout; a directory-source removal leaves the original source directory intact.
+
+```sh
+paseo plugin remove provider-usage
+paseo plugin ls
+```
+
+Confirm only the intended runtime has disappeared. No daemon restart is needed.

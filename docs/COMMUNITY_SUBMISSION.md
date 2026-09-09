@@ -12,7 +12,7 @@ Prepared text for a future maintainer-approved submission; it has not been sent 
 
 **Compatibility:** Paseo 0.7.2, with per-plugin prerequisites and platform limitations documented. Provider Usage is experimental.
 
-**0.8 status:** Reference documentation and Branch Garden source have been updated for 0.8.0-beta.1. Provider Usage migration and beta runtime verification are pending in [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77). Do not describe the current release as 0.8-compatible in a submission; update this proposal after the [release verification](RELEASING.md#validate-runtime-safely) is complete.
+**0.8 status:** All three current sources target 0.8.0-beta.1, including the unreleased Prompt Palette. The user reported runtime verification on Paseo 0.8 with the [documented scope limits](verification/paseo-0.8-runtime.md); Git deployment verification remains in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96). The suggested two-plugin description above applies only to the published 0.7 release. Do not describe the current release as 0.8-compatible in a submission; update this proposal after the [release verification](RELEASING.md#validate-runtime-safely) is complete.
 
 **Maintenance:** NaruForge and contributors; MIT license; CI, release notes, configuration guides and private vulnerability reporting.
 

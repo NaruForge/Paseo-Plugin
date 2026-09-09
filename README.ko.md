@@ -1,124 +1,101 @@
 # Paseo Plugins
 
-[English](README.md) · 커뮤니티에서 유지보수하는 플러그인 모음이며 Paseo 공식 운영·보증 저장소가 아닙니다.
+[English](README.md) · [플러그인 선택](#포함된-플러그인) · [호환성](docs/COMPATIBILITY.md) · [설정](docs/CONFIGURATION.md) · [지원](SUPPORT.md) · [기여](CONTRIBUTING.md)
 
-사용자 안내: [호환성](docs/COMPATIBILITY.md) · [설정](docs/CONFIGURATION.md) · [릴리스](docs/RELEASING.md) · [보안](SECURITY.md) · [지원](SUPPORT.md)
+Paseo에서 Git 작업 상태를 살펴보고, 공급자 사용량을 확인하고, 반복 프롬프트를 저장해 보내는 세 플러그인입니다. 필요한 것만 개별 설치할 수 있습니다. NaruForge와 기여자가 관리하는 커뮤니티 프로젝트로, Paseo 팀의 공식 운영·보증 저장소가 아닙니다.
 
-첫 공개 사전 릴리스 [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2)를 발행했습니다. 릴리스 노트에서 버전을 고정하는 설치 명령과 지원 범위·제한 사항을 확인할 수 있습니다.
+**공개 릴리스:** [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2)는 Paseo **0.7.2**용 Branch Garden과 Provider Usage를 포함합니다. Plugin API는 실험 단계입니다.
 
-Branch Garden, Provider Usage, Prompt Palette 세 개의 [Paseo](https://paseo.sh) 플러그인에 집중하는 npm workspace입니다. 이 저장소의 핵심 지원 대상이며, Paseo 팀의 공식 지원을 의미하지 않습니다. Provider Usage의 공급자 연동은 여전히 실험적입니다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위이며, 플러그인끼리 런타임 코드를 공유하지 않습니다.
-
-> **현재 소스: 세 플러그인 모두 `0.8.0-beta.1` / 기존 배포 태그의 두 플러그인: `0.7.2`** — Provider Usage는 공식 사용량 SDK와 표시 Settings를 적용했습니다. 사용자가 세 플러그인 모두 Paseo 0.8에서 Runtime 검증을 완료했습니다. [검증 기록과 보고 범위](docs/verification/paseo-0.8-runtime.md)를 확인하세요. Git 배포 경로 검증은 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에서 별도로 추적합니다. [소스 검증 기록](docs/verification/branch-garden-0.8-source.md), [0.8 이관 안내](docs/MIGRATION_0.8.md)와 [대응 이슈 #77](https://github.com/NaruForge/Paseo-Plugin/issues/77)을 확인하세요.
-
-> [!WARNING]
-> Paseo 플러그인은 신뢰된 비격리 코드입니다. 서버 측 코드는 daemon이 실행되는 컴퓨터의 파일, 프로세스, 자격 증명과 네트워크에 접근할 수 있고, 클라이언트 코드는 Paseo 앱 안에서 실행됩니다. 검토하고 신뢰하는 소스만 설치하세요.
+**현재 소스:** 세 플러그인 모두 **0.8.0-beta.1** 대상이며 아직 새 collection 릴리스로 배포되지 않았습니다. 사용자의 Paseo **0.8** Runtime 검증 완료 보고와 환경·시나리오 한계는 [검증 기록](docs/verification/paseo-0.8-runtime.md)에 있습니다. Git 설치·업데이트·실패 후보 복구는 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에서 별도로 추적합니다.
 
 ## 포함된 플러그인
 
-| Runtime ID | 대상 | 역할 |
-| --- | --- | --- |
-| [`branch-garden`](plugins/branch-garden/) | Personal operations | 선택된 host의 등록된 Git Project·Workspace와 로컬 branch·worktree 상태를 읽기 전용으로 집계하는 전역 sidebar surface입니다. |
-| [`prompt-palette`](plugins/prompt-palette/) | Personal operations | 반복 프롬프트를 Host Settings에 저장하고 Composer에서 미리보기 후 전송합니다. 미배포 실험 기능입니다. |
-| [`provider-usage`](plugins/provider-usage/) | Personal operations | 선택된 Host에서 활성화한 Provider 연결의 사용량을 공식 SDK로 읽어 표시합니다. Paseo Layout에서 sidebar 표시를, 플러그인 Settings에서 Composer pill 표시와 내용을 조절합니다. |
+| 플러그인 | 역할 | 현재 소스 요구 사항 | 성숙도·배포 상태 |
+| --- | --- | --- | --- |
+| [`branch-garden`](plugins/branch-garden/) | Git Project·Workspace와 branch·worktree 상태를 읽기 전용으로 모아 봅니다. | Paseo 0.8.0-beta.1, host의 Git과 등록된 Project/Workspace | Preview; 0.7 릴리스 있음, 0.8 변경은 미배포 |
+| [`prompt-palette`](plugins/prompt-palette/) | 반복 프롬프트를 저장하고 Composer에서 미리 본 뒤 보냅니다. | Paseo 0.8.0-beta.1, Workspace가 있는 기존 Agent | Experimental; 미배포 |
+| [`provider-usage`](plugins/provider-usage/) | 활성 Provider 연결의 사용량을 표시하고 Composer pill을 설정합니다. | Paseo 0.8.0-beta.1, 활성 Provider 연결 | Experimental; 0.7 릴리스 있음, 0.8 변경은 미배포 |
 
-Runtime ID의 기준은 디렉터리명이나 package 이름이 아니라 각 플러그인의 `paseo-plugin.json`입니다.
-
-Branch Garden의 UI·접근성 문구·자체 오류와 경고는 영어로 표시됩니다. 사용자가 정한 Project·Workspace·브랜치 이름과 외부 도구의 진단 원문은 바꾸지 않습니다. Provider Usage에는 한국어 상태 문구가 남아 있습니다. 기존 두 플러그인의 README에는 과거 실행 화면이 있으며, 신규 Prompt Palette는 [소스 검증 기록](docs/verification/prompt-palette-0.8-source.md)을 제공합니다.
+Branch Garden과 Provider Usage가 핵심 유지보수 대상이며 Prompt Palette는 신규 실험 기능입니다. Branch Garden UI는 영어이고 Provider Usage에는 한국어 상태 문구가 남아 있습니다. 개별 가이드는 영어입니다. 각 가이드에 대표 이미지가 있으며, 실제 0.7 화면과 시뮬레이션한 0.8 소스 preview를 구분해 표시합니다.
 
 ## 시작하기
 
-필요한 도구:
+먼저 설치할 버전을 고르세요. 0.7.2 사용자는 아래 공개 태그를 고정하고, 0.8 평가 사용자는 [로컬 설치](#로컬-설치와-reload)로 이동합니다. 사용자 설치에는 npm 검사나 전체 컬렉션 설치가 필요하지 않습니다.
 
-- 현재 세 플러그인 소스 대상: Paseo daemon/app/CLI `0.8.0-beta.1`; 기존 `v0.1.0-rc.2` 태그 대상: `0.7.2`
-- Branch Garden을 사용할 daemon host의 Git과 등록된 Paseo Project 또는 Workspace
-- 로컬 개발·검증에는 Node.js 22 이상과 npm (Git source 설치만 할 때는 npm 실행 불필요)
-- `provider-usage`는 Paseo의 활성 연결 목록과 공식 사용량 API만 호출합니다. 인증과 벤더 HTTP는 Paseo daemon이 담당하며, 사용량 미지원 연결은 조회 불가로 표시합니다.
+플러그인은 신뢰된 비격리 코드로 daemon 사용자의 파일·프로세스·네트워크 권한으로 실행됩니다. [보안·데이터 접근](SECURITY.md)을 확인하고 신뢰하기로 결정한 뒤 대상 daemon의 **Settings → Plugins**에서 활성화하세요.
 
-로컬 개발 시 루트에서 의존성을 설치하고 문서 동기화·Git-source runtime import·릴리스 메타데이터·모든 workspace 타입과 테스트를 검사합니다.
+### 공개 0.7 릴리스 설치
+
+Paseo daemon/app/CLI **0.7.2**에서 원하는 플러그인의 명령 하나를 선택합니다. Branch Garden은 daemon host의 Git과 등록된 Project/Workspace가 필요하고, 이 버전의 Provider Usage는 기존 Codex/Grok 인증을 사용합니다.
+
+```powershell
+paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
+paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
+```
+
+설치 후 `paseo plugin ls`에서 선택한 ID가 `running`이고 load error가 없는지 확인하세요. 0.7 사용법은 해당 태그의 [Branch Garden 가이드](https://github.com/NaruForge/Paseo-Plugin/blob/v0.1.0-rc.2/plugins/branch-garden/README.md#use)와 [Provider Usage 가이드](https://github.com/NaruForge/Paseo-Plugin/blob/v0.1.0-rc.2/plugins/provider-usage/README.md#use)를 따릅니다.
+
+태그 안의 가이드는 과거 명령 예시도 보존합니다. 설치·업데이트·제거 명령은 이 README의 현재 안내를 따르세요.
+
+## 로컬 설치와 reload
+
+현재 소스 평가에는 **0.8.0-beta.1 daemon/app/CLI**를 사용합니다. daemon host에 저장소를 clone하고 루트로 이동한 뒤 commit과 소스를 검토하세요. 기존 checkout이 있다면 그 루트에서 ref와 로컬 변경을 먼저 확인합니다.
+
+```powershell
+git clone https://github.com/NaruForge/Paseo-Plugin.git
+cd Paseo-Plugin
+git rev-parse HEAD
+```
+
+다음은 저장소 루트에서 실행하는 PowerShell 예시입니다. 먼저 `paseo plugin ls`로 설치 상태와 ID를 확인하고 **원하는 설치 명령 하나만** 선택하세요. 기본 ID는 각 `paseo-plugin.json`에 있습니다. 기존 설치가 같은 ID를 쓰면 `--id branch-garden-dev`처럼 별도 ID를 지정합니다.
+
+```powershell
+$repoRoot = (Resolve-Path .).Path
+paseo plugin ls
+paseo plugin install (Join-Path $repoRoot "plugins/branch-garden")
+paseo plugin install (Join-Path $repoRoot "plugins/provider-usage")
+paseo plugin install (Join-Path $repoRoot "plugins/prompt-palette")
+paseo plugin ls
+```
+
+설치한 ID가 `running`이고 오류가 없으면 다음 위치에서 사용합니다.
+
+- Branch Garden: sidebar에서 열고 host를 선택한 뒤 Refresh. 등록된 저장소가 없거나 필터에 맞지 않으면 빈 결과가 정상입니다.
+- Provider Usage: Command Center의 Open provider usage. Sidebar 표시는 Settings → Layout, pill은 Settings → Plugins → Provider Usage에서 조절합니다. 미지원 사용량은 조회 불가로 남습니다.
+- Prompt Palette: Settings → Plugins → Prompt Palette에서 프롬프트를 추가하고 Apply to draft → Save changes. 기존 Agent의 Prompts에서 본문과 대상을 확인한 뒤 Send합니다. 처음에는 빈 라이브러리가 정상입니다.
+
+검토한 소스 변경을 반영할 때는 실제 ID로 `paseo plugin reload <runtime-id>`를 실행한 뒤 `paseo plugin ls`를 확인합니다. daemon을 재시작하지 않습니다. 0.8 원격 CLI 옵션은 `paseo --host <host> plugin ls`처럼 명령 앞에 둡니다.
+
+## Git source 배포와 update
+
+다른 daemon이나 PC에는 Git source를 사용합니다. `--ref`를 생략하면 **이미 0.8 소스인 main**을 추적하므로 0.7 사용자는 기존 태그를 고정하세요. Branch는 새 commit을 추적하고 tag/commit은 고정됩니다.
+
+Prompt Palette는 main에 있지만 기존 태그에는 없습니다. Git 평가 시 다음 placeholder를 직접 검토한 공개 commit/tag로 바꾸세요. 이 명령은 Git 경로의 실행 검증을 완료했다는 뜻이 아닙니다.
+
+```powershell
+paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-prompt-palette-ref>
+```
+
+업데이트는 `paseo plugin status <runtime-id>`로 ref를 확인한 뒤 `paseo plugin update <runtime-id>`를 실행합니다. 고정 태그는 이동하지 않습니다. Source 선택·원격 명령·실패 후보 복구는 [Git 설치 안내](docs/GIT_INSTALLATION.md)를 참고하세요.
+
+## 설정·문제 해결·제거
+
+Branch Garden은 별도 저장 설정이 없습니다. Provider Usage의 표시 설정과 Prompt Palette의 라이브러리는 내장 Host Settings에 저장되며 update/reload 뒤에도 유지됩니다. **설치를 제거하면 해당 설정과 라이브러리는 삭제됩니다.** 제거·재설치 전에 표시 설정을 기록하고 필요한 프롬프트를 복사하세요. Prompt Palette에는 import/export 기능이 없습니다.
+
+문제가 있으면 대상 host에서 `paseo plugin ls`와 `paseo plugin logs <runtime-id>`로 확인하고 [지원 안내](SUPPORT.md)를 따라 비밀 정보를 뺀 증상·버전·ref를 보고하세요. 제거는 문제 해결의 필수 단계가 아닙니다. 원할 때만 `paseo plugin remove <runtime-id>`를 실행하고 목록에서 해당 ID가 사라졌는지 확인합니다. 원본 Git 저장소와 공급자 인증은 삭제되지 않습니다.
+
+플러그인별 [업데이트·제거 안내](docs/CONFIGURATION.md#update-and-remove), [설정](docs/CONFIGURATION.md), [과거 제거된 플러그인](docs/REMOVED_PLUGINS.md)을 참고하세요.
+
+## 개발하기
+
+이 저장소는 세 플러그인의 npm workspace입니다. 소스 기여에는 Node.js 22, npm과 Git을 사용하며 저장소 루트에서 다음을 실행합니다. 사용자 설치와 별도의 개발 검사입니다.
 
 ```powershell
 npm ci
 npm run check
 ```
 
-동작 로직을 변경했다면 해당 플러그인의 테스트를 실행합니다. 전체 테스트는 Windows·macOS·Linux에서 다음 명령으로 실행합니다.
-
-```powershell
-npm test
-```
-
-플러그인 하나만 검사할 때는 package 이름을 workspace 선택자로 사용합니다.
-
-```powershell
-npm run typecheck --workspace branch-garden
-```
-
-## 플러그인 설정
-
-세 플러그인은 별도의 사용자 설정 파일이 필요하지 않습니다. Prompt Palette는 내장 Host Settings에 프롬프트를 저장합니다. Branch Garden은 Git과 Paseo Workspace를, Provider Usage는 기존 공급자 인증을 사용합니다. [설정 안내](docs/CONFIGURATION.md)와 [제거된 플러그인 안내](docs/REMOVED_PLUGINS.md)를 확인하세요.
-
-## 로컬 설치와 reload
-
-먼저 대상 daemon의 **Settings → Plugins**에서 플러그인이 활성화되어 있는지 확인하세요. 전역 플러그인 switch를 켜는 것은 해당 daemon에서 모든 신뢰된 플러그인 코드를 허용하는 보안 결정입니다.
-
-저장소 루트에서 절대 경로로 원하는 플러그인을 설치합니다. 아래 현재 소스 예시는 호환되는 0.8 beta daemon/app을 대상으로 합니다.
-
-```powershell
-$repoRoot = (Resolve-Path .).Path
-paseo plugin ls
-# Branch Garden: 호환되는 0.8 beta 검증 daemon에서 실행
-paseo plugin install (Join-Path $repoRoot "plugins\branch-garden")
-paseo plugin ls
-```
-
-Provider Usage도 같은 호환 beta daemon에 설치할 수 있습니다. Composer pill 설정은 Settings → Plugins에서 열며 기본값은 켜짐입니다. Sidebar 노출은 Paseo Settings → Layout에서 결정합니다.
-
-```powershell
-$repoRoot = (Resolve-Path .).Path
-paseo plugin ls
-paseo plugin install (Join-Path $repoRoot "plugins\provider-usage")
-paseo plugin ls
-```
-
-Prompt Palette는 기존 릴리스 태그에 포함되지 않은 신규 소스입니다. 호환 beta daemon/app에서 로컬 검증할 때 다음처럼 설치합니다.
-
-```powershell
-$repoRoot = (Resolve-Path .).Path
-paseo plugin ls
-paseo plugin install (Join-Path $repoRoot "plugins\prompt-palette")
-paseo plugin ls
-```
-
-소스를 변경한 뒤에는 daemon을 재시작하지 말고 실제 runtime ID로 reload합니다.
-
-```powershell
-npm run typecheck --workspace branch-garden
-npm test --workspace branch-garden
-paseo plugin reload branch-garden
-paseo plugin ls
-paseo plugin logs branch-garden
-```
-
-설치·reload·제거를 수행하기 전에는 `paseo plugin ls`로 대상 host와 runtime ID를 확인하세요. 0.8 CLI의 원격 옵션은 `paseo --host <host> plugin ls`처럼 명령 앞에 둡니다. 현재 세 플러그인 소스는 0.8 beta daemon/app을 대상으로 합니다. 두 플러그인을 0.7.2에서 사용할 때는 기존 태그를 고정하세요.
-
-## Git source 배포와 update
-
-다른 daemon이나 PC에 배포할 때는 Git source의 canonical monorepo `repository:relative/path` 형식을 사용합니다. Paseo는 lockfile을 보고 package manager나 install script를 자동 실행하지 않습니다. 다만 manifest에 명시적인 `build`가 있으면 신뢰된 비격리 준비 명령으로 실행하므로, 먼저 source를 검토하고 문서 동기화·runtime import·타입 검사를 통과시켜야 합니다.
-
-```powershell
-npm run check:docs-sync
-npm run check:git-source-imports
-npm run typecheck
-paseo plugin ls
-paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
-paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
-paseo plugin ls
-paseo plugin status
-paseo plugin update --all
-paseo plugin ls
-```
-
-위 예시는 0.7 호환 태그로 고정하므로 `update`로 새 commit으로 이동하지 않습니다. `--ref`를 생략하면 default branch를 추적해 향후 0.8 이관 commit을 받을 수 있습니다. 명시적 branch는 새 commit을 추적하며 tag와 commit은 고정됩니다. 기존 directory 설치와 Git 설치에 같은 runtime ID를 사용하지 마세요. 임시 ID 검증, 실패 후보 복구와 정리 절차는 [Git source 설치와 업데이트](docs/GIT_INSTALLATION.md)에 정리되어 있습니다.
+변경 범위별 검사와 기여 절차는 [Contributing](CONTRIBUTING.md), 0.8 계약과 이관 배경은 [이관 안내](docs/MIGRATION_0.8.md)에 있습니다.
 
 ## 저장소 구조
 
