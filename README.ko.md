@@ -4,7 +4,7 @@
 
 Paseo에서 Git 작업 상태를 살펴보고, 공급자 사용량을 확인하고, 반복 프롬프트를 저장해 보내고 Windows 명령을 실행하는 네 플러그인입니다. 필요한 것만 개별 설치할 수 있습니다. NaruForge와 기여자가 관리하는 커뮤니티 프로젝트로, Paseo 팀의 공식 운영·보증 저장소가 아닙니다.
 
-**공개 릴리스:** [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2)는 Paseo **0.7.2**용 Branch Garden과 Provider Usage를 포함합니다. Plugin API는 실험 단계입니다.
+**공개 릴리스:** [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2)는 Paseo **0.7.2**용 Branch Garden과 Provider Usage를 포함합니다. Plugin API는 실험 단계입니다. 그 태그를 설치할 때는 이 README의 `NaruForge/` 명령을 복사하세요. 릴리스 노트와 태그 가이드는 저장소가 NaruForge로 옮기기 전의 GitHub owner 예시와 `--ref`가 없는 설치 샘플을 보존합니다.
 
 **현재 소스:** 네 플러그인 모두 **0.8.0-beta.1** 대상이며 아직 새 collection 릴리스로 배포되지 않았습니다. 기존 Branch Garden·Provider Usage·Prompt Palette에 대한 사용자의 Paseo **0.8** Runtime 검증 완료 보고와 환경·시나리오 한계는 [검증 기록](docs/verification/paseo-0.8-runtime.md)에 있습니다. Command Deck의 소스·Windows 터미널 검증과 남은 앱 검증은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 따릅니다. Git 설치·업데이트·실패 후보 복구는 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에서 별도로 추적합니다.
 
@@ -17,13 +17,13 @@ Paseo에서 Git 작업 상태를 살펴보고, 공급자 사용량을 확인하�
 | [`prompt-palette`](plugins/prompt-palette/) | 반복 프롬프트를 저장하고 Composer에서 미리 본 뒤 보냅니다. | Paseo 0.8.0-beta.1, Workspace가 있는 기존 Agent | Experimental; 미배포 |
 | [`provider-usage`](plugins/provider-usage/) | 활성 Provider 연결의 사용량을 표시하고 Composer pill을 설정합니다. | Paseo 0.8.0-beta.1, 활성 Provider 연결 | Experimental; 0.7 릴리스 있음, 0.8 변경은 미배포 |
 
-Branch Garden과 Provider Usage가 핵심 유지보수 대상이며 Prompt Palette는 신규 실험 기능입니다. Branch Garden UI는 영어이고 Provider Usage에는 한국어 상태 문구가 남아 있습니다. 개별 가이드는 영어입니다. 각 가이드에 대표 이미지가 있으며, 실제 0.7 화면과 시뮬레이션한 0.8 소스 preview를 구분해 표시합니다.
+Branch Garden과 Provider Usage가 핵심 유지보수 대상이며 Prompt Palette와 Command Deck은 신규 실험 기능입니다. Branch Garden UI는 영어이고 Provider Usage에는 한국어 상태 문구가 남아 있습니다. 개별 가이드는 영어입니다. 각 가이드에 대표 이미지가 있으며, 실제 0.7 화면과 시뮬레이션한 0.8 소스 preview를 구분해 표시합니다.
 
 ## 시작하기
 
 먼저 설치할 버전을 고르세요. 0.7.2 사용자는 아래 공개 태그를 고정하고, 0.8 평가 사용자는 [로컬 설치](#로컬-설치와-reload)로 이동합니다. 사용자 설치에는 npm 검사나 전체 컬렉션 설치가 필요하지 않습니다.
 
-플러그인은 신뢰된 비격리 코드로 daemon 사용자의 파일·프로세스·네트워크 권한으로 실행됩니다. [보안·데이터 접근](SECURITY.md)을 확인하고 신뢰하기로 결정한 뒤 대상 daemon의 **Settings → Plugins**에서 활성화하세요.
+플러그인은 신뢰된 비격리 코드로 daemon 사용자의 파일·프로세스·네트워크 권한으로 실행됩니다. Git과 사용량 조회는 읽기 전용입니다. Prompt Palette는 설정 저장과 명시적인 Agent 전송을, Command Deck은 저장한 PowerShell을 daemon 사용자 권한으로 실행·중지합니다. [보안·데이터 접근](SECURITY.md)을 확인하고 신뢰하기로 결정한 뒤 대상 daemon의 **Settings → Plugins**에서 활성화하세요.
 
 ### 공개 0.7 릴리스 설치
 
@@ -36,7 +36,7 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
 
 설치 후 `paseo plugin ls`에서 선택한 ID가 `running`이고 load error가 없는지 확인하세요. 0.7 사용법은 해당 태그의 [Branch Garden 가이드](https://github.com/NaruForge/Paseo-Plugin/blob/v0.1.0-rc.2/plugins/branch-garden/README.md#use)와 [Provider Usage 가이드](https://github.com/NaruForge/Paseo-Plugin/blob/v0.1.0-rc.2/plugins/provider-usage/README.md#use)를 따릅니다.
 
-태그 안의 가이드는 과거 명령 예시도 보존합니다. 설치·업데이트·제거 명령은 이 README의 현재 안내를 따르세요.
+태그 안의 가이드와 릴리스 노트는 과거 명령 예시도 보존합니다. 설치·업데이트·제거 명령은 이 README의 현재 `NaruForge/` 안내를 따르세요.
 
 ## 로컬 설치와 reload
 
@@ -64,7 +64,7 @@ paseo plugin ls
 
 - Branch Garden: sidebar에서 열고 host를 선택한 뒤 Refresh. 등록된 저장소가 없거나 필터에 맞지 않으면 빈 결과가 정상입니다.
 - Provider Usage: Command Center의 Open provider usage. Sidebar 표시는 Settings → Layout, pill은 Settings → Plugins → Provider Usage에서 조절합니다. 미지원 사용량은 조회 불가로 남습니다.
-- Command Deck: Settings → Plugins → Command Deck에서 Project를 고르고 명령을 저장합니다. Composer의 Commands 또는 Command Center의 Open workspace commands에서 실행·출력·중지를 제공합니다. 설치된 앱·모바일 검증은 별도로 필요합니다.
+- Command Deck: Settings → Plugins → Command Deck에서 Project를 고르고 명령을 저장합니다. Composer의 Commands 또는 Command Center의 Open workspace commands에서 실행·출력·중지를 제공합니다. 처음에는 빈 명령 목록이 정상입니다. 설치된 앱·모바일 검증은 별도로 필요합니다.
 - Prompt Palette: Settings → Plugins → Prompt Palette에서 프롬프트를 추가하고 Apply to draft → Save changes. 기존 Agent의 Prompts에서 본문과 대상을 확인한 뒤 Send합니다. 처음에는 빈 라이브러리가 정상입니다.
 
 검토한 소스 변경을 반영할 때는 실제 ID로 `paseo plugin reload <runtime-id>`를 실행한 뒤 `paseo plugin ls`를 확인합니다. daemon을 재시작하지 않습니다. 0.8 원격 CLI 옵션은 `paseo --host <host> plugin ls`처럼 명령 앞에 둡니다.
@@ -73,12 +73,16 @@ paseo plugin ls
 
 다른 daemon이나 PC에는 Git source를 사용합니다. `--ref`를 생략하면 **이미 0.8 소스인 main**을 추적하므로 0.7 사용자는 기존 태그를 고정하세요. Branch는 새 commit을 추적하고 tag/commit은 고정됩니다.
 
-Prompt Palette는 main에 있지만 기존 태그에는 없습니다. Git 평가 시 다음 placeholder를 직접 검토한 공개 commit/tag로 바꾸세요. 이 명령은 Git 경로의 실행 검증을 완료했다는 뜻이 아닙니다.
+0.8 Git 평가에는 `v0.1.0-rc.2`를 쓰지 마세요. 그 태그는 0.7.2 릴리스이며 Prompt Palette와 Command Deck이 없습니다. 다음 placeholder를 직접 검토한 공개 0.8 commit/tag로 바꾸고 **명령 하나만** 선택하세요. 이 명령은 Git 경로의 실행 검증을 완료했다는 뜻이 아닙니다.
 
 ```powershell
-paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-prompt-palette-ref>
-paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref <reviewed-command-deck-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref <reviewed-0.8-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref <reviewed-0.8-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-0.8-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref <reviewed-0.8-ref>
 ```
+
+placeholder를 실제 검토한 commit/tag로 바꾸세요. 이 문자열은 그대로 쓸 ref가 아닙니다.
 
 업데이트는 `paseo plugin status <runtime-id>`로 ref를 확인한 뒤 `paseo plugin update <runtime-id>`를 실행합니다. 고정 태그는 이동하지 않습니다. Source 선택·원격 명령·실패 후보 복구는 [Git 설치 안내](docs/GIT_INSTALLATION.md)를 참고하세요.
 

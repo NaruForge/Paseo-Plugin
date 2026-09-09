@@ -4,7 +4,7 @@ Report recorded: 2026-09-09. Migration tracking: [#77](https://github.com/NaruFo
 
 ## User verification report
 
-The user reported that they personally completed runtime verification of every plugin in this repository on Paseo 0.8. This is a user-performed runtime verification record, separate from the earlier automated checks and simulated UI previews. No repeat runtime session was performed by the documentation author.
+The user reported that they personally completed runtime verification of the three plugins then in this repository (Branch Garden, Provider Usage and Prompt Palette) on Paseo 0.8. Command Deck was added later and is outside this report; see [Command Deck source verification](command-deck-0.8-source.md). This is a user-performed runtime verification record, separate from the earlier automated checks and simulated UI previews. No repeat runtime session was performed by the documentation author.
 
 | Plugin | Reported result |
 | --- | --- |

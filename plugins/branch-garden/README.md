@@ -8,7 +8,7 @@ Inspect registered Git projects, active workspaces, local branches and worktrees
 
 ## Screenshots
 
-Actual Paseo 0.7.2 web client, showing this public repository. The overview combines scan totals, warnings and repository filters; expanding a repository shows workspaces and the reasons branches need review.
+These remain **Paseo 0.7.2** live captures of this public repository. They are the representative UI for scan totals, filters and expanded repository details; they are not a 0.8 app screenshot. Current 0.8 source keeps this English interface and did not replace these images.
 
 ![Branch Garden overview with scan totals, review filter and expanded repository](../../docs/screenshots/branch-garden/overview.png)
 
@@ -36,7 +36,15 @@ paseo plugin install (Join-Path $repoRoot "plugins/branch-garden")
 paseo plugin ls
 ```
 
-Expect runtime ID `branch-garden` with status `running` and no load error. If that ID already exists, choose a distinct `--id branch-garden-dev` and use it in subsequent commands. Open **Branch Garden** in the sidebar. Git source evaluation and its remaining verification scope are described in [Git installation](../../docs/GIT_INSTALLATION.md).
+Expect runtime ID `branch-garden` with status `running` and no load error. If that ID already exists, choose a distinct `--id branch-garden-dev` and use it in subsequent commands. Open **Branch Garden** in the sidebar.
+
+For Git source evaluation of **0.8** source, choose a reviewed published commit that contains this plugin. Do not use `v0.1.0-rc.2` for 0.8:
+
+```sh
+paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref <reviewed-0.8-ref>
+```
+
+Replace the placeholder with that actual ref. Git installation/update/recovery verification remains separate; see [Git installation](../../docs/GIT_INSTALLATION.md).
 
 ## Requirements and configuration
 

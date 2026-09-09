@@ -67,7 +67,7 @@ Expect `prompt-palette` to be `running` without load errors. If that ID already 
 For Git source evaluation, choose a published commit containing this plugin that you have reviewed:
 
 ```sh
-paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-prompt-palette-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-0.8-ref>
 ```
 
 Replace the placeholder with that actual ref. `v0.1.0-rc.2` does not contain this plugin. Git installation/update/recovery verification remains separate in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96); see [Git installation](../../docs/GIT_INSTALLATION.md).
