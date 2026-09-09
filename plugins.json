@@ -29,6 +29,20 @@
         "linux"
       ],
       "readme": "plugins/provider-usage/README.md"
+    },
+    {
+      "id": "prompt-palette",
+      "paseoVersion": "0.8.0-beta.1",
+      "name": "Prompt Palette",
+      "path": "plugins/prompt-palette",
+      "description": "Save reusable prompts in Host Settings, preview and send them to the current Agent.",
+      "maturity": "experimental",
+      "daemonPlatforms": [
+        "win32",
+        "darwin",
+        "linux"
+      ],
+      "readme": "plugins/prompt-palette/README.md"
     }
   ]
 }
