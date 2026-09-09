@@ -4,6 +4,8 @@ The collection uses one version/tag for all supported plugins. Published release
 
 ## Unreleased
 
+- Add experimental Windows-only Command Deck for Paseo 0.8.0-beta.1: Project command Settings, Composer/panel entry, official terminal execution, bounded output, explicit interruption/termination and reconnect discovery. Source/UI and Windows SDK evidence are [recorded separately](docs/verification/command-deck-0.8-source.md); installed app/mobile validation remains pending.
+
 - Remove Provider Usage's two-minute usage polling. Keep shared reads from Paseo's official usage service on demand, including initial display, manual refresh and Provider catalog changes; countdown display and settings synchronization are unchanged.
 
 - Add experimental Prompt Palette for Paseo 0.8.0-beta.1: host-scoped prompt editing and ordering, Composer picker with full preview, revision conflict protection and explicit Agent sends without automatic retries. Not included in the existing release tag.

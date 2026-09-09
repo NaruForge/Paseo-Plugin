@@ -1,0 +1,6 @@
+{
+  "id": "command-deck",
+  "requirements": {
+    "paseo": "^0.8.0"
+  }
+}

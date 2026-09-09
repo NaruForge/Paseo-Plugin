@@ -1,8 +1,8 @@
 # AGENTS.md
 
-이 저장소는 Branch Garden, Provider Usage, Prompt Palette 세 개의 독립적인 Paseo 플러그인을 개발하는 npm workspace다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위다.
+이 저장소는 Branch Garden, Provider Usage, Prompt Palette, Command Deck 네 개의 독립적인 Paseo 플러그인을 개발하는 npm workspace다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위다.
 
-현재 세 플러그인 소스·SDK·manifest는 **0.8.0-beta.1** 대상이며 사용자가 세 플러그인 모두 Paseo 0.8에서 Runtime 검증을 완료했다. 환경과 범위는 [검증 기록](docs/verification/paseo-0.8-runtime.md)을 따른다. Git 배포 경로 검증은 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에서 별도로 추적한다. 기존 배포 태그 `v0.1.0-rc.2`의 두 플러그인은 **0.7.2** 대상이다. 참조 문서는 **0.8.0-beta.1** 계약을 설명한다. 이관 계획은 [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77), 파일·import·검증 순서는 [docs/MIGRATION_0.8.md](docs/MIGRATION_0.8.md)를 따른다.
+현재 네 플러그인 소스·SDK·manifest는 **0.8.0-beta.1** 대상이다. 기존 Branch Garden·Provider Usage·Prompt Palette는 사용자가 Paseo 0.8에서 Runtime 검증을 완료했다. Command Deck의 소스·Windows 터미널 검증과 남은 앱 runtime 검증은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 따른다. 환경과 범위는 [검증 기록](docs/verification/paseo-0.8-runtime.md)을 따른다. Git 배포 경로 검증은 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에서 별도로 추적한다. 기존 배포 태그 `v0.1.0-rc.2`의 두 플러그인은 **0.7.2** 대상이다. 참조 문서는 **0.8.0-beta.1** 계약을 설명한다. 이관 계획은 [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77), 파일·import·검증 순서는 [docs/MIGRATION_0.8.md](docs/MIGRATION_0.8.md)를 따른다.
 
 아이디어, 개발 계획과 버그의 이슈 관리는 GitHub Issues를 사용한다. 새 이슈는 `.github/ISSUE_TEMPLATE/`의 양식을 사용하고, 분류·Project 상태·PR 연결 규칙은 `.github/ISSUE_MANAGEMENT.md`를 따른다.
 
@@ -60,6 +60,10 @@ npm test --workspace branch-garden
   Audience: **Personal operations**
   Role: Host Settings에 반복 프롬프트를 저장하고 Agent Composer pill의 Modal에서 본문을 미리 본 뒤 공식 SDK로 전송한다.
 
+- `plugins/command-deck/`
+  Audience: **Personal operations**
+  Role: Windows Host의 Project별 PowerShell 명령을 Settings에 저장하고 Composer pill·Workspace panel에서 공식 Terminal SDK로 실행·출력 조회·중지한다.
+
 ## Per-Plugin Change Routing
 
 현재 플러그인은 다음 0.8 runtime 규칙을 따른다.
@@ -75,6 +79,7 @@ npm test --workspace branch-garden
 - `*.logic.ts`, `*.view.ts`: 런타임에 의존하지 않는 도메인 판단과 표시용 파생 값을 소유한다. 동작을 바꾸면 같은 이름의 테스트를 함께 확인한다.
 - Provider Usage의 `client/usage-registration.ts`·`usage-query.ts`·`usage-visibility.ts`: pill 등록, query와 표시 설정의 주기적 조회·반영을 소유한다. 구독·timer·pending state처럼 수명이 있는 자원은 만든 모듈에서 cleanup을 제공하고 동명 테스트를 함께 확인한다. `client/usage-settings.tsx`는 설정 UI를, `shared/usage-settings.ts`는 schema·migration을 소유하며 Settings 변경 시 아래 동기화 규칙을 따른다.
 - Prompt Palette의 `shared/prompt-settings.ts`는 schema를, `client/prompt-settings.tsx`는 revision을 고정한 draft 편집을, `prompt-registration.ts`·`prompt-controller.ts`·`prompt-send.ts`는 등록·Modal·전송 수명을 소유한다. 변경 시 workspace typecheck와 테스트를 실행한다. 전송은 공식 Agent `send()`만 사용하며 자동 재전송하지 않는다.
+- Command Deck의 `shared/commands.ts`는 workspaceId별 Settings·RPC 계약을, `server/runner.ts`는 실행 직렬화·터미널 소유권 확인·재발견을 소유한다. `client/run-controller.ts`·`registration.ts`는 조회·기여 수명을 소유한다. 변경 시 workspace typecheck와 테스트를 실행한다. 명령 실행은 공식 Terminal SDK만 사용하며 응답 유실 시 자동 재전송하지 않는다. Cleanup은 터미널을 종료하지 않는다.
 - `paseo-plugin.json`: 설치 기본 ID를 소유한다. 디렉터리명이나 package 이름으로 런타임 ID를 추측하지 않는다.
 - `package.json`: 로컬 타입 검사용 exact `@getpaseo/plugin` 의존성을 소유한다. 공개 계약을 ambient declaration으로 임의 확장하지 않는다.
 
@@ -105,4 +110,4 @@ npm test --workspace branch-garden
 - 소스 변경을 반영하려고 데몬을 재시작하지 않는다. `paseo plugin reload <runtime-id>`를 사용한다.
 - 백엔드 오류는 `paseo plugin logs <runtime-id>`로 확인하고, 로그에 자격 증명이나 토큰을 남기지 않는다.
 
-0.8 CLI의 원격 명령은 global 옵션 형식인 `paseo --host <target> plugin ls`·`paseo --host <target> plugin reload <runtime-id>`를 사용한다. Daemon과 app의 버전 요구 사항은 각각 검사한다. 신규 lifecycle/permission/terminal/provider API는 Branch Garden과 Provider Usage의 읽기 전용 조회 범위를 자동으로 확장하지 않는다. Prompt Palette의 쓰기는 사용자 설정 저장과 명시적인 Agent 메시지 전송으로 한정한다.
+0.8 CLI의 원격 명령은 global 옵션 형식인 `paseo --host <target> plugin ls`·`paseo --host <target> plugin reload <runtime-id>`를 사용한다. Daemon과 app의 버전 요구 사항은 각각 검사한다. 신규 lifecycle/permission/terminal/provider API는 Branch Garden과 Provider Usage의 읽기 전용 조회 범위를 자동으로 확장하지 않는다. Prompt Palette의 쓰기는 사용자 설정 저장과 명시적인 Agent 메시지 전송으로 한정한다. Command Deck의 쓰기는 사용자 명령 설정 저장과 명시적인 터미널 생성·Ctrl+C·종료로 한정한다. 기존 읽기 전용 플러그인의 범위를 확장하지 않는다.

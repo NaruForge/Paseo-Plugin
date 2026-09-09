@@ -22,6 +22,7 @@ body:
         - branch-garden
         - provider-usage
         - prompt-palette
+        - command-deck
         - 새 플러그인
     validations:
       required: true

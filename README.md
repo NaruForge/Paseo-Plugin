@@ -5,19 +5,20 @@
 [![Validate](https://github.com/NaruForge/Paseo-Plugin/actions/workflows/validate.yml/badge.svg)](https://github.com/NaruForge/Paseo-Plugin/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Three independently installable plugins for Git workspace visibility, provider usage and reusable prompts while working with Paseo agents.
+Four independently installable plugins for Git workspace visibility, provider usage, reusable prompts and Windows command execution while working with Paseo agents.
 
 Maintained by **NaruForge and contributors**. This is a community project, independently maintained and not endorsed or operated by the Paseo team.
 
 **Published release target: Paseo 0.7.2.** The Plugin API is experimental. See the [compatibility and verification record](docs/COMPATIBILITY.md) before using another version. The first public prerelease, [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2), includes pinned installation instructions and known limitations.
 
-**Current source:** All three plugins target exact **0.8.0-beta.1**. Provider Usage uses the official host usage API and adds display Settings. The user has completed runtime verification of all three plugins on Paseo 0.8; see the [runtime record and reported scope](docs/verification/paseo-0.8-runtime.md). Git installation/update verification is tracked separately in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96). The existing `v0.1.0-rc.2` tag preserves both 0.7 plugins. For current source, follow [0.8 evaluation](#evaluate-current-08-source); developers can consult the [migration plan](docs/MIGRATION_0.8.md).
+**Current source:** All four plugins target exact **0.8.0-beta.1**. Provider Usage uses the official host usage API and adds display Settings. The user has completed runtime verification of Branch Garden, Provider Usage and Prompt Palette on Paseo 0.8; see the [runtime record and reported scope](docs/verification/paseo-0.8-runtime.md). Command Deck has separate [source and Windows terminal evidence](docs/verification/command-deck-0.8-source.md); installed app/mobile verification remains pending. Git installation/update verification is tracked separately in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96). The existing `v0.1.0-rc.2` tag preserves both 0.7 plugins. For current source, follow [0.8 evaluation](#evaluate-current-08-source); developers can consult the [migration plan](docs/MIGRATION_0.8.md).
 
 ## Plugins
 
 | Plugin | What it does | Requirements | Maturity |
 | --- | --- | --- | --- |
 | [`branch-garden`](plugins/branch-garden/) | Inspect registered Git projects, workspaces, branches and worktrees without changing Git state. | Current source: Paseo 0.8.0-beta.1; Git; registered projects or workspaces | Preview; 0.7 release, unreleased 0.8 changes |
+| [`command-deck`](plugins/command-deck/) | Save Project commands and run, inspect and stop PowerShell terminals from the Composer. | Windows Host, PowerShell 7, Paseo 0.8.0-beta.1 | Experimental, unreleased; app runtime verification pending |
 | [`prompt-palette`](plugins/prompt-palette/) | Save reusable prompts in Host Settings, preview and send them from the Agent Composer. | Paseo 0.8.0-beta.1 source | Experimental, unreleased |
 | [`provider-usage`](plugins/provider-usage/) | Inspect enabled Provider usage through Paseo, with configurable pills and a sidebar managed by Paseo Layout. | Paseo 0.8.0-beta.1 source; enabled provider connections | Experimental; 0.7 release, unreleased 0.8 changes |
 
@@ -49,7 +50,7 @@ Expect the chosen runtime to be `running` without load errors. Use the release�
 
 ## Evaluate current 0.8 source
 
-Main contains all three plugins; it is not a new collection release. Match the daemon, app and CLI to **0.8.0-beta.1** and read the [reported runtime scope](docs/verification/paseo-0.8-runtime.md). Git deployment verification remains in #96.
+Current source includes Command Deck alongside the three existing plugins; it is not a new collection release. Match the daemon, app and CLI to **0.8.0-beta.1** and read the [reported runtime scope](docs/verification/paseo-0.8-runtime.md). Git deployment verification remains in #96.
 
 For local source evaluation, clone this repository on the daemon host, enter its root, and review the selected commit before installing. Git is needed to clone; npm is only needed for development checks. Run in PowerShell or a POSIX shell:
 
@@ -59,12 +60,13 @@ cd Paseo-Plugin
 git rev-parse HEAD
 ```
 
-If you already have a checkout, use that repository root and review its ref and local changes. Follow the directory installation steps in the [Branch Garden](plugins/branch-garden/README.md#install), [Provider Usage](plugins/provider-usage/README.md#installation), or [Prompt Palette](plugins/prompt-palette/README.md#install-current-source) guide. These examples use PowerShell on the daemon host; choose a separate `--id` when another source is already installed under the default ID.
+If you already have a checkout, use that repository root and review its ref and local changes. Follow the directory installation steps in the [Branch Garden](plugins/branch-garden/README.md#install), [Provider Usage](plugins/provider-usage/README.md#installation), [Prompt Palette](plugins/prompt-palette/README.md#install-current-source), or [Command Deck](plugins/command-deck/README.md#install-current-source) guide. These examples use PowerShell on the daemon host; choose a separate `--id` when another source is already installed under the default ID.
 
 For Git source evaluation, choose an existing published commit/tag containing the plugin that you have reviewed. For example, Prompt Palette is on main but is absent from `v0.1.0-rc.2`:
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-prompt-palette-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref <reviewed-command-deck-ref>
 ```
 
 Replace the placeholder with that actual reviewed commit or tag; it is not a literal ref. See [Git source details](docs/GIT_INSTALLATION.md) for branch tracking, remote hosts and rollback.
@@ -93,7 +95,8 @@ Node.js 22 and npm are used in CI. The check command validates documentation, Gi
 ├── plugins/
 │   ├── branch-garden/
 │   ├── provider-usage/
-│   └── prompt-palette/
+│   ├── prompt-palette/
+│   └── command-deck/
 ├── docs/
 │   ├── CONFIGURATION.md
 │   ├── COMPATIBILITY.md
