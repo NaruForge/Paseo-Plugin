@@ -2,7 +2,7 @@
 
 이 저장소는 Branch Garden, Provider Usage, Prompt Palette, Command Deck 네 개의 독립적인 Paseo 플러그인을 개발하는 npm workspace다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위다.
 
-현재 네 플러그인 소스·SDK·manifest는 **0.8.0-beta.1** 대상이다. 기존 Branch Garden·Provider Usage·Prompt Palette는 사용자가 Paseo 0.8에서 Runtime 검증을 완료했다. Command Deck의 소스·Windows 터미널 검증과 남은 앱 runtime 검증은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 따른다. 환경과 범위는 [검증 기록](docs/verification/paseo-0.8-runtime.md)을 따른다. Git 배포 경로 검증은 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에서 별도로 추적한다. 기존 배포 태그 `v0.1.0-rc.2`의 두 플러그인은 **0.7.2** 대상이다. 참조 문서는 **0.8.0-beta.1** 계약을 설명한다. 이관 계획은 [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77), 파일·import·검증 순서는 [docs/MIGRATION_0.8.md](docs/MIGRATION_0.8.md)를 따른다.
+현재 네 플러그인 소스·SDK·manifest는 **0.8.0-beta.1** 대상이다. 기존 Branch Garden·Provider Usage·Prompt Palette는 사용자가 Paseo 0.8에서 Runtime 검증을 완료했다. Command Deck의 소스·Windows 터미널 검증과 남은 앱 runtime 검증은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 따른다. 환경과 범위는 [검증 기록](docs/verification/paseo-0.8-runtime.md)을 따른다. Git 배포 경로 검증은 [기록](docs/verification/paseo-0.8-git-source.md)을 따른다. Command Deck Git 활성화는 그 기록에 없다. 기존 배포 태그 `v0.1.0-rc.2`의 두 플러그인은 **0.7.2** 대상이다. 참조 문서는 **0.8.0-beta.1** 계약을 설명한다. 이관 계획은 [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77), 파일·import·검증 순서는 [docs/MIGRATION_0.8.md](docs/MIGRATION_0.8.md)를 따른다.
 
 아이디어, 개발 계획과 버그의 이슈 관리는 GitHub Issues를 사용한다. 새 이슈는 `.github/ISSUE_TEMPLATE/`의 양식을 사용하고, 분류·Project 상태·PR 연결 규칙은 `.github/ISSUE_MANAGEMENT.md`를 따른다.
 

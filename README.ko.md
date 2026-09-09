@@ -6,7 +6,7 @@ Paseo에서 Git 작업 상태를 살펴보고, 공급자 사용량을 확인하�
 
 **공개 릴리스:** [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2)는 Paseo **0.7.2**용 Branch Garden과 Provider Usage를 포함합니다. Plugin API는 실험 단계입니다. 그 태그를 설치할 때는 이 README의 `NaruForge/` 명령을 복사하세요. 릴리스 노트와 태그 가이드는 저장소가 NaruForge로 옮기기 전의 GitHub owner 예시와 `--ref`가 없는 설치 샘플을 보존합니다.
 
-**현재 소스:** 네 플러그인 모두 **0.8.0-beta.1** 대상이며 아직 새 collection 릴리스로 배포되지 않았습니다. 기존 Branch Garden·Provider Usage·Prompt Palette에 대한 사용자의 Paseo **0.8** Runtime 검증 완료 보고와 환경·시나리오 한계는 [검증 기록](docs/verification/paseo-0.8-runtime.md)에 있습니다. Command Deck의 소스·Windows 터미널 검증과 남은 앱 검증은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 따릅니다. Git 설치·업데이트·실패 후보 복구는 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에서 별도로 추적합니다.
+**현재 소스:** 네 플러그인 모두 **0.8.0-beta.1** 대상이며 아직 새 collection 릴리스로 배포되지 않았습니다. 기존 Branch Garden·Provider Usage·Prompt Palette에 대한 사용자의 Paseo **0.8** Runtime 검증 완료 보고와 환경·시나리오 한계는 [검증 기록](docs/verification/paseo-0.8-runtime.md)에 있습니다. Command Deck의 소스·Windows 터미널 검증과 남은 앱 검증은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 따릅니다. Branch Garden·Provider Usage·Prompt Palette의 Git 설치·업데이트·실패 후보 복구는 [검증 기록](docs/verification/paseo-0.8-git-source.md)에 있습니다. Command Deck Git 활성화는 그 기록에 없습니다.
 
 ## 포함된 플러그인
 

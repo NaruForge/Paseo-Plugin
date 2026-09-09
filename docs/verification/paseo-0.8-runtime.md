@@ -1,6 +1,6 @@
 # Paseo 0.8 runtime verification
 
-Report recorded: 2026-09-09. Migration tracking: [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77). Git deployment follow-up: [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96).
+Report recorded: 2026-09-09. Migration tracking: [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77). Git deployment follow-up: [Git source verification](paseo-0.8-git-source.md) ([#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)).
 
 ## User verification report
 
@@ -18,7 +18,7 @@ The source reference when this report was recorded is `2e178a205ee3c06d4b57fb0d7
 
 The report specifies Paseo **0.8**. Exact daemon and app versions, OS/device, installation source, installed commit and individual test scenarios were not supplied. The repository's exact SDK target remains **0.8.0-beta.1**, which must not be substituted for the reported runtime version.
 
-The report establishes completion for all three plugins. It does not enumerate individual UI themes, accessibility checks, cleanup/error scenarios or native platforms, so this record does not mark those separately as passed. Git source installation, successful update and failed-candidate recovery are tracked independently in #96 until their results are supplied or tested.
+The report establishes completion for all three plugins. It does not enumerate individual UI themes, accessibility checks, cleanup/error scenarios or native platforms, so this record does not mark those separately as passed. Git source installation, successful update and failed-candidate recovery for these three plugins are recorded in the [Git source verification](paseo-0.8-git-source.md). Command Deck Git activation remains unverified.
 
 ## Documentation and release status
 

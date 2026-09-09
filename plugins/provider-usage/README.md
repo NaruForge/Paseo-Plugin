@@ -84,7 +84,7 @@ For Git source evaluation of **0.8** source, choose a reviewed published commit 
 paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref <reviewed-0.8-ref>
 ```
 
-Replace the placeholder with that actual ref. See [Git installation](../../docs/GIT_INSTALLATION.md) before selecting a beta candidate ref.
+Replace the placeholder with that actual ref. Git add/update/recovery for this plugin is recorded in the [Git source verification](../../docs/verification/paseo-0.8-git-source.md). See [Git installation](../../docs/GIT_INSTALLATION.md) before selecting a beta candidate ref.
 
 ## Data access and troubleshooting
 

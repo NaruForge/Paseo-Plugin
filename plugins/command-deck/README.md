@@ -41,7 +41,7 @@ For Git source evaluation, choose a published commit containing this plugin that
 paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref <reviewed-0.8-ref>
 ```
 
-Replace the placeholder with that published commit/tag; it is not a literal ref. Command Deck is absent from `v0.1.0-rc.2`. This command is not evidence that Git installation has been verified. See [Git installation](../../docs/GIT_INSTALLATION.md) and [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96).
+Replace the placeholder with that published commit/tag; it is not a literal ref. Command Deck is absent from `v0.1.0-rc.2`. This command is not evidence that Command Deck Git installation has been verified. The three existing plugins' Git path is recorded in the [Git source verification](../../docs/verification/paseo-0.8-git-source.md); Command Deck Git activation remains unverified. See [Git installation](../../docs/GIT_INSTALLATION.md).
 
 ## Use
 

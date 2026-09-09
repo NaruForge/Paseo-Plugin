@@ -4,6 +4,7 @@ The collection uses one version/tag for all supported plugins. Published release
 
 ## Unreleased
 
+- Record Git add/update/failed-candidate recovery for Branch Garden, Provider Usage and Prompt Palette on Paseo 0.8.0-beta.1. Command Deck Git activation remains unverified; see the [Git source verification](docs/verification/paseo-0.8-git-source.md).
 - Add experimental Windows-only Command Deck for Paseo 0.8.0-beta.1: Project command Settings, Composer/panel entry, official terminal execution, bounded output, explicit interruption/termination and reconnect discovery. Source/UI and Windows SDK evidence are [recorded separately](docs/verification/command-deck-0.8-source.md); installed app/mobile validation remains pending.
 
 - Remove Provider Usage's two-minute usage polling. Keep shared reads from Paseo's official usage service on demand, including initial display, manual refresh and Provider catalog changes; countdown display and settings synchronization are unchanged.
@@ -17,7 +18,7 @@ The collection uses one version/tag for all supported plugins. Published release
 - Check per-plugin SDK catalog versions and 0.8 runtime/type import boundaries; add an exact beta compiler check using a source copy without node_modules.
 - Migrate Provider Usage to the official Paseo usage SDK and all enabled Provider connections; remove direct credential and vendor HTTP access.
 - Add host-scoped Provider Usage Settings: Composer pill on, remaining percentage and provider name on, reset time off by default.
-- The existing v0.1.0-rc.2 tag remains on 0.7.2. The user reported runtime verification of all three plugins on Paseo 0.8; see the [reported environment and scope](docs/verification/paseo-0.8-runtime.md). Git installation/update/recovery is tracked separately in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96).
+- The existing v0.1.0-rc.2 tag remains on 0.7.2. The user reported runtime verification of all three plugins on Paseo 0.8; see the [reported environment and scope](docs/verification/paseo-0.8-runtime.md). Git installation/update/recovery for those three plugins is recorded in the [Git source verification](docs/verification/paseo-0.8-git-source.md); Command Deck Git activation remains unverified.
 - Clarify user installation, support and settings deletion on removal/rollback. Add explicitly labeled source-preview images for Prompt Palette and Provider Usage while preserving historical release evidence.
 - Clarify Command Deck trust, troubleshooting, empty-library and removal data loss. Point current tag installation at this repository's `NaruForge/` commands rather than historical release-note owner examples, and document 0.8 Git evaluation refs for all four plugins.
 
