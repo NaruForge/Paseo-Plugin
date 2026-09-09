@@ -11,7 +11,7 @@ Maintained by **NaruForge and contributors**. This is a community project, indep
 
 **Published release target: Paseo 0.7.2.** The Plugin API is experimental. See the [compatibility and verification record](docs/COMPATIBILITY.md) before using another version. The first public prerelease is [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2); copy the pinned `NaruForge/` commands in this README to install that tag. The release notes and tagged guides keep historical GitHub-owner examples from before the repository moved to NaruForge, and some tagged install samples omit `--ref`.
 
-**Current source:** All four plugins target exact **0.8.0-beta.1**. Provider Usage uses the official host usage API and adds display Settings. The user has completed runtime verification of Branch Garden, Provider Usage and Prompt Palette on Paseo 0.8; see the [runtime record and reported scope](docs/verification/paseo-0.8-runtime.md). Command Deck has separate [source and Windows terminal evidence](docs/verification/command-deck-0.8-source.md); installed app/mobile verification remains pending. Git installation/update verification is tracked separately in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96). The existing `v0.1.0-rc.2` tag preserves both 0.7 plugins. For current source, follow [0.8 evaluation](#evaluate-current-08-source); developers can consult the [migration plan](docs/MIGRATION_0.8.md).
+**Current source:** All four plugins target exact **0.8.0-beta.1**. Provider Usage uses the official host usage API and adds display Settings. The user has completed runtime verification of Branch Garden, Provider Usage and Prompt Palette on Paseo 0.8; see the [runtime record and reported scope](docs/verification/paseo-0.8-runtime.md). Command Deck has separate [source and Windows terminal evidence](docs/verification/command-deck-0.8-source.md); installed app/mobile verification remains pending. Git installation/update/recovery for Branch Garden, Provider Usage and Prompt Palette is recorded in the [Git source verification](docs/verification/paseo-0.8-git-source.md); Command Deck Git activation remains unverified. The existing `v0.1.0-rc.2` tag preserves both 0.7 plugins. For current source, follow [0.8 evaluation](#evaluate-current-08-source); developers can consult the [migration plan](docs/MIGRATION_0.8.md).
 
 ## Plugins
 
@@ -48,7 +48,7 @@ Expect the chosen runtime to be `running` without load errors. Use the releaseâ€
 
 ## Evaluate current 0.8 source
 
-Current source includes Command Deck alongside the three existing plugins; it is not a new collection release. Match the daemon, app and CLI to **0.8.0-beta.1** and read the [reported runtime scope](docs/verification/paseo-0.8-runtime.md). Git deployment verification remains in #96.
+Current source includes Command Deck alongside the three existing plugins; it is not a new collection release. Match the daemon, app and CLI to **0.8.0-beta.1** and read the [reported runtime scope](docs/verification/paseo-0.8-runtime.md). Git add/update/recovery for the three existing plugins is recorded in the [Git source verification](docs/verification/paseo-0.8-git-source.md); Command Deck Git activation remains unverified.
 
 For local source evaluation, clone this repository on the daemon host, enter its root, and review the selected commit before installing. Git is needed to clone; npm is only needed for development checks. Run in PowerShell or a POSIX shell:
 

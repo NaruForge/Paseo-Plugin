@@ -35,7 +35,7 @@ This preview does not certify Paseo's native modal, safe-area, virtual keyboard,
 
 ## Remaining runtime gate
 
-Before treating this plugin as deployment-complete, verify an authorized installation on the intended daemon/app: Settings persistence via real RPC, Composer/panel navigation, two actual app clients, mobile disconnect/reconnect, and `plugin reload` rediscovery. Capture exact app/device versions and logs with no secrets. Git source activation/update remains unverified. Do not apply the older three-plugin user runtime report to Command Deck.
+Before treating this plugin as deployment-complete, verify an authorized installation on the intended daemon/app: Settings persistence via real RPC, Composer/panel navigation, two actual app clients, mobile disconnect/reconnect, and `plugin reload` rediscovery. Capture exact app/device versions and logs with no secrets. Git source activation/update for Command Deck remains unverified. The three existing plugins' Git path is recorded separately in [paseo-0.8-git-source.md](paseo-0.8-git-source.md). Do not apply the older three-plugin user runtime report to Command Deck.
 
 ## Authorized installation and reload — 2026-09-09
 

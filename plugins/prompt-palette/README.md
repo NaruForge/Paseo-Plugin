@@ -70,7 +70,7 @@ For Git source evaluation, choose a published commit containing this plugin that
 paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-0.8-ref>
 ```
 
-Replace the placeholder with that actual ref. `v0.1.0-rc.2` does not contain this plugin. Git installation/update/recovery verification remains separate in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96); see [Git installation](../../docs/GIT_INSTALLATION.md).
+Replace the placeholder with that actual ref. `v0.1.0-rc.2` does not contain this plugin. Git add/update/recovery for this plugin is recorded in the [Git source verification](../../docs/verification/paseo-0.8-git-source.md); see [Git installation](../../docs/GIT_INSTALLATION.md).
 
 ## Troubleshooting
 

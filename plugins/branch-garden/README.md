@@ -44,7 +44,7 @@ For Git source evaluation of **0.8** source, choose a reviewed published commit 
 paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref <reviewed-0.8-ref>
 ```
 
-Replace the placeholder with that actual ref. Git installation/update/recovery verification remains separate; see [Git installation](../../docs/GIT_INSTALLATION.md).
+Replace the placeholder with that actual ref. Git add/update/recovery for this plugin is recorded in the [Git source verification](../../docs/verification/paseo-0.8-git-source.md); see [Git installation](../../docs/GIT_INSTALLATION.md).
 
 ## Requirements and configuration
 

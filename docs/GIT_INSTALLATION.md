@@ -1,6 +1,6 @@
 # Git source 설치와 업데이트
 
-이 문서는 기존 **Paseo 0.7.2용 태그 설치**와 **0.8.0-beta.1 이관 소스의 검증 조건**을 구분합니다. 현재 네 플러그인 소스는 0.8.0-beta.1을 대상으로 합니다. 기존 Branch Garden·Provider Usage·Prompt Palette의 Paseo 0.8 Runtime 검증은 사용자 완료 보고를 [새 기록](verification/paseo-0.8-runtime.md)에 반영했습니다. Command Deck의 앱 runtime 검증은 [별도 기록](verification/command-deck-0.8-source.md)을 따릅니다. Git 설치·업데이트·실패 후보 복구는 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에서 별도로 검증합니다. Git source는 다른 daemon이나 PC에 배포하고 추적 ref를 업데이트하는 운영 경로입니다. 같은 컴퓨터에서 소스를 편집하는 동안에는 directory source 설치와 `plugin reload`를 사용하세요.
+이 문서는 기존 **Paseo 0.7.2용 태그 설치**와 **0.8.0-beta.1 이관 소스의 검증 조건**을 구분합니다. 현재 네 플러그인 소스는 0.8.0-beta.1을 대상으로 합니다. 기존 Branch Garden·Provider Usage·Prompt Palette의 Paseo 0.8 Runtime 검증은 사용자 완료 보고를 [새 기록](verification/paseo-0.8-runtime.md)에 반영했습니다. Command Deck의 앱 runtime 검증은 [별도 기록](verification/command-deck-0.8-source.md)을 따릅니다. Branch Garden·Provider Usage·Prompt Palette의 Git 설치·업데이트·실패 후보 복구는 [0.8 Git 검증 기록](verification/paseo-0.8-git-source.md)에 있습니다. Command Deck Git 활성화는 그 기록에 없습니다. Git source는 다른 daemon이나 PC에 배포하고 추적 ref를 업데이트하는 운영 경로입니다. 같은 컴퓨터에서 소스를 편집하는 동안에는 directory source 설치와 `plugin reload`를 사용하세요.
 
 0.8의 runtime entry·SDK 경로·manifest 변경은 [이관 안내](MIGRATION_0.8.md)를 따릅니다. 아래 현재 릴리스 설치 명령은 0.7.2 daemon/client 대상이며, 이 문서 갱신은 beta runtime 검증 기록이 아닙니다.
 
@@ -51,7 +51,7 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden `
 
 ## 0.8 소스 Git 평가
 
-네 플러그인의 현재 소스는 main에 있습니다. `v0.1.0-rc.2`는 Paseo 0.7.2용 Branch Garden과 Provider Usage만 포함하며 Prompt Palette와 Command Deck은 없습니다. 0.8 평가에는 그 태그를 쓰지 마세요. 아래 placeholder를 직접 검토한 공개 0.8 commit/tag로 바꾸고 호환 beta daemon/app에서 **명령 하나만** 선택하세요. Git 경로 검증이 완료됐다는 의미는 아닙니다.
+네 플러그인의 현재 소스는 main에 있습니다. `v0.1.0-rc.2`는 Paseo 0.7.2용 Branch Garden과 Provider Usage만 포함하며 Prompt Palette와 Command Deck은 없습니다. 0.8 평가에는 그 태그를 쓰지 마세요. 아래 placeholder를 직접 검토한 공개 0.8 commit/tag로 바꾸고 호환 beta daemon/app에서 **명령 하나만** 선택하세요. 아래 명령을 실행하는 것 자체가 검증 완료는 아닙니다. 세 플러그인의 add/update/실패 복구 증거는 [0.8 Git 검증 기록](verification/paseo-0.8-git-source.md)에 있고, Command Deck Git 경로는 포함되지 않습니다.
 
 ```powershell
 paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref <reviewed-0.8-ref>
@@ -62,7 +62,7 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref <reviewed-0.8
 
 placeholder를 실제 검토한 commit/tag로 바꾸세요. 이 문자열은 그대로 쓸 ref가 아닙니다.
 
-현재 로컬 개발은 컬렉션 [0.8 평가](../README.md#evaluate-current-08-source)와 각 플러그인 가이드의 directory 설치를 사용합니다. Git 활성화·업데이트 검증은 아직 수행하지 않았습니다.
+현재 로컬 개발은 컬렉션 [0.8 평가](../README.md#evaluate-current-08-source)와 각 플러그인 가이드의 directory 설치를 사용합니다. 세 플러그인의 Git 활성화·업데이트·실패 복구는 [0.8 Git 검증 기록](verification/paseo-0.8-git-source.md)을 따르고, Command Deck Git 활성화는 아직 수행하지 않았습니다.
 
 ## Ref 선택
 
@@ -114,7 +114,7 @@ Git source는 runtime 설정과 managed checkout이 함께 제거되고 director
 
 ## 0.8 beta 후보 검증
 
-다음은 배포 담당자가 별도 후보 ref와 호환 daemon/app에서 수행하는 검증 절차입니다. 네 플러그인은 모두 0.8.0-beta.1 대상입니다. 기존 세 플러그인에만 사용자 Paseo 0.8 Runtime 검증 완료 보고가 있습니다. 정확한 환경·시나리오 범위는 [보고 기록](verification/paseo-0.8-runtime.md)을 따릅니다. Command Deck의 앱 runtime 검증은 [별도 기록](verification/command-deck-0.8-source.md)을 따릅니다. Git 설치·업데이트·실패 후보 복구는 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에 남아 있습니다.
+다음은 배포 담당자가 별도 후보 ref와 호환 daemon/app에서 수행하는 검증 절차입니다. 네 플러그인은 모두 0.8.0-beta.1 대상입니다. 기존 세 플러그인에만 사용자 Paseo 0.8 Runtime 검증 완료 보고가 있습니다. 정확한 환경·시나리오 범위는 [보고 기록](verification/paseo-0.8-runtime.md)을 따릅니다. Command Deck의 앱 runtime 검증은 [별도 기록](verification/command-deck-0.8-source.md)을 따릅니다. 세 플러그인의 Git 설치·업데이트·실패 후보 복구는 [0.8 Git 검증 기록](verification/paseo-0.8-git-source.md)에 있습니다. Command Deck Git 경로는 남아 있습니다.
 
 1. 대상 beta CLI의 fresh scaffold와 exact SDK를 대조하고 root 검사를 통과시킵니다.
 2. `requirements.paseo`와 client/server entry가 갖춰진 후보 ref를 선택합니다. 권장 범위 `^0.8.0`은 Paseo의 prerelease 규칙에서 beta.1을 포함합니다.
