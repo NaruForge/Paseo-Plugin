@@ -2,17 +2,18 @@
 
 [English](README.md) · [플러그인 선택](#포함된-플러그인) · [호환성](docs/COMPATIBILITY.md) · [설정](docs/CONFIGURATION.md) · [지원](SUPPORT.md) · [기여](CONTRIBUTING.md)
 
-Paseo에서 Git 작업 상태를 살펴보고, 공급자 사용량을 확인하고, 반복 프롬프트를 저장해 보내는 세 플러그인입니다. 필요한 것만 개별 설치할 수 있습니다. NaruForge와 기여자가 관리하는 커뮤니티 프로젝트로, Paseo 팀의 공식 운영·보증 저장소가 아닙니다.
+Paseo에서 Git 작업 상태를 살펴보고, 공급자 사용량을 확인하고, 반복 프롬프트를 저장해 보내고 Windows 명령을 실행하는 네 플러그인입니다. 필요한 것만 개별 설치할 수 있습니다. NaruForge와 기여자가 관리하는 커뮤니티 프로젝트로, Paseo 팀의 공식 운영·보증 저장소가 아닙니다.
 
 **공개 릴리스:** [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2)는 Paseo **0.7.2**용 Branch Garden과 Provider Usage를 포함합니다. Plugin API는 실험 단계입니다.
 
-**현재 소스:** 세 플러그인 모두 **0.8.0-beta.1** 대상이며 아직 새 collection 릴리스로 배포되지 않았습니다. 사용자의 Paseo **0.8** Runtime 검증 완료 보고와 환경·시나리오 한계는 [검증 기록](docs/verification/paseo-0.8-runtime.md)에 있습니다. Git 설치·업데이트·실패 후보 복구는 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에서 별도로 추적합니다.
+**현재 소스:** 네 플러그인 모두 **0.8.0-beta.1** 대상이며 아직 새 collection 릴리스로 배포되지 않았습니다. 기존 Branch Garden·Provider Usage·Prompt Palette에 대한 사용자의 Paseo **0.8** Runtime 검증 완료 보고와 환경·시나리오 한계는 [검증 기록](docs/verification/paseo-0.8-runtime.md)에 있습니다. Command Deck의 소스·Windows 터미널 검증과 남은 앱 검증은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 따릅니다. Git 설치·업데이트·실패 후보 복구는 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에서 별도로 추적합니다.
 
 ## 포함된 플러그인
 
 | 플러그인 | 역할 | 현재 소스 요구 사항 | 성숙도·배포 상태 |
 | --- | --- | --- | --- |
 | [`branch-garden`](plugins/branch-garden/) | Git Project·Workspace와 branch·worktree 상태를 읽기 전용으로 모아 봅니다. | Paseo 0.8.0-beta.1, host의 Git과 등록된 Project/Workspace | Preview; 0.7 릴리스 있음, 0.8 변경은 미배포 |
+| [`command-deck`](plugins/command-deck/) | Project별 PowerShell 명령을 저장하고 Composer에서 실행·출력 조회·중지합니다. | Windows Host, PowerShell 7, Paseo 0.8.0-beta.1 | Experimental; 미배포·앱 runtime 검증 대기 |
 | [`prompt-palette`](plugins/prompt-palette/) | 반복 프롬프트를 저장하고 Composer에서 미리 본 뒤 보냅니다. | Paseo 0.8.0-beta.1, Workspace가 있는 기존 Agent | Experimental; 미배포 |
 | [`provider-usage`](plugins/provider-usage/) | 활성 Provider 연결의 사용량을 표시하고 Composer pill을 설정합니다. | Paseo 0.8.0-beta.1, 활성 Provider 연결 | Experimental; 0.7 릴리스 있음, 0.8 변경은 미배포 |
 
@@ -55,6 +56,7 @@ paseo plugin ls
 paseo plugin install (Join-Path $repoRoot "plugins\branch-garden")
 paseo plugin install (Join-Path $repoRoot "plugins\provider-usage")
 paseo plugin install (Join-Path $repoRoot "plugins\prompt-palette")
+paseo plugin install (Join-Path $repoRoot "plugins\command-deck")
 paseo plugin ls
 ```
 
@@ -62,6 +64,7 @@ paseo plugin ls
 
 - Branch Garden: sidebar에서 열고 host를 선택한 뒤 Refresh. 등록된 저장소가 없거나 필터에 맞지 않으면 빈 결과가 정상입니다.
 - Provider Usage: Command Center의 Open provider usage. Sidebar 표시는 Settings → Layout, pill은 Settings → Plugins → Provider Usage에서 조절합니다. 미지원 사용량은 조회 불가로 남습니다.
+- Command Deck: Settings → Plugins → Command Deck에서 Project를 고르고 명령을 저장합니다. Composer의 Commands 또는 Command Center의 Open workspace commands에서 실행·출력·중지를 제공합니다. 설치된 앱·모바일 검증은 별도로 필요합니다.
 - Prompt Palette: Settings → Plugins → Prompt Palette에서 프롬프트를 추가하고 Apply to draft → Save changes. 기존 Agent의 Prompts에서 본문과 대상을 확인한 뒤 Send합니다. 처음에는 빈 라이브러리가 정상입니다.
 
 검토한 소스 변경을 반영할 때는 실제 ID로 `paseo plugin reload <runtime-id>`를 실행한 뒤 `paseo plugin ls`를 확인합니다. daemon을 재시작하지 않습니다. 0.8 원격 CLI 옵션은 `paseo --host <host> plugin ls`처럼 명령 앞에 둡니다.
@@ -74,13 +77,14 @@ Prompt Palette는 main에 있지만 기존 태그에는 없습니다. Git 평가
 
 ```powershell
 paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-prompt-palette-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref <reviewed-command-deck-ref>
 ```
 
 업데이트는 `paseo plugin status <runtime-id>`로 ref를 확인한 뒤 `paseo plugin update <runtime-id>`를 실행합니다. 고정 태그는 이동하지 않습니다. Source 선택·원격 명령·실패 후보 복구는 [Git 설치 안내](docs/GIT_INSTALLATION.md)를 참고하세요.
 
 ## 설정·문제 해결·제거
 
-Branch Garden은 별도 저장 설정이 없습니다. Provider Usage의 표시 설정과 Prompt Palette의 라이브러리는 내장 Host Settings에 저장되며 update/reload 뒤에도 유지됩니다. **설치를 제거하면 해당 설정과 라이브러리는 삭제됩니다.** 제거·재설치 전에 표시 설정을 기록하고 필요한 프롬프트를 복사하세요. Prompt Palette에는 import/export 기능이 없습니다.
+Branch Garden은 별도 저장 설정이 없습니다. Provider Usage의 표시 설정과 Prompt Palette의 라이브러리는 내장 Host Settings에 저장되며 update/reload 뒤에도 유지됩니다. **설치를 제거하면 해당 설정과 라이브러리는 삭제됩니다.** 제거·재설치 전에 표시 설정을 기록하고 필요한 프롬프트를 복사하세요. Prompt Palette에는 import/export 기능이 없습니다. Command Deck도 제거 시 명령 설정과 설치 식별자가 삭제됩니다. 기존 터미널은 자동 종료하지 않으며 재설치 후 자동 연결되지 않으므로, 제거 전에 필요한 출력을 복사하고 터미널을 직접 정리하세요.
 
 문제가 있으면 대상 host에서 `paseo plugin ls`와 `paseo plugin logs <runtime-id>`로 확인하고 [지원 안내](SUPPORT.md)를 따라 비밀 정보를 뺀 증상·버전·ref를 보고하세요. 제거는 문제 해결의 필수 단계가 아닙니다. 원할 때만 `paseo plugin remove <runtime-id>`를 실행하고 목록에서 해당 ID가 사라졌는지 확인합니다. 원본 Git 저장소와 공급자 인증은 삭제되지 않습니다.
 
@@ -88,7 +92,7 @@ Branch Garden은 별도 저장 설정이 없습니다. Provider Usage의 표시 
 
 ## 개발하기
 
-이 저장소는 세 플러그인의 npm workspace입니다. 소스 기여에는 Node.js 22, npm과 Git을 사용하며 저장소 루트에서 다음을 실행합니다. 사용자 설치와 별도의 개발 검사입니다.
+이 저장소는 네 플러그인의 npm workspace입니다. 소스 기여에는 Node.js 22, npm과 Git을 사용하며 저장소 루트에서 다음을 실행합니다. 사용자 설치와 별도의 개발 검사입니다.
 
 ```powershell
 npm ci
@@ -104,7 +108,8 @@ npm run check
 ├── plugins/
 │   ├── branch-garden/
 │   ├── provider-usage/
-│   └── prompt-palette/
+│   ├── prompt-palette/
+│   └── command-deck/
 ├── docs/
 │   ├── DESIGN.md
 │   ├── GIT_INSTALLATION.md

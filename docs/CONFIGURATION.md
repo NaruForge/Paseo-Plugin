@@ -4,6 +4,7 @@ No plugin requires a custom host settings file. This guide describes current 0.8
 
 - Branch Garden reads the selected daemon's Paseo project/workspace registry and uses its installed Git executable. See the [plugin guide](../plugins/branch-garden/README.md).
 - Provider Usage reads enabled connections and usage through Paseo. The daemon owns authentication and provider HTTP; the plugin neither reads nor writes credentials. See the [plugin guide](../plugins/provider-usage/README.md).
+- Command Deck stores Project-specific PowerShell commands in Host Settings and runs them through the official Terminal SDK on Windows. See the [plugin guide](../plugins/command-deck/README.md).
 - Prompt Palette stores its prompt library in built-in Host Settings and sends selected text to the current Agent. See the [plugin guide](../plugins/prompt-palette/README.md).
 
 Settings and credentials belong to the selected daemon host, not the viewing client. Keep authentication files out of Git and issue reports.
@@ -26,12 +27,20 @@ The library defaults to empty. Limits: 100 prompts; name 80, description 240 and
 
 The Composer Prompts pill opens the latest saved library. Select a prompt, review its full body and target Agent, then Send. The original Composer draft and attachments stay in place. Failed/uncertain delivery keeps the preview and requires checking the conversation before another send. The plugin never automatically retries. A running Agent receives messages according to Paseo/Provider behavior; the plugin does not stop a turn. See the [plugin guide](../plugins/prompt-palette/README.md).
 
+## Command Deck Settings
+
+Select a Project in Settings → Plugins → Command Deck. Add a name, one PowerShell command line and an optional working directory; Apply to draft, then Save changes. Commands are keyed by Project ID and shared across its Workspaces and Git worktrees. Each run uses the current Workspace directory and has separate terminal ownership. Limits: 100 commands across the installation; name 80, command 8,000 and directory 2,000 JavaScript string code units. Stale drafts cannot overwrite newer revisions; Copy draft and Load latest provide explicit recovery.
+
+The installation identifier is retained even when the command list is empty so existing terminals remain discoverable. Removing/reinstalling the plugin deletes that identifier and saved commands; terminals are not automatically killed and the new installation will not adopt them. Stop or inspect them in the Workspace terminal before removal. Never put secrets in commands or settings.
+
 ## Paseo 0.8 settings contract
 
-All three plugin sources target 0.8.0-beta.1. Provider Usage registers **Provider Usage Settings** under Settings → Plugins, using `addSettingsScreen` and host-scoped `defineSettings` → `registerSettings` → `useSettings`; see the [settings reference](plugin-capabilities/backend-and-sdk.md#host-단위-설정-저장) and [migration plan](MIGRATION_0.8.md).
+All four plugin sources target 0.8.0-beta.1. Provider Usage registers **Provider Usage Settings** under Settings → Plugins, using `addSettingsScreen` and host-scoped `defineSettings` → `registerSettings` → `useSettings`; see the [settings reference](plugin-capabilities/backend-and-sdk.md#host-단위-설정-저장) and [migration plan](MIGRATION_0.8.md).
 
 Built-in values are shared by authorized clients of the same host and installation, validated against a schema, and saved with revision conflict detection. They survive reload/disable/update and daemon restart, but **removing the installation deletes its values**. Reinstalling starts from defaults. They are ordinary JSON, not a credential vault, and provide neither per-user storage nor cross-host synchronization. A settings screen does not replace Paseo's native provider usage screen or expose a generic route into it.
 
 ## Update and remove
 
-First run `paseo plugin ls` on the intended Host and note the actual runtime ID and source. Follow the plugin-specific [Branch Garden](../plugins/branch-garden/README.md#update-and-remove), [Provider Usage](../plugins/provider-usage/README.md#update-and-remove) or [Prompt Palette](../plugins/prompt-palette/README.md#update-and-remove) instructions. Git branch updates and directory reloads preserve settings; removal/reinstallation does not. Copy Prompt Palette prompts and record Provider Usage preferences before removing either installation. See [Git rollback details](GIT_INSTALLATION.md#제거와-정리).
+First run `paseo plugin ls` on the intended Host and note the actual runtime ID and source. Follow the plugin-specific [Branch Garden](../plugins/branch-garden/README.md#update-and-remove), [Provider Usage](../plugins/provider-usage/README.md#update-and-remove), [Prompt Palette](../plugins/prompt-palette/README.md#update-and-remove) or [Command Deck](../plugins/command-deck/README.md#update-and-remove) instructions. Git branch updates and directory reloads preserve settings; removal/reinstallation does not. Copy Prompt Palette prompts and record Provider Usage preferences before removing either installation. See [Git rollback details](GIT_INSTALLATION.md#제거와-정리).
+
+Existing version 1 settings preserve command and installation IDs during migration. Known Workspace-to-Project links are resolved in the client; Save changes persists those links with revision protection. Unresolved commands remain under **Needs Project assignment** for manual selection. No commands or terminals are deleted by migration.

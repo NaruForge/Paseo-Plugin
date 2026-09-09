@@ -43,6 +43,18 @@
         "linux"
       ],
       "readme": "plugins/prompt-palette/README.md"
+    },
+    {
+      "id": "command-deck",
+      "name": "Command Deck",
+      "paseoVersion": "0.8.0-beta.1",
+      "path": "plugins/command-deck",
+      "description": "Save Project PowerShell commands and run, inspect and stop their terminals from the Composer on Windows.",
+      "maturity": "experimental",
+      "daemonPlatforms": [
+        "win32"
+      ],
+      "readme": "plugins/command-deck/README.md"
     }
   ]
 }
