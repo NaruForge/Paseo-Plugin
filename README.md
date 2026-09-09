@@ -11,50 +11,65 @@ Maintained by **NaruForge and contributors**. This is a community project, indep
 
 **Published release target: Paseo 0.7.2.** The Plugin API is experimental. See the [compatibility and verification record](docs/COMPATIBILITY.md) before using another version. The first public prerelease, [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2), includes pinned installation instructions and known limitations.
 
-**Current source:** All three plugins target exact **0.8.0-beta.1**. Provider Usage uses the official host usage API and adds display Settings. The user has completed runtime verification of all three plugins on Paseo 0.8; see the [runtime record and reported scope](docs/verification/paseo-0.8-runtime.md). Git installation/update verification is tracked separately in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96). The existing `v0.1.0-rc.2` tag preserves both 0.7 plugins. See the [migration plan](docs/MIGRATION_0.8.md), [source verification](docs/verification/branch-garden-0.8-source.md) and [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77).
+**Current source:** All three plugins target exact **0.8.0-beta.1**. Provider Usage uses the official host usage API and adds display Settings. The user has completed runtime verification of all three plugins on Paseo 0.8; see the [runtime record and reported scope](docs/verification/paseo-0.8-runtime.md). Git installation/update verification is tracked separately in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96). The existing `v0.1.0-rc.2` tag preserves both 0.7 plugins. For current source, follow [0.8 evaluation](#evaluate-current-08-source); developers can consult the [migration plan](docs/MIGRATION_0.8.md).
 
 ## Plugins
 
 | Plugin | What it does | Requirements | Maturity |
 | --- | --- | --- | --- |
-| [`branch-garden`](plugins/branch-garden/) | Inspect registered Git projects, workspaces, branches and worktrees without changing Git state. | Current source: Paseo 0.8.0-beta.1; Git; registered projects or workspaces | Preview |
+| [`branch-garden`](plugins/branch-garden/) | Inspect registered Git projects, workspaces, branches and worktrees without changing Git state. | Current source: Paseo 0.8.0-beta.1; Git; registered projects or workspaces | Preview; 0.7 release, unreleased 0.8 changes |
 | [`prompt-palette`](plugins/prompt-palette/) | Save reusable prompts in Host Settings, preview and send them from the Agent Composer. | Paseo 0.8.0-beta.1 source | Experimental, unreleased |
-| [`provider-usage`](plugins/provider-usage/) | Inspect enabled Provider usage through Paseo, with configurable pills and a sidebar managed by Paseo Layout. | Paseo 0.8.0-beta.1 source; enabled provider connections | Experimental |
+| [`provider-usage`](plugins/provider-usage/) | Inspect enabled Provider usage through Paseo, with configurable pills and a sidebar managed by Paseo Layout. | Paseo 0.8.0-beta.1 source; enabled provider connections | Experimental; 0.7 release, unreleased 0.8 changes |
 
-Branch Garden and Provider Usage are maintained as this repository's core offering; this does not imply Paseo-team support. Branch Garden's interface is in English. Provider Usage remains experimental at the provider integration boundary and still includes Korean status messages. Their English installation guides include historical runtime screenshots.
+Branch Garden and Provider Usage are maintained as this repository's core offering; this does not imply Paseo-team support. Branch Garden's interface is in English. Provider Usage remains experimental at the provider integration boundary and still includes Korean status messages. Their English guides include historical runtime screenshots; Provider Usage also includes labeled 0.8 source previews.
 
-Prompt Palette is an unreleased experimental addition. Its guide documents the current source and verification limits.
+Prompt Palette is an unreleased experimental addition. Its guide includes representative source previews, use instructions and verification limits.
 
 ## Install one plugin
 
 1. Install the tools listed in that plugin's guide on the **daemon host**.
 2. In Paseo **Settings → Plugins**, enable plugins if you choose to trust them.
-3. Run the command for the plugin you want:
+3. On **Paseo 0.7.2**, run one command below. For **0.8 source**, skip these release commands and use [the evaluation route](#evaluate-current-08-source).
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
 paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
 ```
 
-Choose one command; there is no need to install the entire collection or run npm. These commands pin the 0.7-compatible release. Omitting `--ref` tracks the default branch and can pick up a future 0.8 migration. Select a reviewed compatible tag or commit from [Releases](https://github.com/NaruForge/Paseo-Plugin/releases). A pinned tag does not advance on `plugin update`. See [Git installation and rollback](docs/GIT_INSTALLATION.md).
+Choose one command; there is no need to install the entire collection or run npm. These commands pin the 0.7-compatible release. Omitting `--ref` tracks the default branch, which already contains 0.8 source and is incompatible with 0.7. Select a reviewed compatible tag or commit from [Releases](https://github.com/NaruForge/Paseo-Plugin/releases). A pinned tag does not advance on `plugin update`. See [Git installation and rollback](docs/GIT_INSTALLATION.md).
 
 ```sh
 paseo plugin ls
 paseo plugin logs branch-garden
-paseo plugin update branch-garden
 ```
 
 The manifest ID is the default runtime ID. If you install with `--id`, use that ID in later commands. Installations are per daemon. For 0.8 CLI operations, `--host` is global: `paseo --host <host> plugin ls`. Choose daemon and app versions for the plugin and ref being installed; the pinned commands above target 0.7.2.
 
-Prompt Palette is not included in `v0.1.0-rc.2`. After a reviewed commit containing it is published, install that ref on a compatible beta Host and app:
+Expect the chosen runtime to be `running` without load errors. Use the release’s versioned [Branch Garden guide](https://github.com/NaruForge/Paseo-Plugin/blob/v0.1.0-rc.2/plugins/branch-garden/README.md#use) or [Provider Usage guide](https://github.com/NaruForge/Paseo-Plugin/blob/v0.1.0-rc.2/plugins/provider-usage/README.md#use) for 0.7 behavior. Those historical guides preserve old command examples; use this README’s pinned installation and current maintenance instructions. Current-source guides are linked in the table above. For later maintenance, see [updates and removal](docs/CONFIGURATION.md#update-and-remove).
+
+## Evaluate current 0.8 source
+
+Main contains all three plugins; it is not a new collection release. Match the daemon, app and CLI to **0.8.0-beta.1** and read the [reported runtime scope](docs/verification/paseo-0.8-runtime.md). Git deployment verification remains in #96.
+
+For local source evaluation, clone this repository on the daemon host, enter its root, and review the selected commit before installing. Git is needed to clone; npm is only needed for development checks. Run in PowerShell or a POSIX shell:
+
+```sh
+git clone https://github.com/NaruForge/Paseo-Plugin.git
+cd Paseo-Plugin
+git rev-parse HEAD
+```
+
+If you already have a checkout, use that repository root and review its ref and local changes. Follow the directory installation steps in the [Branch Garden](plugins/branch-garden/README.md#install), [Provider Usage](plugins/provider-usage/README.md#installation), or [Prompt Palette](plugins/prompt-palette/README.md#install-current-source) guide. These examples use PowerShell on the daemon host; choose a separate `--id` when another source is already installed under the default ID.
+
+For Git source evaluation, choose an existing published commit/tag containing the plugin that you have reviewed. For example, Prompt Palette is on main but is absent from `v0.1.0-rc.2`:
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-prompt-palette-ref>
 ```
 
-Replace the placeholder with the reviewed commit or tag. For current local development, use the [plugin guide](plugins/prompt-palette/README.md).
+Replace the placeholder with that actual reviewed commit or tag; it is not a literal ref. See [Git source details](docs/GIT_INSTALLATION.md) for branch tracking, remote hosts and rollback.
 
-**Configuration:** No plugin needs a custom host settings file. Prompt Palette stores its library in built-in Host Settings. See [prerequisites and removal guidance](docs/CONFIGURATION.md).
+**Configuration:** No plugin needs a custom host settings file. Provider Usage stores display preferences and Prompt Palette stores its library in built-in Host Settings. Removal deletes those values; record preferences and copy prompts first. See [prerequisites and removal guidance](docs/CONFIGURATION.md).
 
 ## Trust and privacy
 

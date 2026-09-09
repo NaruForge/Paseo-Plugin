@@ -10,11 +10,11 @@ English and Korean reports are welcome. Include plugin runtime ID, installed com
 
 ## Support policy
 
-Core support covers Branch Garden and Provider Usage. Provider Usage still depends on experimental supplier endpoints. Other plugins were removed before the first public release; see [removal guidance](docs/REMOVED_PLUGINS.md).
+Core support covers Branch Garden and Provider Usage. Prompt Palette is an unreleased experimental addition; source-evaluation reports are welcome through the same bug form. Current Provider Usage delegates integrations to Paseo; the published 0.7 implementation uses experimental supplier endpoints. Five earlier plugins were removed before the first public release; see [removal guidance](docs/REMOVED_PLUGINS.md).
 
 The initial release line targets Paseo **0.7.2**. Newer or preview APIs are not assumed compatible. We prioritize reproducible problems on the Windows daemon and web client used for runtime validation. macOS/Linux automated checks and native mobile support have separate evidence in [Compatibility](docs/COMPATIBILITY.md).
 
-**0.8.0-beta.1 requires a source migration.** Current plugins have not been migrated or runtime-verified on the beta. Track [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77) and the [migration guide](docs/MIGRATION_0.8.md). Updated API reference pages do not expand the supported release line.
+**Current source targets 0.8.0-beta.1.** All three sources are migrated. The user reported runtime verification on Paseo 0.8; exact daemon/app versions, platforms and scenarios were not supplied. Follow the [reported scope](docs/verification/paseo-0.8-runtime.md), not an inferred beta.1 or native-platform certification. Git installation/update/recovery remains separately tracked in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96). The published release remains on 0.7.2; see [Compatibility](docs/COMPATIBILITY.md).
 
 Before 1.0, breaking changes can occur in minor releases and are documented in the changelog. Release candidates are for evaluation. Only the latest release in the active minor line receives routine fixes; use a reviewed tag/commit and retain the previous source reference for rollback.
 

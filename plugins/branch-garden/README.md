@@ -2,7 +2,7 @@
 
 Inspect registered Git projects, active workspaces, local branches and worktrees on the selected host. No branch is checked out, reset or deleted.
 
-[Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Support](../../SUPPORT.md)
+[Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Install](#install) · [Support](../../SUPPORT.md)
 
 **Current source targets Paseo 0.8.0-beta.1.** Runtime entries, imports and exact SDK dependencies have been migrated and checked with the beta compiler, including a copy without `node_modules`. The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). See the [source verification](../../docs/verification/branch-garden-0.8-source.md) and [#82](https://github.com/NaruForge/Paseo-Plugin/issues/82). The screenshots and pinned release below remain 0.7 evidence.
 
@@ -18,12 +18,25 @@ On a compact screen, workspace details and branch evidence stack vertically:
 
 ## Install
 
+Choose **Paseo 0.7.2** for this published release command. Enable trusted plugins in the intended daemon’s **Settings → Plugins**, then run:
+
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2
 paseo plugin ls
 ```
 
-This pins the 0.7-compatible release; `update` does not advance a pinned tag. Omitting `--ref` tracks the default branch, including future compatibility changes. Review and trust source before enabling plugins; see [Git installation](../../docs/GIT_INSTALLATION.md).
+This pins the 0.7-compatible release; `update` does not advance a pinned tag. Omitting `--ref` tracks the default branch, which already contains 0.8 source incompatible with 0.7. Review and trust source before enabling plugins; see [Git installation](../../docs/GIT_INSTALLATION.md).
+
+For current 0.8 source evaluation, follow the [source checkout steps](../../README.md#evaluate-current-08-source), then run this in PowerShell from the repository root on the daemon host:
+
+```powershell
+$repoRoot = (Resolve-Path .).Path
+paseo plugin ls
+paseo plugin install (Join-Path $repoRoot "plugins/branch-garden")
+paseo plugin ls
+```
+
+Expect runtime ID `branch-garden` with status `running` and no load error. If that ID already exists, choose a distinct `--id branch-garden-dev` and use it in subsequent commands. Open **Branch Garden** in the sidebar. Git source evaluation and its remaining verification scope are described in [Git installation](../../docs/GIT_INSTALLATION.md).
 
 ## Requirements and configuration
 
@@ -46,10 +59,32 @@ Reads project/workspace metadata and bounded read-only Git commands. It never pr
 Check that Git is installed on the daemon host, that the selected host owns the workspace and that its repository still exists. Refresh after external Git changes.
 
 ```sh
+paseo plugin ls
 paseo plugin logs branch-garden
-paseo plugin update branch-garden
-paseo plugin remove branch-garden
 ```
 
-Use the actual runtime ID if installed with `--id`. For 0.8 CLI remote diagnostics, the syntax is `paseo --host <host> plugin ls`; check the daemon and app versions independently. Directory development installations use `reload` instead of `update`.
+Use the actual runtime ID if installed with `--id`. For 0.8 CLI remote diagnostics, the syntax is `paseo --host <host> plugin ls`; check the daemon and app versions independently. Directory development installations use `reload` instead of `update`. If it still fails, follow [Support](../../SUPPORT.md#troubleshooting-first-steps) with redacted logs and the installed ref.
 
+
+## Update and remove
+
+Run `paseo plugin ls` against the intended Host before changing an installation. These examples use the default ID `branch-garden`; replace it with your actual ID if you used `--id`. On the 0.8 CLI, put remote selection before the command: `paseo --host <host> plugin ls`.
+
+For a **Git source** installation, check the tracked ref and update it:
+
+```sh
+paseo plugin status branch-garden
+paseo plugin update branch-garden
+paseo plugin ls
+```
+
+Branches advance; fixed tags and commits do not. For a **directory source**, after reviewing changes to the local checkout use `paseo plugin reload branch-garden`, then `paseo plugin ls`. See [ref changes and rollback](../../docs/RELEASING.md#rollback) before switching a pinned installation.
+
+Removal is optional and separate from troubleshooting. Branch Garden has no saved plugin settings. Removal leaves your original repositories, branches and worktrees intact. A Git-source removal deletes the managed checkout; a directory-source removal leaves the original source directory intact.
+
+```sh
+paseo plugin remove branch-garden
+paseo plugin ls
+```
+
+Confirm only the intended runtime has disappeared. No daemon restart is needed.

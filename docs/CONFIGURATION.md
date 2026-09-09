@@ -1,6 +1,6 @@
 # Configuration
 
-No plugin requires a custom host settings file.
+No plugin requires a custom host settings file. This guide describes current 0.8 source; for the published 0.7 release use its [versioned guides](https://github.com/NaruForge/Paseo-Plugin/tree/v0.1.0-rc.2/plugins).
 
 - Branch Garden reads the selected daemon's Paseo project/workspace registry and uses its installed Git executable. See the [plugin guide](../plugins/branch-garden/README.md).
 - Provider Usage reads enabled connections and usage through Paseo. The daemon owns authentication and provider HTTP; the plugin neither reads nor writes credentials. See the [plugin guide](../plugins/provider-usage/README.md).
@@ -31,3 +31,7 @@ The Composer Prompts pill opens the latest saved library. Select a prompt, revie
 All three plugin sources target 0.8.0-beta.1. Provider Usage registers **Provider Usage Settings** under Settings → Plugins, using `addSettingsScreen` and host-scoped `defineSettings` → `registerSettings` → `useSettings`; see the [settings reference](plugin-capabilities/backend-and-sdk.md#host-단위-설정-저장) and [migration plan](MIGRATION_0.8.md).
 
 Built-in values are shared by authorized clients of the same host and installation, validated against a schema, and saved with revision conflict detection. They survive reload/disable/update and daemon restart, but **removing the installation deletes its values**. Reinstalling starts from defaults. They are ordinary JSON, not a credential vault, and provide neither per-user storage nor cross-host synchronization. A settings screen does not replace Paseo's native provider usage screen or expose a generic route into it.
+
+## Update and remove
+
+First run `paseo plugin ls` on the intended Host and note the actual runtime ID and source. Follow the plugin-specific [Branch Garden](../plugins/branch-garden/README.md#update-and-remove), [Provider Usage](../plugins/provider-usage/README.md#update-and-remove) or [Prompt Palette](../plugins/prompt-palette/README.md#update-and-remove) instructions. Git branch updates and directory reloads preserve settings; removal/reinstallation does not. Copy Prompt Palette prompts and record Provider Usage preferences before removing either installation. See [Git rollback details](GIT_INSTALLATION.md#제거와-정리).

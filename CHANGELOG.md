@@ -13,7 +13,8 @@ The collection uses one version/tag for all supported plugins. Published release
 - Check per-plugin SDK catalog versions and 0.8 runtime/type import boundaries; add an exact beta compiler check using a source copy without node_modules.
 - Migrate Provider Usage to the official Paseo usage SDK and all enabled Provider connections; remove direct credential and vendor HTTP access.
 - Add host-scoped Provider Usage Settings: Composer pill on, remaining percentage and provider name on, reset time off by default.
-- The existing v0.1.0-rc.2 tag remains on 0.7.2. Live beta daemon/app and Git update verification are pending.
+- The existing v0.1.0-rc.2 tag remains on 0.7.2. The user reported runtime verification of all three plugins on Paseo 0.8; see the [reported environment and scope](docs/verification/paseo-0.8-runtime.md). Git installation/update/recovery is tracked separately in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96).
+- Clarify user installation, support and settings deletion on removal/rollback. Add explicitly labeled source-preview images for Prompt Palette and Provider Usage while preserving historical release evidence.
 
 ## 0.1.0-rc.2 — 2026-09-08 (prerelease)
 

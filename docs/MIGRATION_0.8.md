@@ -15,7 +15,7 @@
 | 이 문서와 capability 참조 | Paseo 0.8.0-beta.1 계약을 설명. 현재 소스의 실행 가능성을 뜻하지 않음 |
 | 후속 배포 작업 | [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)의 Git 경로 검증 후 새 collection prerelease 준비 |
 
-0.7 사용자는 검토한 `--ref v0.1.0-rc.2` 또는 commit으로 고정한다. Default branch를 추적하는 설치는 향후 0.8 이관 commit도 받을 수 있으므로 지원 버전을 먼저 확인한다. 소스 안에 0.7용 `index.ts` compatibility entry를 남겨 양쪽을 지원하려 하지 않는다. 별도 Git ref로 구분한다.
+0.7 사용자는 검토한 `--ref v0.1.0-rc.2` 또는 commit으로 고정한다. Default branch는 이미 0.8 소스이므로 이를 추적하는 설치는 지원 버전을 먼저 확인한다. 소스 안에 0.7용 `index.ts` compatibility entry를 남겨 양쪽을 지원하려 하지 않는다. 별도 Git ref로 구분한다.
 
 ## Manifest와 exact SDK
 
@@ -45,7 +45,7 @@ Daemon과 app은 자신의 버전을 각각 검사한다. Compatible daemon에 �
 | `*.shared.ts` | `shared/`의 `.ts` |
 | `*.logic.ts`, `*.view.ts`, helper | 실제 runtime 의존성에 따라 분류. 루트에 소스 모듈을 남기지 않음 |
 
-`index.client.ts[x]`와 `index.server.ts[x]` 중 필요한 것만 두되 최소 하나가 필요하다. 현재 두 플러그인은 UI와 RPC가 있어 둘 다 필요하다. Manifest/package/tsconfig는 루트에 남긴다. Nested feature 디렉터리는 각 runtime 아래에 보존하고 상대 import·테스트 경로를 함께 수정한다.
+`index.client.ts[x]`와 `index.server.ts[x]` 중 필요한 것만 두되 최소 하나가 필요하다. Branch Garden과 Provider Usage는 UI와 RPC가 있어 둘 다 사용하며, Prompt Palette는 client UI와 server Settings 등록을 위해 둘 다 사용한다. Manifest/package/tsconfig는 루트에 남긴다. Nested feature 디렉터리는 각 runtime 아래에 보존하고 상대 import·테스트 경로를 함께 수정한다.
 
 | 기존 import·등록 | 0.8 대체 |
 | --- | --- |
@@ -75,7 +75,7 @@ Provider Usage의 `provider-usage.view.ts`는 `PluginTheme`를 이용한 표시�
 
 소스 이관 후 다음을 확인한다.
 
-- 각 플러그인 workspace typecheck와 test; 둘 모두 이관한 뒤 루트 `npm run check`
+- 각 플러그인 workspace typecheck와 test; 공통 검증에는 루트 `npm run check`
 - Branch Garden의 read-only Git allowlist와 Git 상태 무변경, Provider Usage의 공식 read-only SDK 경계·활성 연결 필터·credential 접근 및 token 로그 부재
 - 호환 beta daemon/app에서 source compile, 정확한 runtime ID의 `running`, RPC 결과와 surface/sidebar/Command Center
 - Provider Usage pill의 최초 목록·구독·archive/remove/provider 변경·cleanup, 재연결/reload 시 중복 없음

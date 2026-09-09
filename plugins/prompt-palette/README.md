@@ -4,6 +4,20 @@ Save prompts you use often and send them from an Agent's Composer after reviewin
 
 **Experimental, unreleased source for Paseo 0.8.0-beta.1.** This plugin is not included in the existing `v0.1.0-rc.2` tag. Both daemon and app must be compatible. The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). Earlier [source verification](../../docs/verification/prompt-palette-0.8-source.md) remains a separate historical record.
 
+[Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Install](#install-current-source) · [Support](../../SUPPORT.md)
+
+## Screenshots
+
+These **0.8.0-beta.1 source previews**, captured on 2026-09-09, use simulated Paseo host components and sample text. They do not show a live Agent send or certify native mobile layout. Original captures are included unchanged.
+
+![Prompt Palette compact source preview listing a saved prompt and Manage prompts](../../docs/screenshots/prompt-palette/picker-preview.png)
+
+The picker shows the Agent/Host target and opens a saved prompt for review. This image comes from the [mobile layout review](../../docs/verification/prompt-palette-mobile-layout.md).
+
+![Prompt Palette source preview showing the full prompt body, target Agent, Copy text and Send](../../docs/screenshots/prompt-palette/send-preview.png)
+
+The full-body preview comes from the earlier [initial source review](../../docs/verification/prompt-palette-0.8-source.md), before the later button/layout adjustments. It illustrates preview-before-send; surrounding controls and sheet dimensions are simulated.
+
 ## Use
 
 1. Open **Settings → Plugins → Prompt Palette**.
@@ -35,43 +49,61 @@ Host Settings schema `library`, version 1, defaults to an empty array. Up to 100
 
 Settings are ordinary JSON, not a secret vault. They survive reload, disable, update and daemon restart. **Removing the plugin installation deletes its library.** Copy anything you want to keep before removal. No cross-Host sync, template variables, search/tags, import/export, macros or scheduled sends are included.
 
-## Local development
+## Install current source
 
-The manifest's default installation ID is `prompt-palette`. The project was created with `paseo plugin init` from exact CLI 0.8.0-beta.1.
+There is no published collection release containing Prompt Palette. Its source is available on main; use it for evaluation with compatible **0.8.0-beta.1 daemon, app and CLI**. Enable trusted plugins in the intended daemon’s **Settings → Plugins**. An existing Agent with a Workspace is needed for sending.
 
-```powershell
-npm ci
-npm run typecheck --workspace prompt-palette
-npm test --workspace prompt-palette
-npm run check
-```
-
-For an explicitly chosen compatible test daemon with plugins already enabled:
+Follow the [source checkout steps](../../README.md#evaluate-current-08-source), then run this in PowerShell from the repository root on the daemon host. npm is not needed just to install the existing source.
 
 ```powershell
 $repoRoot = (Resolve-Path .).Path
 paseo plugin ls
-paseo plugin install (Join-Path $repoRoot "plugins\prompt-palette")
+paseo plugin install (Join-Path $repoRoot "plugins/prompt-palette")
 paseo plugin ls
-# After subsequent source changes:
-paseo plugin reload prompt-palette
-paseo plugin ls
-paseo plugin logs prompt-palette
 ```
 
-Use the actual runtime ID from `plugin ls` if installed with `--id`. Remote CLI options are global: `paseo --host <host> plugin ls`. Do not restart the daemon to load source changes.
+Expect `prompt-palette` to be `running` without load errors. If that ID already exists, use a separate `--id prompt-palette-dev` and use that ID in later commands. Open **Settings → Plugins → Prompt Palette**, save your first prompt, then use **Prompts** on an existing Agent. An empty library is normal on first install and links back to Settings.
 
-After a reviewed ref containing this plugin is published, Git source installation can use:
+For Git source evaluation, choose a published commit containing this plugin that you have reviewed:
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-prompt-palette-ref>
 ```
 
-Replace the placeholder; the existing 0.7 release tag does not contain this directory. See [Git installation](../../docs/GIT_INSTALLATION.md).
+Replace the placeholder with that actual ref. `v0.1.0-rc.2` does not contain this plugin. Git installation/update/recovery verification remains separate in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96); see [Git installation](../../docs/GIT_INSTALLATION.md).
 
-## Implementation
+## Troubleshooting
 
-`index.client.tsx` registers Settings and per-Agent pills. `index.server.ts` only registers built-in settings persistence. Runtime-neutral schemas live in `shared/`; UI, draft logic, registration lifecycle and sending live in `client/`. No custom backend RPC or third-party runtime dependency is needed.
+- **Prompts is missing:** check the intended Host, `running` plugin status, compatible daemon/app, and an existing available Agent with a Workspace. The new-Agent draft Composer is not supported.
+- **A prompt is missing:** Apply to draft is local; choose Save changes before switching Host or leaving Settings. Confirm you are using the same Host and installation.
+- **Save conflict or invalid settings:** retain/copy your draft before loading latest. Do not remove/reinstall to fix a conflict; removal deletes the library.
+- **Delivery is uncertain:** check the Agent conversation before unlocking another send. The plugin never automatically retries.
 
-Initial Agent enumeration follows every page and merges concurrent events. A 30-second refresh recovers missed events or initial query failures. Disposal cancels timers and listeners, closes pickers, invalidates pending preflight checks and prevents late results from restoring removed pills.
+For load errors, run `paseo plugin ls`, then `paseo plugin logs <runtime-id>`. On 0.8 use global `--host` for remote commands. Report persistent problems through [Support](../../SUPPORT.md), including the installed ref and versions, without prompt bodies, credentials or private conversation content.
 
+## Contribute
+
+For source changes, follow [Contributing](../../CONTRIBUTING.md). Development checks are separate from installation. [Source verification](../../docs/verification/prompt-palette-0.8-source.md) describes the implementation checkpoint and [runtime verification](../../docs/verification/paseo-0.8-runtime.md) records the later user report.
+
+## Update and remove
+
+Run `paseo plugin ls` against the intended Host before changing an installation. These examples use the default ID `prompt-palette`; replace it with your actual ID if you used `--id`. On the 0.8 CLI, put remote selection before the command: `paseo --host <host> plugin ls`.
+
+For a **Git source** installation, check the tracked ref and update it:
+
+```sh
+paseo plugin status prompt-palette
+paseo plugin update prompt-palette
+paseo plugin ls
+```
+
+Branches advance; fixed tags and commits do not. For a **directory source**, after reviewing changes to the local checkout use `paseo plugin reload prompt-palette`, then `paseo plugin ls`. Settings survive update/reload. See [ref changes and rollback](../../docs/RELEASING.md#rollback) before switching a pinned installation.
+
+Removal is optional and separate from troubleshooting. **Removal deletes this installation’s prompt library.** Copy all prompts you want to retain first; there is no import/export feature. Reinstalling starts with an empty library. A Git-source removal deletes the managed checkout; a directory-source removal leaves the original source directory intact.
+
+```sh
+paseo plugin remove prompt-palette
+paseo plugin ls
+```
+
+Confirm only the intended runtime has disappeared. No daemon restart is needed.

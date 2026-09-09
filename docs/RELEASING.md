@@ -1,6 +1,6 @@
 # Releasing the collection
 
-Both plugins use one collection version and one Git tag (`v<version>`). Runtime IDs remain unchanged. Keep versions in root/workspace packages, the lockfile, `plugins.json` and the changelog in sync. A catalog is descriptive metadata, not a Paseo registry submission.
+All three current plugins use one collection version and one Git tag (`v<version>`). Runtime IDs remain unchanged. Keep versions in root/workspace packages, the lockfile, `plugins.json` and the changelog in sync. A catalog is descriptive metadata, not a Paseo registry submission.
 
 ## Prepare
 
@@ -11,7 +11,7 @@ Both plugins use one collection version and one Git tag (`v<version>`). Runtime 
 
 ## Validate runtime safely
 
-For **Paseo 0.8.0-beta.1**, apply the [migration checklist](MIGRATION_0.8.md) first. Both plugin sources are migrated; the existing `v0.1.0-rc.2` release remains on 0.7.2. Source checks are not a new release or runtime certification. Keep the previous tag and use an explicit candidate ref. Do not overwrite 0.7 release notes or runtime evidence with beta claims.
+For **Paseo 0.8.0-beta.1**, apply the [migration checklist](MIGRATION_0.8.md) first. All three plugin sources target beta.1. The user runtime report and its limits are recorded in [verification](verification/paseo-0.8-runtime.md); Git deployment checks remain in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96). The existing `v0.1.0-rc.2` release remains on 0.7.2. Source checks are not a new release or runtime certification. Keep the previous tag and use an explicit candidate ref. Do not overwrite 0.7 release notes or runtime evidence with beta claims.
 
 Require separate client/server entries, runtime directories, `requirements.paseo`, exact target SDK/client dependencies and matching catalog/lockfile metadata. A plugin entry’s `paseoVersion` overrides the root `plugins.json.paseoVersion` default; release checks enforce the effective exact SDK and client dependency for every workspace. Update import checks and test stubs with the source migration. Recommended manifest range: `^0.8.0`; development SDK: exact `0.8.0-beta.1`.
 
@@ -38,11 +38,13 @@ The workflow deliberately creates a **draft**. Publish only after reviewing the 
 
 ## Rollback
 
-`paseo plugin update` follows branches; tags and commits stay pinned. Retain the prior tag or full commit SHA. To change a pinned installation, record its ID/source, remove that installation, then add the reviewed source again under the same ID and explicit prior `--ref`. This briefly removes its contributions. Configuration files outside the checkout remain intact; do not remove them unless intentionally revoking their settings.
+`paseo plugin update` follows branches; tags and commits stay pinned. Retain the prior tag or full commit SHA. **Before any remove/re-add rollback of current 0.8 source, record Provider Usage display preferences and copy Prompt Palette prompts outside the installation. Removal deletes those built-in settings; reinstalling starts from defaults. Prompt Palette has no import/export feature.** Branch Garden has no saved plugin settings.
+
+To change a pinned installation, record its actual ID/source with `plugin ls`, remove only that installation, then add the reviewed source again under the same ID and explicit prior `--ref`. This briefly removes its contributions. Restore preferences and prompts manually. Original repositories, provider credentials and unrelated external configuration files remain intact.
 
 Failed Git update candidates retain the previous running version, but directory reload failures do not. See [Git installation](GIT_INSTALLATION.md).
 
-For plugins using 0.8 built-in settings, removing an installation also deletes its stored settings. A remove/re-add rollback does not preserve those values; plan export/recovery before applying that procedure. The current two plugins have no such settings yet. A rejected Git update, without removal, keeps the installed revision.
+Only the historical two-plugin `v0.1.0-rc.2` release has no built-in 0.8 settings. This exception does not apply to current Provider Usage or Prompt Palette. A rejected Git update, without removal, keeps the installed revision and its settings.
 
 ## Upstream listing
 
