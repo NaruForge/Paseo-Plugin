@@ -1,6 +1,6 @@
 # Git source 설치와 업데이트
 
-이 문서는 기존 **Paseo 0.7.2용 태그 설치**와 **0.8.0-beta.1 이관 소스의 검증 조건**을 구분합니다. 현재 세 플러그인 소스는 0.8.0-beta.1을 대상으로 합니다. 실제 beta daemon/app 실행 검증은 후속 작업입니다. Git source는 다른 daemon이나 PC에 배포하고 추적 ref를 업데이트하는 운영 경로입니다. 같은 컴퓨터에서 소스를 편집하는 동안에는 directory source 설치와 `plugin reload`를 사용하세요.
+이 문서는 기존 **Paseo 0.7.2용 태그 설치**와 **0.8.0-beta.1 이관 소스의 검증 조건**을 구분합니다. 현재 세 플러그인 소스는 0.8.0-beta.1을 대상으로 합니다. 세 플러그인의 Paseo 0.8 Runtime 검증은 사용자 완료 보고를 [새 기록](verification/paseo-0.8-runtime.md)에 반영했습니다. Git 설치·업데이트·실패 후보 복구는 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에서 별도로 검증합니다. Git source는 다른 daemon이나 PC에 배포하고 추적 ref를 업데이트하는 운영 경로입니다. 같은 컴퓨터에서 소스를 편집하는 동안에는 directory source 설치와 `plugin reload`를 사용하세요.
 
 0.8의 runtime entry·SDK 경로·manifest 변경은 [이관 안내](MIGRATION_0.8.md)를 따릅니다. 아래 현재 릴리스 설치 명령은 0.7.2 daemon/client 대상이며, 이 문서 갱신은 beta runtime 검증 기록이 아닙니다.
 

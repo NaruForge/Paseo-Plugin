@@ -11,7 +11,7 @@ Maintained by **NaruForge and contributors**. This is a community project, indep
 
 **Published release target: Paseo 0.7.2.** The Plugin API is experimental. See the [compatibility and verification record](docs/COMPATIBILITY.md) before using another version. The first public prerelease, [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2), includes pinned installation instructions and known limitations.
 
-**Current source:** All three plugins target exact **0.8.0-beta.1**. Provider Usage uses the official host usage API and adds display Settings. Live beta daemon/app verification is pending; see its [source verification](docs/verification/provider-usage-0.8-source.md). The existing `v0.1.0-rc.2` tag preserves both 0.7 plugins. See the [migration plan](docs/MIGRATION_0.8.md), [source verification](docs/verification/branch-garden-0.8-source.md) and [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77).
+**Current source:** All three plugins target exact **0.8.0-beta.1**. Provider Usage uses the official host usage API and adds display Settings. The user has completed runtime verification of all three plugins on Paseo 0.8; see the [runtime record and reported scope](docs/verification/paseo-0.8-runtime.md). Git installation/update verification is tracked separately in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96). The existing `v0.1.0-rc.2` tag preserves both 0.7 plugins. See the [migration plan](docs/MIGRATION_0.8.md), [source verification](docs/verification/branch-garden-0.8-source.md) and [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77).
 
 ## Plugins
 

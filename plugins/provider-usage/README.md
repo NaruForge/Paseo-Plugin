@@ -4,7 +4,7 @@ Show usage for every enabled Provider connection on the selected Host, using Pas
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Support](../../SUPPORT.md)
 
-**Current source targets Paseo 0.8.0-beta.1.** Source and isolated UI checks are recorded in [verification](../../docs/verification/provider-usage-0.8-source.md). Live beta daemon/app verification is pending. The published `v0.1.0-rc.2` tag retains the previous 0.7.2 implementation.
+**Current source targets Paseo 0.8.0-beta.1.** Source and isolated UI checks are recorded in [verification](../../docs/verification/provider-usage-0.8-source.md). The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). The published `v0.1.0-rc.2` tag retains the previous 0.7.2 implementation.
 
 ## Provider Usage Settings
 
