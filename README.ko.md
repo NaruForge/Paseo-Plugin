@@ -52,9 +52,9 @@ git rev-parse HEAD
 ```powershell
 $repoRoot = (Resolve-Path .).Path
 paseo plugin ls
-paseo plugin install (Join-Path $repoRoot "plugins/branch-garden")
-paseo plugin install (Join-Path $repoRoot "plugins/provider-usage")
-paseo plugin install (Join-Path $repoRoot "plugins/prompt-palette")
+paseo plugin install (Join-Path $repoRoot "plugins\branch-garden")
+paseo plugin install (Join-Path $repoRoot "plugins\provider-usage")
+paseo plugin install (Join-Path $repoRoot "plugins\prompt-palette")
 paseo plugin ls
 ```
 
