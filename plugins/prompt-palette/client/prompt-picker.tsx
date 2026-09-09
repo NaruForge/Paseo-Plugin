@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
 import { promptSettings, type Prompt } from "../shared/prompt-settings";
 import type { PromptSender } from "./prompt-send";
-import { Action } from "./prompt-ui";
+import { Action, PromptRow } from "./prompt-ui";
 
 export function PromptPicker({ theme, layout, host, agentId, workspaceId, sender, close, openSettings }: PluginComposerPillProps & {
   sender: PromptSender; close(): void; openSettings(): void;
@@ -41,20 +41,25 @@ export function PromptPicker({ theme, layout, host, agentId, workspaceId, sender
   }
   const message = (text: string) => <Text style={{ color: theme.colors.foregroundMuted, fontSize: 12 }}>{text}</Text>;
   return <Modal title={selected ? selected.name : "Quick prompts"} open onOpenChange={open => { if (!open && !sender.pending) close(); }}>
-    <Modal.Content style={{ backgroundColor: theme.colors.surface0 }} contentContainerStyle={{ padding: layout.compact ? 16 : 24, gap: 16 }} scrollable={false}>
-      {message(`Host: ${host.label} · Agent: ${agent?.title || agentId}`)}
+    <Modal.Content style={{ backgroundColor: theme.colors.surface0 }} contentContainerStyle={{ padding: layout.compact ? 16 : 24, gap: 16, minHeight: 0 }} scrollable={false}>
+      <View style={{ gap: 4 }}>
+        <Text numberOfLines={2} style={{ color: theme.colors.foreground, fontSize: 14, lineHeight: 20 }}>
+          Agent: {agent?.title || agentId}
+        </Text>
+        {message(`Host: ${host.label}`)}
+      </View>
       {unavailable ? message("This Agent is no longer available.") : null}
       {error ? <Text accessibilityRole="alert" style={{ color: theme.colors.foreground, fontSize: 14 }}>{error}</Text> : null}
       {selected ? <>
-        <ScrollView style={{ maxHeight: layout.compact ? 280 : 400 }}>
+        <ScrollView style={{ flexGrow: 0, flexShrink: 1, minHeight: 0, maxHeight: layout.compact ? 280 : 400 }}>
           <Text selectable style={{ color: theme.colors.foreground, fontSize: 14, lineHeight: 22 }}>{selected.body}</Text>
         </ScrollView>
         {message("Sends this text as a separate message. Your Composer draft and attachments stay in place. A running Agent may receive it as a follow-up.")}
         {sender.uncertain ? <Action theme={theme} label="I checked the conversation — allow another send" disabled={pending}
           onPress={() => { sender.acknowledge(); setError(null); }} /> : null}
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-          <Action theme={theme} label="Back" disabled={pending} onPress={() => { setSelected(null); setError(null); }} />
-          <Action theme={theme} label="Copy text" disabled={pending} onPress={() => {
+          <Action theme={theme} label="Back" secondary disabled={pending} onPress={() => { setSelected(null); setError(null); }} />
+          <Action theme={theme} label="Copy text" secondary disabled={pending} onPress={() => {
             void copyText(selected.body).then(() => { if (alive.current) setError("Prompt copied."); })
               .catch(() => { if (alive.current) setError("Could not copy the prompt."); });
           }} />
@@ -70,19 +75,20 @@ export function PromptPicker({ theme, layout, host, agentId, workspaceId, sender
               .finally(() => { if (alive.current) setReloading(false); });
           }} />
         </> : <>
-          <ScrollView style={{ maxHeight: layout.compact ? 300 : 440 }}>
-            <View style={{ gap: 8 }}>
-              {settings.values.prompts.length === 0 ? message("No saved prompts yet. Add your first prompt in Settings.") :
-                settings.values.prompts.map(prompt => <View key={prompt.id}>
-                  <Action theme={theme} label={prompt.name} disabled={unavailable}
-                    onPress={() => { setSelected({ ...prompt }); }} />
-                  <Text numberOfLines={2} style={{ color: theme.colors.foregroundMuted, fontSize: 12, paddingHorizontal: 12 }}>
-                    {prompt.description || prompt.body}
-                  </Text>
-                </View>)}
+          {/* Native ScrollView grows by default, even with only one prompt. */}
+          {settings.values.prompts.length === 0 ? message("No saved prompts yet. Add your first prompt in Settings.") :
+          <ScrollView style={{ flexGrow: 0, flexShrink: 1, minHeight: 0, maxHeight: layout.compact ? 300 : 440 }}>
+            <View style={{ borderWidth: 1, borderColor: theme.colors.border, borderRadius: 8, overflow: "hidden" }}>
+              {settings.values.prompts.map((prompt, index) => <View key={prompt.id}
+                style={index ? { borderTopWidth: 1, borderTopColor: theme.colors.border } : undefined}>
+                <PromptRow theme={theme} prompt={prompt} disabled={unavailable}
+                  onPress={() => { setSelected({ ...prompt }); }} />
+              </View>)}
             </View>
-          </ScrollView>
-          <Action theme={theme} label={settings.values.prompts.length ? "Manage prompts" : "Add prompts"} onPress={() => { close(); openSettings(); }} />
+          </ScrollView>}
+          <View style={{ borderTopWidth: 1, borderTopColor: theme.colors.border, paddingTop: 16 }}>
+            <Action theme={theme} secondary label={settings.values.prompts.length ? "Manage prompts" : "Add prompts"} onPress={() => { close(); openSettings(); }} />
+          </View>
         </>}
     </Modal.Content>
   </Modal>;
