@@ -1,0 +1,5 @@
+interface:
+  display_name: "Repository Readiness"
+  short_description: "Audit Paseo-Plugin documentation readiness"
+policy:
+  allow_implicit_invocation: false
