@@ -2,7 +2,7 @@
 
 이 저장소는 Branch Garden, Provider Usage, Prompt Palette, Command Deck 네 개의 독립적인 Paseo 플러그인을 개발하는 npm workspace다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위다.
 
-현재 소스·SDK·manifest는 **0.8.0-beta.1**이다. 공개 태그 `v0.1.0-rc.2`의 Branch Garden과 Provider Usage는 **0.7.2**다. 파일·import·검증 순서는 [docs/MIGRATION_0.8.md](docs/MIGRATION_0.8.md)를 본다. 검증 범위는 [Runtime](docs/verification/paseo-0.8-runtime.md), [Git source](docs/verification/paseo-0.8-git-source.md), Command Deck은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 본다.
+현재 소스와 개발 SDK는 exact **0.8.0-beta.1**이고, manifest `requirements.paseo`는 **^0.8.0**이다. 공개 태그 `v0.1.0-rc.2`의 Branch Garden과 Provider Usage는 **0.7.2**다. 파일·import·검증 순서는 [docs/MIGRATION_0.8.md](docs/MIGRATION_0.8.md)를 본다. 검증 범위는 [Runtime](docs/verification/paseo-0.8-runtime.md), [Git source](docs/verification/paseo-0.8-git-source.md), Command Deck은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 본다.
 
 아이디어, 개발 계획과 버그의 이슈 관리는 GitHub Issues를 사용한다. 새 이슈는 `.github/ISSUE_TEMPLATE/`의 양식을 사용하고, 분류·Project 상태·PR 연결 규칙은 `.github/ISSUE_MANAGEMENT.md`를 따른다.
 
