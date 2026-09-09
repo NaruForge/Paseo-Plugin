@@ -49,16 +49,20 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden `
 
 `--path`는 기존 자동화와의 호환을 위한 legacy 형식입니다. 새 명령과 문서에는 source 뒤에 `:relative/path`를 붙이는 canonical 형식을 사용합니다.
 
-## Prompt Palette 신규 소스
+## 0.8 소스 Git 평가
 
-Prompt Palette는 main에 있지만 `v0.1.0-rc.2`에는 없습니다. 아래 placeholder를 직접 검토한 공개 commit/tag로 바꾸고 호환 beta daemon/app에서 평가합니다. Git 경로 검증이 완료됐다는 의미는 아닙니다.
+네 플러그인의 현재 소스는 main에 있습니다. `v0.1.0-rc.2`는 Paseo 0.7.2용 Branch Garden과 Provider Usage만 포함하며 Prompt Palette와 Command Deck은 없습니다. 0.8 평가에는 그 태그를 쓰지 마세요. 아래 placeholder를 직접 검토한 공개 0.8 commit/tag로 바꾸고 호환 beta daemon/app에서 **명령 하나만** 선택하세요. Git 경로 검증이 완료됐다는 의미는 아닙니다.
 
 ```powershell
-paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-prompt-palette-ref>
-paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref <reviewed-command-deck-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref <reviewed-0.8-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref <reviewed-0.8-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-0.8-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref <reviewed-0.8-ref>
 ```
 
-현재 로컬 개발은 [directory 설치 안내](../plugins/prompt-palette/README.md)를 사용합니다. Git 활성화·업데이트 검증은 아직 수행하지 않았습니다.
+placeholder를 실제 검토한 commit/tag로 바꾸세요. 이 문자열은 그대로 쓸 ref가 아닙니다.
+
+현재 로컬 개발은 컬렉션 [0.8 평가](../README.md#evaluate-current-08-source)와 각 플러그인 가이드의 directory 설치를 사용합니다. Git 활성화·업데이트 검증은 아직 수행하지 않았습니다.
 
 ## Ref 선택
 
@@ -97,7 +101,7 @@ Paseo는 후보 commit을 checkout하고 compile·초기화한 뒤 정상 시작
 
 제거는 선택적 작업이며 오류 진단을 위해 실행할 필요는 없습니다. 먼저 `paseo plugin ls`에서 대상 host와 실제 runtime ID를 확인하세요.
 
-**현재 0.8 Provider Usage는 표시 설정을, Prompt Palette는 프롬프트 라이브러리를 제거 시 삭제합니다.** 재설치 전에 설정을 기록하고 필요한 프롬프트를 복사하세요. Prompt Palette에는 import/export 기능이 없습니다. 재설치하면 기본값에서 시작합니다. Branch Garden에는 저장된 플러그인 설정이 없습니다. 내장 0.8 Settings가 없다는 설명은 과거 두 플러그인의 `v0.1.0-rc.2` 릴리스에만 해당합니다.
+**현재 0.8 Provider Usage는 표시 설정을, Prompt Palette는 프롬프트 라이브러리를, Command Deck은 명령과 설치 식별자를 제거 시 삭제합니다.** 재설치 전에 설정을 기록하고 필요한 프롬프트와 명령을 복사하세요. Prompt Palette와 Command Deck에는 import/export 기능이 없습니다. Command Deck 터미널은 자동 종료되지 않으며 재설치 후 이어받지 않습니다. 재설치하면 기본값에서 시작합니다. Branch Garden에는 저장된 플러그인 설정이 없습니다. 내장 0.8 Settings가 없다는 설명은 과거 두 플러그인의 `v0.1.0-rc.2` 릴리스에만 해당합니다.
 
 아래 `<runtime-id>`를 제거하려는 실제 ID로 바꿉니다. 임시 검증 설치라면 임시 ID만 지정하세요.
 

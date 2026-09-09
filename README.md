@@ -1,6 +1,6 @@
 # Paseo Plugins
 
-[한국어](README.ko.md) · [Plugin guides](#plugins) · [Compatibility](docs/COMPATIBILITY.md) · [Contributing](CONTRIBUTING.md)
+[한국어](README.ko.md) · [Plugin guides](#plugins) · [Compatibility](docs/COMPATIBILITY.md) · [Support](SUPPORT.md) · [Contributing](CONTRIBUTING.md)
 
 [![Validate](https://github.com/NaruForge/Paseo-Plugin/actions/workflows/validate.yml/badge.svg)](https://github.com/NaruForge/Paseo-Plugin/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -9,7 +9,7 @@ Four independently installable plugins for Git workspace visibility, provider us
 
 Maintained by **NaruForge and contributors**. This is a community project, independently maintained and not endorsed or operated by the Paseo team.
 
-**Published release target: Paseo 0.7.2.** The Plugin API is experimental. See the [compatibility and verification record](docs/COMPATIBILITY.md) before using another version. The first public prerelease, [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2), includes pinned installation instructions and known limitations.
+**Published release target: Paseo 0.7.2.** The Plugin API is experimental. See the [compatibility and verification record](docs/COMPATIBILITY.md) before using another version. The first public prerelease is [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2); copy the pinned `NaruForge/` commands in this README to install that tag. The release notes and tagged guides keep historical GitHub-owner examples from before the repository moved to NaruForge, and some tagged install samples omit `--ref`.
 
 **Current source:** All four plugins target exact **0.8.0-beta.1**. Provider Usage uses the official host usage API and adds display Settings. The user has completed runtime verification of Branch Garden, Provider Usage and Prompt Palette on Paseo 0.8; see the [runtime record and reported scope](docs/verification/paseo-0.8-runtime.md). Command Deck has separate [source and Windows terminal evidence](docs/verification/command-deck-0.8-source.md); installed app/mobile verification remains pending. Git installation/update verification is tracked separately in [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96). The existing `v0.1.0-rc.2` tag preserves both 0.7 plugins. For current source, follow [0.8 evaluation](#evaluate-current-08-source); developers can consult the [migration plan](docs/MIGRATION_0.8.md).
 
@@ -19,12 +19,10 @@ Maintained by **NaruForge and contributors**. This is a community project, indep
 | --- | --- | --- | --- |
 | [`branch-garden`](plugins/branch-garden/) | Inspect registered Git projects, workspaces, branches and worktrees without changing Git state. | Current source: Paseo 0.8.0-beta.1; Git; registered projects or workspaces | Preview; 0.7 release, unreleased 0.8 changes |
 | [`command-deck`](plugins/command-deck/) | Save Project commands and run, inspect and stop PowerShell terminals from the Composer. | Windows Host, PowerShell 7, Paseo 0.8.0-beta.1 | Experimental, unreleased; app runtime verification pending |
-| [`prompt-palette`](plugins/prompt-palette/) | Save reusable prompts in Host Settings, preview and send them from the Agent Composer. | Paseo 0.8.0-beta.1 source | Experimental, unreleased |
+| [`prompt-palette`](plugins/prompt-palette/) | Save reusable prompts in Host Settings, preview and send them from the Agent Composer. | Paseo 0.8.0-beta.1 source; existing Agent with a Workspace | Experimental, unreleased |
 | [`provider-usage`](plugins/provider-usage/) | Inspect enabled Provider usage through Paseo, with configurable pills and a sidebar managed by Paseo Layout. | Paseo 0.8.0-beta.1 source; enabled provider connections | Experimental; 0.7 release, unreleased 0.8 changes |
 
-Branch Garden and Provider Usage are maintained as this repository's core offering; this does not imply Paseo-team support. Branch Garden's interface is in English. Provider Usage remains experimental at the provider integration boundary and still includes Korean status messages. Their English guides include historical runtime screenshots; Provider Usage also includes labeled 0.8 source previews.
-
-Prompt Palette is an unreleased experimental addition. Its guide includes representative source previews, use instructions and verification limits.
+Branch Garden and Provider Usage are maintained as this repository's core offering; this does not imply Paseo-team support. Prompt Palette and Command Deck are unreleased experimental additions. Branch Garden's interface is in English. Provider Usage remains experimental at the provider integration boundary and still includes Korean status messages. Each English guide includes a representative image and labels historical 0.7 captures separately from simulated 0.8 source previews.
 
 ## Install one plugin
 
@@ -62,22 +60,24 @@ git rev-parse HEAD
 
 If you already have a checkout, use that repository root and review its ref and local changes. Follow the directory installation steps in the [Branch Garden](plugins/branch-garden/README.md#install), [Provider Usage](plugins/provider-usage/README.md#installation), [Prompt Palette](plugins/prompt-palette/README.md#install-current-source), or [Command Deck](plugins/command-deck/README.md#install-current-source) guide. These examples use PowerShell on the daemon host; choose a separate `--id` when another source is already installed under the default ID.
 
-For Git source evaluation, choose an existing published commit/tag containing the plugin that you have reviewed. For example, Prompt Palette is on main but is absent from `v0.1.0-rc.2`:
+For Git source evaluation, choose an existing published commit or tag that contains the plugin and that you have reviewed. Do not use `v0.1.0-rc.2` for 0.8 source; that tag is the 0.7.2 release and does not include Prompt Palette or Command Deck. Choose **one** command:
 
 ```sh
-paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-prompt-palette-ref>
-paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref <reviewed-command-deck-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref <reviewed-0.8-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref <reviewed-0.8-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-0.8-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref <reviewed-0.8-ref>
 ```
 
 Replace the placeholder with that actual reviewed commit or tag; it is not a literal ref. See [Git source details](docs/GIT_INSTALLATION.md) for branch tracking, remote hosts and rollback.
 
-**Configuration:** No plugin needs a custom host settings file. Provider Usage stores display preferences and Prompt Palette stores its library in built-in Host Settings. Removal deletes those values; record preferences and copy prompts first. See [prerequisites and removal guidance](docs/CONFIGURATION.md).
+**Configuration:** No plugin needs a custom host settings file. Provider Usage stores display preferences, Prompt Palette stores its library, and Command Deck stores Project commands in built-in Host Settings. Removal deletes those values; record preferences and copy prompts and commands first. Command Deck also deletes its installation identifier; existing terminals are not killed and are not adopted after reinstall. See [prerequisites and removal guidance](docs/CONFIGURATION.md).
 
 ## Trust and privacy
 
-Paseo plugins are trusted, unsandboxed code. The backend has the daemon user's filesystem, process and network access. Review source before installing. Git and usage inspection are read-only; Prompt Palette saves settings and sends Agent messages on user action. These are implementation boundaries, not an OS sandbox.
+Paseo plugins are trusted, unsandboxed code. The backend has the daemon user's filesystem, process and network access. Review source before installing. Git and usage inspection are read-only. Prompt Palette saves settings and sends Agent messages on explicit user action. Command Deck saves commands and runs user-selected PowerShell with the daemon user's privileges, and can send Ctrl+C or terminate an owned terminal on explicit action. These are implementation boundaries, not an OS sandbox.
 
-[Security and data access](SECURITY.md) lists the files, commands and endpoints used by each plugin. The plugins do not directly modify Git state or provider authentication. Prompt Palette can start Agent work under the Agent's existing permissions.
+[Security and data access](SECURITY.md) lists the files, commands and endpoints used by each plugin. The plugins do not directly modify Git state or provider authentication. Prompt Palette can start Agent work under the Agent's existing permissions. Saved Command Deck commands can read or write files, start processes and use the network under the daemon account.
 
 ## Develop
 
@@ -100,6 +100,7 @@ Node.js 22 and npm are used in CI. The check command validates documentation, Gi
 ├── docs/
 │   ├── CONFIGURATION.md
 │   ├── COMPATIBILITY.md
+│   ├── GIT_INSTALLATION.md
 │   ├── RELEASING.md
 │   ├── DESIGN.md
 │   └── verification/

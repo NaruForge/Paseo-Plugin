@@ -76,7 +76,15 @@ paseo plugin install (Join-Path $repoRoot "plugins/provider-usage")
 paseo plugin ls
 ```
 
-Expect `provider-usage` to be `running` without load errors. If the ID already exists, use a distinct `--id provider-usage-dev`. Open **Usage** from Command Center; sidebar visibility belongs to **Settings → Layout**. A matching enabled connection is required for an Agent pill. No enabled connections means there is no usage to show; unsupported connections stay visible as unavailable. See [Git installation](../../docs/GIT_INSTALLATION.md) before selecting a beta candidate ref.
+Expect `provider-usage` to be `running` without load errors. If the ID already exists, use a distinct `--id provider-usage-dev`. Open **Usage** from Command Center; sidebar visibility belongs to **Settings → Layout**. A matching enabled connection is required for an Agent pill. No enabled connections means there is no usage to show; unsupported connections stay visible as unavailable.
+
+For Git source evaluation of **0.8** source, choose a reviewed published commit that contains this plugin. Do not use `v0.1.0-rc.2` for 0.8:
+
+```sh
+paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref <reviewed-0.8-ref>
+```
+
+Replace the placeholder with that actual ref. See [Git installation](../../docs/GIT_INSTALLATION.md) before selecting a beta candidate ref.
 
 ## Data access and troubleshooting
 

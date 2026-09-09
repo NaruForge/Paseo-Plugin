@@ -17,7 +17,7 @@ See the [two-plugin removal verification](verification/0.1.0-rc.2.md), subsequen
 
 ## Current Paseo v0.8 sources
 
-Paseo **0.8.0-beta.1** introduces a breaking plugin contract. The two migrated sources now have separate client/server entries, runtime directories, exact beta.1 SDK dependencies and `requirements.paseo: ^0.8.0`. Provider Usage uses official host usage APIs and host-scoped display Settings.
+Paseo **0.8.0-beta.1** introduces a breaking plugin contract. All four current plugin sources have separate client/server entries, runtime directories, exact beta.1 SDK dependencies and `requirements.paseo: ^0.8.0`. Provider Usage uses official host usage APIs and host-scoped display Settings.
 
 | Repository artifact | Paseo target | Evidence |
 | --- | --- | --- |

@@ -10,7 +10,7 @@ English and Korean reports are welcome. Include plugin runtime ID, installed com
 
 ## Support policy
 
-Core support covers Branch Garden and Provider Usage. Prompt Palette is an unreleased experimental addition; source-evaluation reports are welcome through the same bug form. Current Provider Usage delegates integrations to Paseo; the published 0.7 implementation uses experimental supplier endpoints. Five earlier plugins were removed before the first public release; see [removal guidance](docs/REMOVED_PLUGINS.md).
+Core support covers Branch Garden and Provider Usage. Prompt Palette and Command Deck are unreleased experimental additions; source-evaluation reports are welcome through the same bug form. Command Deck is Windows-only and its installed app/mobile interaction is not yet verified. Current Provider Usage delegates integrations to Paseo; the published 0.7 implementation uses experimental supplier endpoints. Five earlier plugins were removed before the first public release; see [removal guidance](docs/REMOVED_PLUGINS.md).
 
 The initial release line targets Paseo **0.7.2**. Newer or preview APIs are not assumed compatible. We prioritize reproducible problems on the Windows daemon and web client used for runtime validation. macOS/Linux automated checks and native mobile support have separate evidence in [Compatibility](docs/COMPATIBILITY.md).
 

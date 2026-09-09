@@ -4,34 +4,44 @@ Save PowerShell commands for a Project and run them from the Agent Composer or a
 
 Source and Windows SDK checks are complete as described in the [verification record](../../docs/verification/command-deck-0.8-source.md). Backend installation/reload passed; installed app/mobile interaction verification remains pending. Existing verification reports for the other three plugins do not cover Command Deck.
 
+[Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Install](#install-current-source) · [Support](../../SUPPORT.md)
+
 ## Source previews
 
-These images render the actual source components with a **simulated Paseo host**, not an installed app or a native phone. Host-provided settings and modal primitives are approximations.
+These **0.8.0-beta.1 source previews** render the actual source components with a **simulated Paseo host**, not an installed app or a native phone. Host-provided settings and modal primitives are approximations. The images themselves are labeled `Source preview - simulated Paseo host`.
 
-![Compact Command Deck panel source preview](../../docs/screenshots/command-deck/panel-preview.png)
+![Command Deck compact panel listing saved commands, recent output, Run command, Send Ctrl+C and Terminate terminal](../../docs/screenshots/command-deck/panel-preview.png)
 
-![Command Deck settings source preview](../../docs/screenshots/command-deck/settings-preview.png)
+The panel shows a Project command, captured output, and explicit run, interrupt and terminate actions. Terminal presence is not treated as success.
+
+![Command Deck settings with a Project selected, saved command library, Add command and Save changes](../../docs/screenshots/command-deck/settings-preview.png)
+
+Settings edits the Host-scoped command library for one Project. Save changes persists the draft; Load latest and Copy draft recover from revision conflicts.
 
 ## Install current source
 
-Review the source on the daemon host. Check the existing runtime IDs and use a separate `--id` if needed. Enable plugins in Paseo Settings only if you choose to trust them. From this repository root in PowerShell:
+There is no published collection release containing Command Deck. Its source is available on main; use it for evaluation with compatible **0.8.0-beta.1 daemon, app and CLI** on a **Windows** host. Enable trusted plugins in the intended daemon’s **Settings → Plugins**.
+
+Follow the [source checkout steps](../../README.md#evaluate-current-08-source), then run this in PowerShell from the repository root on the daemon host. npm is not needed just to install the existing source.
 
 ```powershell
 $repoRoot = (Resolve-Path .).Path
 paseo plugin ls
-paseo plugin install (Join-Path $repoRoot "plugins\command-deck")
+paseo plugin install (Join-Path $repoRoot "plugins/command-deck")
 paseo plugin ls
 ```
 
-The default manifest ID is `command-deck`. On a remote 0.8 daemon, put `--host <target>` before `plugin`. Installation is per daemon. The `^0.8.0` manifest range includes beta.1; daemon and app requirements are checked separately.
+Expect `command-deck` to be `running` without load errors. If that ID already exists, use a separate `--id command-deck-dev` and use that ID in later commands. On a remote 0.8 daemon, put `--host <target>` before `plugin`. Installation is per daemon. The `^0.8.0` manifest range includes beta.1; daemon and app requirements are checked separately.
 
-After a reviewed commit containing this plugin is published, Git evaluation can use:
+Open **Settings → Plugins → Command Deck**. An empty command list is normal on first install. Then use **Commands** on an Agent Composer, or **Open workspace commands** in Command Center.
+
+For Git source evaluation, choose a published commit containing this plugin that you have reviewed:
 
 ```powershell
-paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref <reviewed-command-deck-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref <reviewed-0.8-ref>
 ```
 
-Replace the placeholder with that published commit/tag. Command Deck is absent from `v0.1.0-rc.2`. This command is not evidence that Git installation has been verified.
+Replace the placeholder with that published commit/tag; it is not a literal ref. Command Deck is absent from `v0.1.0-rc.2`. This command is not evidence that Git installation has been verified. See [Git installation](../../docs/GIT_INSTALLATION.md) and [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96).
 
 ## Use
 
@@ -41,9 +51,17 @@ Replace the placeholder with that published commit/tag. Command Deck is absent f
 4. Open the Agent Composer's **Commands** button, or **Open workspace commands** in Command Center. No Agent is required for the Command Center route.
 5. Select a command and press **Run command**. Inspect its output, use **Send Ctrl+C** to request interruption, or confirm **Terminate terminal** to close it.
 
+An empty command list is normal on first install. Commands and Open workspace commands still open the panel and can return you to Settings.
+
 Commands belong to Projects and are shared across their Workspaces and Git worktrees. Run state and terminals remain separate for each Workspace. The default working directory is the Workspace root; relative paths resolve against that root, and full Windows absolute paths are accepted. `C:relative`, root-relative paths and missing directories are rejected. Environment expansion is not applied to the working-directory field.
 
 PowerShell runs with `-NoLogo -NoProfile -Command`. Commands use the daemon's environment and privileges, not the viewing phone's shell. Profiles and execution policies are not automatically changed. Interactive prompts must be handled in the existing Workspace terminal; there is no general input field or direct terminal-tab navigation in this plugin.
+
+## Storage and limits
+
+Host Settings schema version 2 keys commands by Project ID. Up to 100 commands across the installation; names up to 80, command lines 8,000 and directories 2,000 JavaScript string code units. See [Command Deck Settings](../../docs/CONFIGURATION.md#command-deck-settings).
+
+Settings are ordinary JSON, not a secret vault. They survive reload, disable, update and daemon restart. **Removing the plugin installation deletes its commands and installation identifier.** Copy anything you want to keep before removal; there is no import/export. Terminals are not automatically killed, and a reinstalled plugin will not adopt the old installation's terminals.
 
 ## Runs and output
 
@@ -57,13 +75,44 @@ PowerShell runs with `-NoLogo -NoProfile -Command`. Commands use the daemon's en
 - The daemon owns terminal lifecycle. There is no automatic relaunch after daemon restart. Terminating a terminal may interrupt unsaved work; processes deliberately detached by a command need separate management.
 - Opening a development website remotely requires its own network/preview route. The host's `localhost` URL is not automatically available on your phone.
 
+## Troubleshooting
+
+- **Commands is missing:** check a Windows daemon host, `running` plugin status, compatible daemon/app, and the intended Host. The Command Center route does not need an Agent. Installed app and native mobile interaction are not yet verified.
+- **PowerShell is unavailable:** confirm PowerShell 7 (`pwsh`) is on the daemon PATH, not only on the viewing client.
+- **A command is missing:** Apply to draft is local; choose Save changes before switching Host or leaving Settings. Confirm you are using the same Host and installation.
+- **Working directory rejected:** use the Workspace root, a path relative to that root, or a full Windows absolute path. Missing directories, `C:relative` and root-relative paths are rejected.
+- **Save conflict or invalid settings:** retain/copy your draft before loading latest. Do not remove/reinstall to fix a conflict; removal deletes the command library and installation identifier.
+- **No output after Run:** fast commands can finish before the panel captures output. Inspect Workspace terminals; disappeared terminals cannot be recovered from this panel.
+- **Run result is unknown:** terminal presence is not success. Check Workspace terminals before **Allow another run…**, which may start a duplicate.
+
+For load errors, run `paseo plugin ls`, then `paseo plugin logs <runtime-id>`. On 0.8 use global `--host` for remote commands. Report persistent problems through [Support](../../SUPPORT.md), including the installed ref and versions, without command bodies, captured output, credentials or private paths.
+
 ## Update and remove
 
-Check `paseo plugin ls` on the intended daemon before lifecycle commands. Use `paseo plugin reload <runtime-id>` for reviewed directory-source edits; do not restart the daemon. Git installs use `paseo plugin update <runtime-id>`. Confirm status and errors with `plugin ls` and `plugin logs <runtime-id>`.
+Run `paseo plugin ls` against the intended Host before changing an installation. These examples use the default ID `command-deck`; replace it with your actual ID if you used `--id`. On the 0.8 CLI, put remote selection before the command: `paseo --host <host> plugin ls`.
 
-Settings survive reload, disable, update and daemon restart. **Removing an installation deletes its commands and installation identifier.** Copy the draft before removal if needed; there is no import feature. Terminals are not automatically killed, and a reinstalled plugin will not adopt the old installation's terminals. Inspect/stop them before removing the plugin.
+For a **Git source** installation, check the tracked ref and update it:
 
-## Development
+```sh
+paseo plugin status command-deck
+paseo plugin update command-deck
+paseo plugin ls
+```
+
+Branches advance; fixed tags and commits do not. For a **directory source**, after reviewing changes to the local checkout use `paseo plugin reload command-deck`, then `paseo plugin ls`. Settings survive update/reload. See [ref changes and rollback](../../docs/RELEASING.md#rollback) before switching a pinned installation.
+
+Removal is optional and separate from troubleshooting. **Removal deletes this installation’s commands and installation identifier.** Copy the draft first; there is no import feature. Terminals are not automatically killed, and a reinstalled plugin will not adopt the old installation's terminals. Inspect or stop them in the Workspace terminal before removal. A Git-source removal deletes the managed checkout; a directory-source removal leaves the original source directory intact.
+
+```sh
+paseo plugin remove command-deck
+paseo plugin ls
+```
+
+Confirm only the intended runtime has disappeared. No daemon restart is needed.
+
+## Contribute
+
+For source changes, follow [Contributing](../../CONTRIBUTING.md). Development checks are separate from installation.
 
 ```powershell
 npm run typecheck --workspace command-deck

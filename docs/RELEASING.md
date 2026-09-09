@@ -38,13 +38,13 @@ The workflow deliberately creates a **draft**. Publish only after reviewing the 
 
 ## Rollback
 
-`paseo plugin update` follows branches; tags and commits stay pinned. Retain the prior tag or full commit SHA. **Before any remove/re-add rollback of current 0.8 source, record Provider Usage display preferences and copy Prompt Palette prompts outside the installation. Removal deletes those built-in settings; reinstalling starts from defaults. Prompt Palette has no import/export feature.** Branch Garden has no saved plugin settings.
+`paseo plugin update` follows branches; tags and commits stay pinned. Retain the prior tag or full commit SHA. **Before any remove/re-add rollback of current 0.8 source, record Provider Usage display preferences and copy Prompt Palette prompts and Command Deck commands outside the installation. Removal deletes those built-in settings and Command Deck's installation identifier; reinstalling starts from defaults. Prompt Palette and Command Deck have no import/export feature. Command Deck terminals are not killed and are not adopted after reinstall.** Branch Garden has no saved plugin settings.
 
 To change a pinned installation, record its actual ID/source with `plugin ls`, remove only that installation, then add the reviewed source again under the same ID and explicit prior `--ref`. This briefly removes its contributions. Restore preferences and prompts manually. Original repositories, provider credentials and unrelated external configuration files remain intact.
 
 Failed Git update candidates retain the previous running version, but directory reload failures do not. See [Git installation](GIT_INSTALLATION.md).
 
-Only the historical two-plugin `v0.1.0-rc.2` release has no built-in 0.8 settings. This exception does not apply to current Provider Usage or Prompt Palette. A rejected Git update, without removal, keeps the installed revision and its settings.
+Only the historical two-plugin `v0.1.0-rc.2` release has no built-in 0.8 settings. This exception does not apply to current Provider Usage, Prompt Palette or Command Deck. A rejected Git update, without removal, keeps the installed revision and its settings.
 
 ## Upstream listing
 
