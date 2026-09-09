@@ -4,6 +4,8 @@ The collection uses one version/tag for all supported plugins. Published release
 
 ## Unreleased
 
+- Add experimental Prompt Palette for Paseo 0.8.0-beta.1: host-scoped prompt editing and ordering, Composer picker with full preview, revision conflict protection and explicit Agent sends without automatic retries. Not included in the existing release tag.
+
 - Add an exclusive Date and time / Time remaining preference for Provider Usage resets, with automatic countdown updates and compact pill values without Reset/Resets. Migrate display settings v1/v2 to v3 while preserving existing choices.
 - Delegate Provider Usage sidebar visibility to Paseo Settings → Layout. Always register the sidebar item, remove the duplicate plugin switch, and migrate v1 display settings to v2 while preserving all four remaining preferences.
 

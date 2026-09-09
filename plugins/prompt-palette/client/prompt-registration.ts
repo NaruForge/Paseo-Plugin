@@ -1,0 +1,66 @@
+import type { PluginClientContext, PluginComposerPillProps } from "@getpaseo/plugin/client";
+import type { ComponentType } from "react";
+import { createPromptController, type PromptController } from "./prompt-controller";
+import { createPromptSender, type PromptSender } from "./prompt-send";
+
+export function registerPromptPills(client: PluginClientContext,
+  component: (controller: PromptController, sender: PromptSender) => ComponentType<PluginComposerPillProps>) {
+  let active = true;
+  let loading = false;
+  const changed = new Set<string>();
+  const pills = new Map<string, { workspaceId: string; remove(): unknown; controller: PromptController; sender: PromptSender }>();
+  function remove(id: string) {
+    const pill = pills.get(id);
+    if (!pill) return;
+    pill.sender.dispose(); pill.controller.dispose(); void pill.remove(); pills.delete(id);
+  }
+  function sync(agent: { id: string; workspaceId?: string; archivedAt?: string | null }) {
+    if (!agent.workspaceId || agent.archivedAt) { remove(agent.id); return; }
+    if (pills.get(agent.id)?.workspaceId === agent.workspaceId) return;
+    remove(agent.id);
+    const controller = createPromptController();
+    const sender = createPromptSender();
+    const cleanup = client.addComposerPill({
+      id: "prompts", title: "Open saved prompts", agentId: agent.id, workspaceId: agent.workspaceId,
+      Component: component(controller, sender), onPress: () => { if (!sender.pending) controller.open(); },
+    });
+    pills.set(agent.id, { workspaceId: agent.workspaceId, remove: cleanup, controller, sender });
+  }
+  const unsubscribe = client.paseo.agents.subscribe(update => {
+    if (!active) return;
+    const id = update.kind === "remove" ? update.agentId : update.agent.id;
+    if (loading) changed.add(id);
+    if (update.kind === "remove") remove(id); else sync(update.agent);
+  });
+  async function refresh() {
+    if (!active || loading) return;
+    loading = true; changed.clear();
+    const seen = new Set<string>();
+    const cursors = new Set<string>();
+    try {
+      let cursor: string | undefined;
+      do {
+        const page = await client.paseo.agents.list({ scope: "active", page: { limit: 200, cursor } });
+        if (!active) return;
+        for (const { agent } of page.entries) {
+          seen.add(agent.id);
+          if (!changed.has(agent.id)) sync(agent);
+        }
+        if (page.pageInfo.hasMore && !page.pageInfo.nextCursor) throw new Error("Missing page cursor");
+        cursor = page.pageInfo.hasMore ? page.pageInfo.nextCursor ?? undefined : undefined;
+        if (cursor && cursors.has(cursor)) throw new Error("Repeated page cursor");
+        if (cursor) cursors.add(cursor);
+      } while (cursor);
+      for (const id of pills.keys()) if (!seen.has(id) && !changed.has(id)) remove(id);
+    } catch {
+      // Preserve verified pills; the next refresh recovers missed directory events.
+    } finally { loading = false; changed.clear(); }
+  }
+  void refresh();
+  const timer = setInterval(() => { void refresh(); }, 30000);
+  return () => {
+    if (!active) return;
+    active = false; clearInterval(timer); unsubscribe();
+    for (const id of pills.keys()) remove(id);
+  };
+}

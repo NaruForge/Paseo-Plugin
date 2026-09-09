@@ -1,6 +1,6 @@
 # Git source 설치와 업데이트
 
-이 문서는 기존 **Paseo 0.7.2용 태그 설치**와 **0.8.0-beta.1 이관 소스의 검증 조건**을 구분합니다. 현재 두 플러그인 소스는 0.8.0-beta.1을 대상으로 합니다. 실제 beta daemon/app 실행 검증은 후속 작업입니다. Git source는 다른 daemon이나 PC에 배포하고 추적 ref를 업데이트하는 운영 경로입니다. 같은 컴퓨터에서 소스를 편집하는 동안에는 directory source 설치와 `plugin reload`를 사용하세요.
+이 문서는 기존 **Paseo 0.7.2용 태그 설치**와 **0.8.0-beta.1 이관 소스의 검증 조건**을 구분합니다. 현재 세 플러그인 소스는 0.8.0-beta.1을 대상으로 합니다. 실제 beta daemon/app 실행 검증은 후속 작업입니다. Git source는 다른 daemon이나 PC에 배포하고 추적 ref를 업데이트하는 운영 경로입니다. 같은 컴퓨터에서 소스를 편집하는 동안에는 directory source 설치와 `plugin reload`를 사용하세요.
 
 0.8의 runtime entry·SDK 경로·manifest 변경은 [이관 안내](MIGRATION_0.8.md)를 따릅니다. 아래 현재 릴리스 설치 명령은 0.7.2 daemon/client 대상이며, 이 문서 갱신은 beta runtime 검증 기록이 아닙니다.
 
@@ -56,6 +56,16 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden `
 ```
 
 `--path`는 기존 자동화와의 호환을 위한 legacy 형식입니다. 새 명령과 문서에는 source 뒤에 `:relative/path`를 붙이는 canonical 형식을 사용합니다.
+
+## Prompt Palette 신규 소스
+
+Prompt Palette는 `v0.1.0-rc.2`에 없습니다. 새 소스를 포함하는 검토된 commit/tag가 공개된 뒤, 아래 placeholder를 실제 ref로 바꾸고 호환 beta daemon/app에서 검증합니다.
+
+```powershell
+paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-prompt-palette-ref>
+```
+
+현재 로컬 개발은 [directory 설치 안내](../plugins/prompt-palette/README.md)를 사용합니다. Git 활성화·업데이트 검증은 아직 수행하지 않았습니다.
 
 ## 선택적 build 명령
 

@@ -17,8 +17,11 @@ Paseo 0.8 adds compiler boundaries between client/server/shared modules and daem
 | Plugin | Reads and connections | Writes and user actions |
 | --- | --- | --- |
 | Branch Garden | Selected host's Paseo projects/workspaces and read-only Git status, branches and worktrees | No Git writes; navigation stays on the selected host |
+| Prompt Palette | Host-scoped prompt library and the selected Agent state through Paseo SDK | Saves library revisions; sends previewed prompt text to the selected Agent on explicit Send; optional copy uses the viewing client clipboard |
 | Provider Usage | Host Provider catalog and normalized usage via official Paseo SDK | Saves display settings; no credential access, vendor HTTP, authentication refresh or inference calls |
 
 Current Provider Usage source delegates usage retrieval to `paseo.providers.snapshot()` and `paseo.providers.listUsage()`. Paseo owns credential storage, usage integrations, caching and HTTP policy. The plugin has no vendor endpoint allowlist because it makes no direct HTTP requests; it sanitizes host failure messages and performs no credential logging. Tests guard this adapter boundary. The repository adds no analytics or telemetry service.
 
 The published `v0.1.0-rc.2` implementation used authenticated GETs to Codex WHAM and Grok billing with redirects rejected. That policy is historical and does not describe Paseo's own HTTP implementation. Display settings are ordinary host JSON and must contain no credentials.
+
+Prompt Palette stores ordinary text in built-in Host Settings, not encrypted secret storage. Sending can start Agent work under its existing permissions and Provider configuration. It does not read credentials, change permissions, merge Composer drafts/attachments, call vendors directly, or automatically retry uncertain sends. Removal deletes its saved library.

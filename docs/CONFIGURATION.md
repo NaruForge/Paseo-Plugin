@@ -1,9 +1,10 @@
 # Configuration
 
-Neither supported plugin requires a custom host settings file.
+No plugin requires a custom host settings file.
 
 - Branch Garden reads the selected daemon's Paseo project/workspace registry and uses its installed Git executable. See the [plugin guide](../plugins/branch-garden/README.md).
 - Provider Usage reads enabled connections and usage through Paseo. The daemon owns authentication and provider HTTP; the plugin neither reads nor writes credentials. See the [plugin guide](../plugins/provider-usage/README.md).
+- Prompt Palette stores its prompt library in built-in Host Settings and sends selected text to the current Agent. See the [plugin guide](../plugins/prompt-palette/README.md).
 
 Settings and credentials belong to the selected daemon host, not the viewing client. Keep authentication files out of Git and issue reports.
 
@@ -17,8 +18,16 @@ Sidebar visibility belongs to **Paseo Settings → Layout**. Provider Usage alwa
 
 **Reset time → Display format** chooses Date and time or Time remaining for both Usage and the pill. Show reset time still independently controls pill visibility. Pill text omits Reset/Resets and uses at most two duration units (`2h 15m`, `6d 3h`). Client-only countdowns update every 30 seconds while mounted; `<1m` covers the final minute and `Due` indicates a passed deadline pending fresh usage. Background throttling may delay the next tick.
 
+## Prompt Palette Settings
+
+Open Settings → Plugins → Prompt Palette. Add a name, optional description and prompt body; Apply to draft, then Save changes. Reorder with Move up/down. Delete requires confirmation and affects stored values only after saving. Cancel / load latest explicitly discards the draft. Leaving Settings or changing Host discards unsaved edits; save first.
+
+The library defaults to empty. Limits: 100 prompts; name 80, description 240 and body 20,000 JavaScript string code units each. Body whitespace is preserved. Simultaneous edits use revision conflict detection: the old draft remains available to copy, and cannot silently overwrite a newer revision.
+
+The Composer Prompts pill opens the latest saved library. Select a prompt, review its full body and target Agent, then Send. The original Composer draft and attachments stay in place. Failed/uncertain delivery keeps the preview and requires checking the conversation before another send. The plugin never automatically retries. A running Agent receives messages according to Paseo/Provider behavior; the plugin does not stop a turn. See the [plugin guide](../plugins/prompt-palette/README.md).
+
 ## Paseo 0.8 settings contract
 
-Both plugin sources target 0.8.0-beta.1. Provider Usage registers **Provider Usage Settings** under Settings → Plugins, using `addSettingsScreen` and host-scoped `defineSettings` → `registerSettings` → `useSettings`; see the [settings reference](plugin-capabilities/backend-and-sdk.md#host-단위-설정-저장) and [migration plan](MIGRATION_0.8.md).
+All three plugin sources target 0.8.0-beta.1. Provider Usage registers **Provider Usage Settings** under Settings → Plugins, using `addSettingsScreen` and host-scoped `defineSettings` → `registerSettings` → `useSettings`; see the [settings reference](plugin-capabilities/backend-and-sdk.md#host-단위-설정-저장) and [migration plan](MIGRATION_0.8.md).
 
 Built-in values are shared by authorized clients of the same host and installation, validated against a schema, and saved with revision conflict detection. They survive reload/disable/update and daemon restart, but **removing the installation deletes its values**. Reinstalling starts from defaults. They are ordinary JSON, not a credential vault, and provide neither per-user storage nor cross-host synchronization. A settings screen does not replace Paseo's native provider usage screen or expose a generic route into it.

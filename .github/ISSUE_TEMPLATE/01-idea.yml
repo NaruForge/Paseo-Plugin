@@ -21,6 +21,7 @@ body:
         - workspace 전체
         - branch-garden
         - provider-usage
+        - prompt-palette
         - 새 플러그인
     validations:
       required: true
