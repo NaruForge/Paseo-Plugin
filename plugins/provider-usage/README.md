@@ -50,7 +50,7 @@ The surface includes all connections with `enabled: true` in the host's global P
 
 Open **Usage** from the optional sidebar or Command Center to inspect plans, usage windows, resets, balances and details. The pill shows the most consumed window's remaining percentage, falling back to a balance percentage when available. Reset time follows that window, with a balance fallback. Missing values display `—`; unavailable usage is never shown as zero. Provider-supplied missing-field defaults are owned by Paseo.
 
-The surface and pills share a query, refresh every two minutes while active, and offer manual refresh. **Paseo beta.1 caches usage for five minutes; its public API has no force-refresh option**, so refresh may return the same host reading. Background clients may pause polling. Connection updates trigger catalog refresh and a shared usage refresh.
+The surface and pills share a query to Paseo's official usage service, with no periodic usage polling. They read on initial mount and can reuse a recent reading. Use **Refresh** in Usage or press the Composer pill to request another reading; Provider catalog changes also trigger a shared usage refresh. Leaving the screen open does not repeatedly fetch usage, and the catalog subscription is not a live usage feed. **Paseo beta.1 caches usage for five minutes; its public API has no force-refresh option**, so a request may return the same host reading. The 30-second remaining-time display and Composer visibility settings synchronization are separate from usage retrieval.
 
 The image below records the previous 0.7 composer UI; it is not beta Settings verification.
 

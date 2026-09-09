@@ -3,7 +3,6 @@ import type { ProviderUsageSnapshot } from "../shared/provider-usage";
 
 export const USAGE_QUERY_KEY = ["provider-usage", "snapshot"] as const;
 export const USAGE_STALE_TIME_MS = 60_000;
-export const USAGE_REFETCH_INTERVAL_MS = 120_000;
 
 let queryClient: QueryClient | undefined;
 
@@ -20,7 +19,8 @@ export function usageQueryOptions(queryFn: () => Promise<ProviderUsageSnapshot>)
     queryKey: USAGE_QUERY_KEY,
     queryFn,
     staleTime: USAGE_STALE_TIME_MS,
-    refetchInterval: USAGE_REFETCH_INTERVAL_MS,
+    // Paseo owns usage collection and caching; this query never polls.
+    refetchInterval: false as const,
   };
 }
 
