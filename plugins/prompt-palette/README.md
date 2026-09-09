@@ -2,7 +2,7 @@
 
 Save prompts you use often and send them from an Agent's Composer after reviewing the full text.
 
-**Experimental, unreleased source for Paseo 0.8.0-beta.1.** This plugin is not included in the existing `v0.1.0-rc.2` tag. Both daemon and app must be compatible; source/compiler and simulated UI checks are not live Paseo certification. See [verification](../../docs/verification/prompt-palette-0.8-source.md).
+**Experimental, unreleased source for Paseo 0.8.0-beta.1.** This plugin is not included in the existing `v0.1.0-rc.2` tag. Both daemon and app must be compatible. The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). Earlier [source verification](../../docs/verification/prompt-palette-0.8-source.md) remains a separate historical record.
 
 ## Use
 

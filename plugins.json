@@ -21,7 +21,7 @@
       "id": "provider-usage",
       "name": "Provider Usage",
       "path": "plugins/provider-usage",
-      "description": "Inspect Codex and Grok plan usage from existing host credentials.",
+      "description": "Inspect enabled Provider usage through Paseo's official usage API.",
       "maturity": "experimental",
       "daemonPlatforms": [
         "win32",

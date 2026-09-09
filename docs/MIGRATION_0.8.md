@@ -1,18 +1,19 @@
 # Paseo 0.8 플러그인 이관
 
-이관 대상은 **Paseo 0.8.0-beta.1**이다. 0.8 정식판 지원 선언이 아니다. Branch Garden은 [#82](https://github.com/NaruForge/Paseo-Plugin/issues/82)에서 소스·manifest·SDK를 이관했으며 실제 beta daemon/app 실행 검증은 남아 있다. Provider Usage도 [#84](https://github.com/NaruForge/Paseo-Plugin/issues/84)에서 소스를 이관하고 공식 사용량 SDK와 표시 Settings를 적용했다. 기존 `v0.1.0-rc.2` 태그의 두 플러그인은 **0.7.2**를 유지한다. 전체 대응은 [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77), 선행 참조 문서 갱신은 [#78](https://github.com/NaruForge/Paseo-Plugin/issues/78)에서 추적한다.
+이관 대상은 **Paseo 0.8.0-beta.1**이다. 0.8 정식판 지원 선언이 아니다. Branch Garden은 [#82](https://github.com/NaruForge/Paseo-Plugin/issues/82)에서 소스·manifest·SDK를 이관했으며 사용자가 세 플러그인 모두 Paseo 0.8 Runtime 검증을 완료했다([검증 기록](verification/paseo-0.8-runtime.md)). Provider Usage도 [#84](https://github.com/NaruForge/Paseo-Plugin/issues/84)에서 소스를 이관하고 공식 사용량 SDK와 표시 Settings를 적용했다. 기존 `v0.1.0-rc.2` 태그의 두 플러그인은 **0.7.2**를 유지한다. 전체 대응은 [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77), 선행 참조 문서 갱신은 [#78](https://github.com/NaruForge/Paseo-Plugin/issues/78)에서 추적한다.
 
-기준 문서는 [공식 migration](https://paseo.sh/docs/plugins/v0.8/migration), [quickstart](https://paseo.sh/docs/plugins/v0.8), [reference](https://paseo.sh/docs/plugins/v0.8/reference), [beta.1 릴리스](https://github.com/getpaseo/paseo/releases/tag/v0.8.0-beta.1)다. 2026-09-08에 배포된 exact plugin/client SDK 선언과 CLI scaffold 생성 코드를 정적으로 대조했다. Branch Garden은 2026-09-09에 beta.1 CLI의 실제 init과 compiler 검증을 수행했다. 설치·RPC·UI 검증은 후속 단계이며 [소스 검증 기록](verification/branch-garden-0.8-source.md)에서 구분한다.
+기준 문서는 [공식 migration](https://paseo.sh/docs/plugins/v0.8/migration), [quickstart](https://paseo.sh/docs/plugins/v0.8), [reference](https://paseo.sh/docs/plugins/v0.8/reference), [beta.1 릴리스](https://github.com/getpaseo/paseo/releases/tag/v0.8.0-beta.1)다. 2026-09-08에 배포된 exact plugin/client SDK 선언과 CLI scaffold 생성 코드를 정적으로 대조했다. Branch Garden은 2026-09-09에 beta.1 CLI의 실제 init과 compiler 검증을 수행했다. 당시 [소스 검증 기록](verification/branch-garden-0.8-source.md)은 보존하고, 이후 사용자 Runtime 검증 보고는 [별도 기록](verification/paseo-0.8-runtime.md)으로 구분한다. Git 배포 경로는 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에서 추적한다.
 
 ## 버전과 배포 경로
 
 | 구분 | 지원 상태·사용 방법 |
 | --- | --- |
 | Collection `v0.1.0-rc.2` | Paseo 0.7.2 대상. 기존 태그와 실행 검증 기록을 보존 |
-| Branch Garden 현재 소스 | Exact 0.8.0-beta.1 계약. Typecheck/test와 node_modules 없는 compiler 검증 완료; 실제 runtime 미검증 |
-| Provider Usage 현재 소스 | Exact 0.8.0-beta.1 계약, 공식 사용량 SDK와 Settings. [검증 기록](verification/provider-usage-0.8-source.md); 실제 runtime 미검증 |
+| Branch Garden 현재 소스 | Exact 0.8.0-beta.1 계약. Typecheck/test와 node_modules 없는 compiler 검증 완료; [사용자 0.8 Runtime 검증 완료](verification/paseo-0.8-runtime.md) |
+| Provider Usage 현재 소스 | Exact 0.8.0-beta.1 계약, 공식 사용량 SDK와 Settings. [검증 기록](verification/provider-usage-0.8-source.md); [사용자 0.8 Runtime 검증 완료](verification/paseo-0.8-runtime.md) |
+| Prompt Palette 현재 소스 | Exact 0.8.0-beta.1 계약. [사용자 0.8 Runtime 검증 완료](verification/paseo-0.8-runtime.md); 새 collection 릴리스에는 아직 미포함 |
 | 이 문서와 capability 참조 | Paseo 0.8.0-beta.1 계약을 설명. 현재 소스의 실행 가능성을 뜻하지 않음 |
-| 후속 0.8 이관 소스 | 별도 작업 branch/ref에서 검증하고 새 collection prerelease로 공개 |
+| 후속 배포 작업 | [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)의 Git 경로 검증 후 새 collection prerelease 준비 |
 
 0.7 사용자는 검토한 `--ref v0.1.0-rc.2` 또는 commit으로 고정한다. Default branch를 추적하는 설치는 향후 0.8 이관 commit도 받을 수 있으므로 지원 버전을 먼저 확인한다. 소스 안에 0.7용 `index.ts` compatibility entry를 남겨 양쪽을 지원하려 하지 않는다. 별도 Git ref로 구분한다.
 

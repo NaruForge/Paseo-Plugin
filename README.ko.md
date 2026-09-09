@@ -8,7 +8,7 @@
 
 Branch Garden, Provider Usage, Prompt Palette 세 개의 [Paseo](https://paseo.sh) 플러그인에 집중하는 npm workspace입니다. 이 저장소의 핵심 지원 대상이며, Paseo 팀의 공식 지원을 의미하지 않습니다. Provider Usage의 공급자 연동은 여전히 실험적입니다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위이며, 플러그인끼리 런타임 코드를 공유하지 않습니다.
 
-> **현재 소스: 세 플러그인 모두 `0.8.0-beta.1` / 기존 배포 태그의 두 플러그인: `0.7.2`** — Provider Usage는 공식 사용량 SDK와 표시 Settings를 적용했습니다. 실제 beta daemon/app 실행 검증은 남아 있습니다. [Provider Usage 검증 기록](docs/verification/provider-usage-0.8-source.md)을 확인하세요. [소스 검증 기록](docs/verification/branch-garden-0.8-source.md), [0.8 이관 안내](docs/MIGRATION_0.8.md)와 [대응 이슈 #77](https://github.com/NaruForge/Paseo-Plugin/issues/77)을 확인하세요.
+> **현재 소스: 세 플러그인 모두 `0.8.0-beta.1` / 기존 배포 태그의 두 플러그인: `0.7.2`** — Provider Usage는 공식 사용량 SDK와 표시 Settings를 적용했습니다. 사용자가 세 플러그인 모두 Paseo 0.8에서 Runtime 검증을 완료했습니다. [검증 기록과 보고 범위](docs/verification/paseo-0.8-runtime.md)를 확인하세요. Git 배포 경로 검증은 [#96](https://github.com/NaruForge/Paseo-Plugin/issues/96)에서 별도로 추적합니다. [소스 검증 기록](docs/verification/branch-garden-0.8-source.md), [0.8 이관 안내](docs/MIGRATION_0.8.md)와 [대응 이슈 #77](https://github.com/NaruForge/Paseo-Plugin/issues/77)을 확인하세요.
 
 > [!WARNING]
 > Paseo 플러그인은 신뢰된 비격리 코드입니다. 서버 측 코드는 daemon이 실행되는 컴퓨터의 파일, 프로세스, 자격 증명과 네트워크에 접근할 수 있고, 클라이언트 코드는 Paseo 앱 안에서 실행됩니다. 검토하고 신뢰하는 소스만 설치하세요.

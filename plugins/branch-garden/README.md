@@ -4,7 +4,7 @@ Inspect registered Git projects, active workspaces, local branches and worktrees
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Support](../../SUPPORT.md)
 
-**Current source targets Paseo 0.8.0-beta.1.** Runtime entries, imports and exact SDK dependencies have been migrated and checked with the beta compiler, including a copy without `node_modules`. Live daemon/app verification is still pending. See the [source verification](../../docs/verification/branch-garden-0.8-source.md) and [#82](https://github.com/NaruForge/Paseo-Plugin/issues/82). The screenshots and pinned release below remain 0.7 evidence.
+**Current source targets Paseo 0.8.0-beta.1.** Runtime entries, imports and exact SDK dependencies have been migrated and checked with the beta compiler, including a copy without `node_modules`. The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). See the [source verification](../../docs/verification/branch-garden-0.8-source.md) and [#82](https://github.com/NaruForge/Paseo-Plugin/issues/82). The screenshots and pinned release below remain 0.7 evidence.
 
 ## Screenshots
 
