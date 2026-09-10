@@ -76,7 +76,7 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref v0.1.0-rc.3
 paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref v0.1.0-rc.3
 ```
 
-Replace the placeholder with that actual reviewed commit or tag; it is not a literal ref. See [Git source details](docs/GIT_INSTALLATION.md) for branch tracking, remote hosts and rollback.
+The command pins the reviewed v0.1.0-rc.3 tag. See [Git source details](docs/GIT_INSTALLATION.md) for branch tracking, remote hosts and rollback.
 
 **Configuration:** No plugin needs a custom host settings file. Provider Usage stores display preferences, Prompt Palette stores its library, and Command Deck stores Project commands in built-in Host Settings. Removal deletes those values; record preferences and copy prompts and commands first. Command Deck also deletes its installation identifier; existing terminals are not killed and are not adopted after reinstall. See [prerequisites and removal guidance](docs/CONFIGURATION.md).
 

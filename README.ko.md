@@ -82,7 +82,7 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref v0.1.0-rc.3
 paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref v0.1.0-rc.3
 ```
 
-placeholder를 실제 검토한 commit/tag로 바꾸세요. 이 문자열은 그대로 쓸 ref가 아닙니다.
+위 명령은 `v0.1.0-rc.3` 태그를 고정합니다. 다른 ref를 선택하려면 해당 소스와 지원 버전을 먼저 검토하세요.
 
 업데이트는 `paseo plugin status <runtime-id>`로 ref를 확인한 뒤 `paseo plugin update <runtime-id>`를 실행합니다. 고정 태그는 이동하지 않습니다. Source 선택·원격 명령·실패 후보 복구는 [Git 설치 안내](docs/GIT_INSTALLATION.md)를 참고하세요.
 
