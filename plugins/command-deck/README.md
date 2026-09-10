@@ -1,6 +1,12 @@
 # Command Deck
 
-Save PowerShell commands for a Project and run them from the Agent Composer or a Workspace panel. **Experimental, unreleased; Windows hosts only.** Requires Paseo daemon/app/CLI **0.8.0-beta.1**, PowerShell 7 on the daemon PATH, and the tools used by your commands (for example Node.js/npm).
+Release **v0.1.0-rc.3** targets final **Paseo 0.8.0**. See [final-version checks and remaining runtime limits](../../docs/verification/paseo-0.8.0-release.md). Existing screenshots below retain their historical version and simulated-host scope.
+
+```sh
+paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref v0.1.0-rc.3
+```
+
+Save PowerShell commands for a Project and run them from the Agent Composer or a Workspace panel. **Experimental, v0.1.0-rc.3; Windows hosts only.** Requires Paseo daemon/app/CLI **0.8.0**, PowerShell 7 on the daemon PATH, and the tools used by your commands (for example Node.js/npm).
 
 Source and Windows SDK checks are complete as described in the [verification record](../../docs/verification/command-deck-0.8-source.md). Backend installation/reload passed; installed app/mobile interaction verification remains pending. Existing verification reports for the other three plugins do not cover Command Deck.
 
@@ -20,7 +26,7 @@ Settings edits the Host-scoped command library for one Project. Save changes per
 
 ## Install current source
 
-There is no published collection release containing Command Deck. Its source is available on main; use it for evaluation with compatible **0.8.0-beta.1 daemon, app and CLI** on a **Windows** host. Enable trusted plugins in the intended daemon’s **Settings → Plugins**.
+The v0.1.0-rc.3 collection includes this plugin. Use it with compatible **0.8.0 daemon, app and CLI** on a **Windows** host. Enable trusted plugins in the intended daemon’s **Settings → Plugins**.
 
 Follow the [source checkout steps](../../README.md#evaluate-current-08-source), then run this in PowerShell from the repository root on the daemon host. npm is not needed just to install the existing source.
 
@@ -31,17 +37,17 @@ paseo plugin install (Join-Path $repoRoot "plugins/command-deck")
 paseo plugin ls
 ```
 
-Expect `command-deck` to be `running` without load errors. If that ID already exists, use a separate `--id command-deck-dev` and use that ID in later commands. On a remote 0.8 daemon, put `--host <target>` before `plugin`. Installation is per daemon. The `^0.8.0` manifest range includes beta.1; daemon and app requirements are checked separately.
+Expect `command-deck` to be `running` without load errors. If that ID already exists, use a separate `--id command-deck-dev` and use that ID in later commands. On a remote 0.8 daemon, put `--host <target>` before `plugin`. Installation is per daemon. Use final 0.8.0 daemon and app: beta.1 lacks the revised pill API even though Paseo’s prerelease matcher can accept its manifest range.
 
 Open **Settings → Plugins → Command Deck**. An empty command list is normal on first install. Then use **Commands** on an Agent Composer, or **Open workspace commands** in Command Center.
 
 For Git source evaluation, choose a published commit containing this plugin that you have reviewed:
 
 ```powershell
-paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref <reviewed-0.8-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref v0.1.0-rc.3
 ```
 
-Replace the placeholder with that published commit/tag; it is not a literal ref. Command Deck is absent from `v0.1.0-rc.2`. This command is not evidence that Command Deck Git installation has been verified. The three existing plugins' Git path is recorded in the [Git source verification](../../docs/verification/paseo-0.8-git-source.md); Command Deck Git activation remains unverified. See [Git installation](../../docs/GIT_INSTALLATION.md).
+The command pins v0.1.0-rc.3. Command Deck is absent from `v0.1.0-rc.2`. This command is not evidence that Command Deck Git installation has been verified. The three existing plugins' Git path is recorded in the [Git source verification](../../docs/verification/paseo-0.8-git-source.md); Command Deck Git activation remains unverified. See [Git installation](../../docs/GIT_INSTALLATION.md).
 
 ## Use
 

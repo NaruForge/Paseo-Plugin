@@ -2,7 +2,7 @@
 
 이 저장소는 Branch Garden, Provider Usage, Prompt Palette, Command Deck 네 개의 독립적인 Paseo 플러그인을 개발하는 npm workspace다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위다.
 
-현재 소스와 개발 SDK는 exact **0.8.0-beta.1**이고, manifest `requirements.paseo`는 **^0.8.0**이다. 공개 태그 `v0.1.0-rc.2`의 Branch Garden과 Provider Usage는 **0.7.2**다. 파일·import·검증 순서는 [docs/MIGRATION_0.8.md](docs/MIGRATION_0.8.md)를 본다. 검증 범위는 [Runtime](docs/verification/paseo-0.8-runtime.md), [Git source](docs/verification/paseo-0.8-git-source.md), Command Deck은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 본다.
+현재 소스와 개발 SDK는 exact **0.8.0**이고, manifest `requirements.paseo`는 **^0.8.0**이다. 공개 태그 `v0.1.0-rc.2`의 Branch Garden과 Provider Usage는 **0.7.2**다. 파일·import·검증 순서는 [docs/MIGRATION_0.8.md](docs/MIGRATION_0.8.md)를 본다. 검증 범위는 [Runtime](docs/verification/paseo-0.8-runtime.md), [Git source](docs/verification/paseo-0.8-git-source.md), Command Deck은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 본다.
 
 아이디어, 개발 계획과 버그의 이슈 관리는 GitHub Issues를 사용한다. 새 이슈는 `.github/ISSUE_TEMPLATE/`의 양식을 사용하고, 분류·Project 상태·PR 연결 규칙은 `.github/ISSUE_MANAGEMENT.md`를 따른다.
 
@@ -73,7 +73,7 @@ npm test --workspace branch-garden
 - `client/`: UI·훅·구독·query·controller. `server/`: Node·파일·프로세스·자격 증명·외부 API. `shared/`: 런타임 중립 값·타입·Zod 계약. Entry 외 소스 모듈은 이 디렉터리들에 두고 구형 루트 `index.ts`는 제거한다.
 - 공유 `defineRpc`·`defineSettings`·`defineAttachmentSource`·`RpcInput`·`RpcOutput`·`PluginTheme`는 SDK root, client 훅·props는 `/client`, UI는 `/client/react-native`·`/client/ui`에서 가져온다. `/client/host`는 private이며 type import에도 runtime 경계를 적용한다.
 - `*.logic.ts`, `*.view.ts`와 helper·테스트는 실제 소비자와 runtime 의존성에 따라 이동한다. 이름만으로 shared로 분류하지 않는다.
-- 이관 완료 소스는 manifest에 `requirements.paseo`를 선언한다. 권장 범위는 `^0.8.0`, 이관 기준 SDK는 exact `0.8.0-beta.1`이다. Manifest만 바꿔 호환성을 표시하지 않는다.
+- 이관 완료 소스는 manifest에 `requirements.paseo`를 선언한다. 권장 범위는 `^0.8.0`, 이관 기준 SDK는 exact `0.8.0`이다. Manifest만 바꿔 호환성을 표시하지 않는다.
 
 - `client/*.tsx`: UI, 훅, React Native 스타일. 모든 `Text` 색상은 `theme.colors`, 루트 배경은 `theme.colors.surface0`, 좁은 화면은 `layout.compact`를 사용한다.
 - `*.logic.ts`, `*.view.ts`: 런타임에 의존하지 않는 도메인 판단과 표시용 파생 값을 소유한다. 동작을 바꾸면 같은 이름의 테스트를 함께 확인한다.

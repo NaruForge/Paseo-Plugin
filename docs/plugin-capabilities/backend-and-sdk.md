@@ -1,6 +1,6 @@
 # Backend와 Paseo SDK
 
-기준은 **Paseo 0.8.0-beta.1**이다. 플러그인별 소스 상태는 [호환성 기록](../COMPATIBILITY.md), 파일 이동과 검증 순서는 [이관 안내](../MIGRATION_0.8.md)를 따른다. 이 문서는 [공식 reference](https://paseo.sh/docs/plugins/v0.8/reference)와 exact SDK 선언을 정적으로 대조한 참조 자료다.
+기준은 **Paseo 0.8.0**이다. 플러그인별 소스 상태는 [호환성 기록](../COMPATIBILITY.md), 파일 이동과 검증 순서는 [이관 안내](../MIGRATION_0.8.md)를 따른다. 이 문서는 [공식 reference](https://paseo.sh/docs/plugins/v0.8/reference)와 exact SDK 선언을 정적으로 대조한 참조 자료다.
 
 ## Runtime 경계
 
@@ -76,7 +76,7 @@ Handler context는 `{ paseo }`다. Lifecycle context의 `signal`을 일반 RPC h
 
 Beta.1에는 **`paseo.providers.listUsage(options?)`가 공개돼 있다**. Options는 optional `requestId`, 반환 payload는 `requestId`, `fetchedAt`, `providers`를 포함한다. Provider별 `status`·`planLabel`·사용량 `windows`, optional `balances`·`details`·`error`를 제공한다. `agent.lastUsage`의 직전 turn 토큰·비용·context 값과 구분한다.
 
-SDK는 host가 `providerUsageList` feature를 지원하지 않으면 update-host 오류로 reject한다. `providers.subscribe`는 catalog 구독이며 usage polling을 대체하지 않는다. 사용량 API를 호출하기 위해 새 Paseo client를 만들지 않고 제공된 `paseo`를 사용한다. 근거는 [공식 SDK reference](https://paseo.sh/docs/sdk/reference#clientproviders)와 exact client/protocol beta.1 선언이다.
+SDK는 host가 `providerUsageList` feature를 지원하지 않으면 update-host 오류로 reject한다. `providers.subscribe`는 catalog 구독이며 usage polling을 대체하지 않는다. 사용량 API를 호출하기 위해 새 Paseo client를 만들지 않고 제공된 `paseo`를 사용한다. 근거는 [공식 SDK reference](https://paseo.sh/docs/sdk/reference#clientproviders)와 exact client/protocol 0.8.0 선언이다.
 
 Provider Usage 현재 소스는 이 SDK를 사용하고 `providers.snapshot()`의 `enabled` 연결만 표시한다. 직접 자격 증명·HTTP 코드는 제거했다. Beta.1의 5분 host cache와 force-refresh 부재, 인증·오류 정책 비교 및 실제 runtime 미검증 범위는 [검증 기록](../verification/provider-usage-0.8-source.md)을 따른다.
 

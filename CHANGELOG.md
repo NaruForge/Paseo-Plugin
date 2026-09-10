@@ -2,26 +2,21 @@
 
 The collection uses one version/tag for all supported plugins. Published releases are listed on [GitHub](https://github.com/NaruForge/Paseo-Plugin/releases).
 
-## Unreleased
+## 0.1.0-rc.3 — 2026-09-10 (prerelease)
 
-- Align release, design and community 0.8 source counts with the four current plugins, and document the same compiler check for Prompt Palette and Command Deck.
-- Record Git add/update/failed-candidate recovery for Branch Garden, Provider Usage and Prompt Palette on Paseo 0.8.0-beta.1. Command Deck Git activation remains unverified; see the [Git source verification](docs/verification/paseo-0.8-git-source.md).
-- Add experimental Windows-only Command Deck for Paseo 0.8.0-beta.1: Project command Settings, Composer/panel entry, official terminal execution, bounded output, explicit interruption/termination and reconnect discovery. Source/UI and Windows SDK evidence are [recorded separately](docs/verification/command-deck-0.8-source.md); installed app/mobile validation remains pending.
+This collection targets **final Paseo 0.8.0** and includes all four plugins. Upgrade the daemon, app and CLI before installing: beta.1 does not have the final Composer pill API. Paseo 0.7.2 users must keep `v0.1.0-rc.2`.
 
-- Remove Provider Usage's two-minute usage polling. Keep shared reads from Paseo's official usage service on demand, including initial display, manual refresh and Provider catalog changes; countdown display and settings synchronization are unchanged.
+- Pin all Plugin SDKs, Branch Garden's client SDK and release catalog to exact 0.8.0; verify the final CLI scaffold and compile all four plugins without node_modules using the exact host compiler.
+- Migrate Provider Usage, Prompt Palette and Command Deck pills to `button` descriptors and `update/remove` handles. Preserve dynamic usage/reset labels, accessible titles, explicit actions and cleanup. If all usage fields are off, show `Usage` because final buttons reject empty labels; update Prompt Palette's label and disabled state while sending.
+- Include the separate client/server runtime migration for Branch Garden and Provider Usage. Preserve Branch Garden's read-only Git scan and runtime IDs.
+- Replace Provider Usage credential/vendor HTTP access with Paseo's official usage APIs for enabled connections. Add host-scoped display preferences, date-time/countdown resets and on-demand shared queries without periodic usage polling. Sidebar visibility belongs to Paseo Layout.
+- Add experimental Prompt Palette: host-scoped prompt editing/ordering, full-body preview, revision conflict handling and explicit Agent sends without automatic retries.
+- Add experimental Windows-only Command Deck: Project command Settings, Composer/panel entry, official Terminal SDK execution, bounded output, explicit interruption/termination and reconnect discovery. PowerShell 7 is required.
+- Update English/Korean installation, compatibility, capabilities and release documentation. Keep historical screenshots and verification reports at their original versions.
 
-- Add experimental Prompt Palette for Paseo 0.8.0-beta.1: host-scoped prompt editing and ordering, Composer picker with full preview, revision conflict protection and explicit Agent sends without automatic retries. Not included in the existing release tag.
+The collection remains a **prerelease**. Final SDK/compiler and simulated-host UI checks do not certify live final-version app/mobile behavior or Git activation/update. See the [0.8.0 verification record](docs/verification/paseo-0.8.0-release.md). Prior [beta Git evidence](docs/verification/paseo-0.8-git-source.md) covers three plugins, not Command Deck.
 
-- Add an exclusive Date and time / Time remaining preference for Provider Usage resets, with automatic countdown updates and compact pill values without Reset/Resets. Migrate display settings v1/v2 to v3 while preserving existing choices.
-- Delegate Provider Usage sidebar visibility to Paseo Settings → Layout. Always register the sidebar item, remove the duplicate plugin switch, and migrate v1 display settings to v2 while preserving all four remaining preferences.
-
-- Migrate Branch Garden source to Paseo 0.8.0-beta.1 runtime entries and SDK imports, preserving the existing UI and read-only Git scan.
-- Check per-plugin SDK catalog versions and 0.8 runtime/type import boundaries; add an exact beta compiler check using a source copy without node_modules.
-- Migrate Provider Usage to the official Paseo usage SDK and all enabled Provider connections; remove direct credential and vendor HTTP access.
-- Add host-scoped Provider Usage Settings: Composer pill on, remaining percentage and provider name on, reset time off by default.
-- The existing v0.1.0-rc.2 tag remains on 0.7.2. The user reported runtime verification of all three plugins on Paseo 0.8; see the [reported environment and scope](docs/verification/paseo-0.8-runtime.md). Git installation/update/recovery for those three plugins is recorded in the [Git source verification](docs/verification/paseo-0.8-git-source.md); Command Deck Git activation remains unverified.
-- Clarify user installation, support and settings deletion on removal/rollback. Add explicitly labeled source-preview images for Prompt Palette and Provider Usage while preserving historical release evidence.
-- Clarify Command Deck trust, troubleshooting, empty-library and removal data loss. Point current tag installation at this repository's `NaruForge/` commands rather than historical release-note owner examples, and document 0.8 Git evaluation refs for all four plugins.
+Install one plugin with `paseo plugin add NaruForge/Paseo-Plugin:plugins/<plugin-id> --ref v0.1.0-rc.3`. Tags stay pinned. Before remove/re-add when changing a pinned ref, copy Provider Usage preferences, Prompt Palette prompts and Command Deck commands: removing an installation deletes its Settings and Command Deck's installation identity. See [upgrade/rollback guidance](docs/GIT_INSTALLATION.md).
 
 ## 0.1.0-rc.2 — 2026-09-08 (prerelease)
 

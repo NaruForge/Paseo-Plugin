@@ -1,8 +1,14 @@
 # Prompt Palette
 
+Release **v0.1.0-rc.3** targets final **Paseo 0.8.0**. See [final-version checks and remaining runtime limits](../../docs/verification/paseo-0.8.0-release.md). Existing screenshots below retain their historical version and simulated-host scope.
+
+```sh
+paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref v0.1.0-rc.3
+```
+
 Save prompts you use often and send them from an Agent's Composer after reviewing the full text.
 
-**Experimental, unreleased source for Paseo 0.8.0-beta.1.** This plugin is not included in the existing `v0.1.0-rc.2` tag. Both daemon and app must be compatible. The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). Earlier [source verification](../../docs/verification/prompt-palette-0.8-source.md) remains a separate historical record.
+**Experimental, v0.1.0-rc.3 source for Paseo 0.8.0.** This plugin is not included in the existing `v0.1.0-rc.2` tag. Both daemon and app must be compatible. The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). Earlier [source verification](../../docs/verification/prompt-palette-0.8-source.md) remains a separate historical record.
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Install](#install-current-source) · [Support](../../SUPPORT.md)
 
@@ -51,7 +57,7 @@ Settings are ordinary JSON, not a secret vault. They survive reload, disable, up
 
 ## Install current source
 
-There is no published collection release containing Prompt Palette. Its source is available on main; use it for evaluation with compatible **0.8.0-beta.1 daemon, app and CLI**. Enable trusted plugins in the intended daemon’s **Settings → Plugins**. An existing Agent with a Workspace is needed for sending.
+The v0.1.0-rc.3 collection includes this plugin. Use it with compatible **0.8.0 daemon, app and CLI**. Enable trusted plugins in the intended daemon’s **Settings → Plugins**. An existing Agent with a Workspace is needed for sending.
 
 Follow the [source checkout steps](../../README.md#evaluate-current-08-source), then run this in PowerShell from the repository root on the daemon host. npm is not needed just to install the existing source.
 
@@ -67,10 +73,10 @@ Expect `prompt-palette` to be `running` without load errors. If that ID already 
 For Git source evaluation, choose a published commit containing this plugin that you have reviewed:
 
 ```sh
-paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref <reviewed-0.8-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref v0.1.0-rc.3
 ```
 
-Replace the placeholder with that actual ref. `v0.1.0-rc.2` does not contain this plugin. Git add/update/recovery for this plugin is recorded in the [Git source verification](../../docs/verification/paseo-0.8-git-source.md); see [Git installation](../../docs/GIT_INSTALLATION.md).
+The command pins v0.1.0-rc.3. `v0.1.0-rc.2` does not contain this plugin. Git add/update/recovery for this plugin is recorded in the [Git source verification](../../docs/verification/paseo-0.8-git-source.md); see [Git installation](../../docs/GIT_INSTALLATION.md).
 
 ## Troubleshooting
 

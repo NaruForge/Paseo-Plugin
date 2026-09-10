@@ -1,6 +1,6 @@
 # Compatibility
 
-Published `v0.1.0-rc.2` contracts: Paseo daemon/client/CLI and exact `@getpaseo/plugin` **0.7.2**. All four current plugin sources target exact **0.8.0-beta.1**. The user has completed runtime verification of Branch Garden, Provider Usage and Prompt Palette on Paseo 0.8; see the [reported scope](verification/paseo-0.8-runtime.md). Development checks use Node.js 22 in CI. The root package and catalog describe the collection release; they do not change Paseo's plugin API version.
+Published `v0.1.0-rc.2` contracts: Paseo daemon/client/CLI and exact `@getpaseo/plugin` **0.7.2**. The v0.1.0-rc.3 collection and all four current sources target exact final **0.8.0**. The user has completed runtime verification of Branch Garden, Provider Usage and Prompt Palette on Paseo 0.8; see the [reported scope](verification/paseo-0.8-runtime.md). Development checks use Node.js 22 in CI. The root package and catalog describe the collection release; they do not change Paseo's plugin API version.
 
 ## Published 0.7 release: daemon and client support
 
@@ -15,20 +15,17 @@ Published `v0.1.0-rc.2` contracts: Paseo daemon/client/CLI and exact `@getpaseo/
 
 See the [two-plugin removal verification](verification/0.1.0-rc.2.md), subsequent [Branch Garden English UI and screenshot verification](verification/branch-garden-english.md), and [GitHub Actions](https://github.com/NaruForge/Paseo-Plugin/actions/workflows/validate.yml). Records distinguish source checks, runtime activation, RPC actions, UI layouts/themes and untested environments. Historic `0.7.0-beta.1` Git-update evidence in [Git installation](GIT_INSTALLATION.md) is not evidence for a new release.
 
-## Current Paseo v0.8 sources
+## Final Paseo 0.8.0 collection
 
-Paseo **0.8.0-beta.1** introduces a breaking plugin contract. All four current plugin sources have separate client/server entries, runtime directories, exact beta.1 SDK dependencies and `requirements.paseo: ^0.8.0`. Provider Usage uses official host usage APIs and host-scoped display Settings.
+All four sources have separate runtime entries and exact 0.8.0 SDK dependencies. The three Composer integrations use the final `button` / `update` / `remove` contract. Install v0.1.0-rc.3 with final 0.8.0 daemon, app and CLI; beta.1 is incompatible with this pill API even if Paseo’s prerelease matcher accepts the manifest range `^0.8.0`.
 
-| Repository artifact | Paseo target | Evidence |
+| Plugin | Daemon scope | Final-version evidence |
 | --- | --- | --- |
-| Existing `v0.1.0-rc.2` tag | 0.7.2 | Existing verification records above |
-| Branch Garden current source | 0.8.0-beta.1 | [Source verification](verification/branch-garden-0.8-source.md): fresh CLI scaffold, type/tests, beta compiler without node_modules; subsequent [user runtime verification](verification/paseo-0.8-runtime.md) |
-| Provider Usage current source | 0.8.0-beta.1 | [Source verification](verification/provider-usage-0.8-source.md): adapter/settings tests, compiler without node_modules, isolated UI preview; subsequent [user runtime verification](verification/paseo-0.8-runtime.md) |
-| Prompt Palette new source | 0.8.0-beta.1 | Unreleased; [source verification](verification/prompt-palette-0.8-source.md); subsequent [user runtime verification](verification/paseo-0.8-runtime.md); [Git add/update/recovery](verification/paseo-0.8-git-source.md) |
-| Command Deck new source | 0.8.0-beta.1; Windows Host + PowerShell 7 | [Source and Windows terminal verification](verification/command-deck-0.8-source.md); installed app/mobile and Git activation not yet verified |
-| Updated capability/design/migration reference | 0.8.0-beta.1 | Official versioned docs, published exact plugin/client declarations and CLI scaffold source inspected on 2026-09-08 |
-| Future collection release | 0.8 target to be recorded | Existing three plugins: user 0.8 runtime and Git add/update/recovery recorded. Command Deck: app runtime and Git activation pending; no new release published |
+| Branch Garden | Windows, macOS, Linux; Git required | Exact SDK types, read-only regression tests, staged compiler |
+| Provider Usage | Windows, macOS, Linux; enabled Provider connection | Usage/settings/registration tests, staged compiler, simulated pill UI |
+| Prompt Palette | Windows, macOS, Linux; Agent with Workspace | Settings/send/registration tests, staged compiler, simulated pill/Modal UI |
+| Command Deck | Windows + PowerShell 7 | Settings/runner/registration tests, staged compiler, simulated pill action |
 
-Track the work in [#77](https://github.com/NaruForge/Paseo-Plugin/issues/77) and follow the [repository migration guide](MIGRATION_0.8.md). Preserve the 0.7 tag and use a separate candidate ref for 0.8. Runtime completion is recorded from the user report rather than inferred from CI. Git add/update/recovery for the three existing plugins is recorded in the [Git source verification](verification/paseo-0.8-git-source.md). Exact environment and per-scenario claims follow the runtime and Git records. Keep source checks separate from runtime evidence; see [#82](https://github.com/NaruForge/Paseo-Plugin/issues/82) for the Branch Garden source step.
+See the [0.8.0 release verification](verification/paseo-0.8.0-release.md) for actual commands, CI and UI scope. Collection v0.1.0-rc.3 remains a prerelease. Native app/mobile and live final-version Git activation/update are not certified by these source checks.
 
-The recommended migrated manifest range is `^0.8.0`; the development SDK remains exact `0.8.0-beta.1`. Paseo's prerelease matching includes beta.1 in that range. Daemon and app versions are checked independently. An older app is not compatible merely because its daemon is compatible. See the [official requirements contract](https://paseo.sh/docs/plugins/v0.8/reference#requirements) and [migration guide](https://paseo.sh/docs/plugins/v0.8/migration).
+The earlier [user runtime report](verification/paseo-0.8-runtime.md), [Git verification](verification/paseo-0.8-git-source.md) and per-plugin beta source records retain their original scope. The final release does not retroactively change those results. Follow the [migration guide](MIGRATION_0.8.md) and [#112](https://github.com/NaruForge/Paseo-Plugin/issues/112) for the final-version changes. Daemon and app compatibility are checked separately.

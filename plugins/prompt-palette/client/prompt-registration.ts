@@ -1,10 +1,10 @@
-import type { PluginClientContext, PluginComposerPillProps } from "@getpaseo/plugin/client";
+import type { PluginClientContext, PluginButtonIconProps } from "@getpaseo/plugin/client";
 import type { ComponentType } from "react";
 import { createPromptController, type PromptController } from "./prompt-controller";
 import { createPromptSender, type PromptSender } from "./prompt-send";
 
 export function registerPromptPills(client: PluginClientContext,
-  component: (controller: PromptController, sender: PromptSender) => ComponentType<PluginComposerPillProps>) {
+  component: (controller: PromptController, sender: PromptSender) => ComponentType<PluginButtonIconProps>) {
   let active = true;
   let loading = false;
   const changed = new Set<string>();
@@ -21,10 +21,12 @@ export function registerPromptPills(client: PluginClientContext,
     const controller = createPromptController();
     const sender = createPromptSender();
     const cleanup = client.addComposerPill({
-      id: "prompts", title: "Open saved prompts", agentId: agent.id, workspaceId: agent.workspaceId,
-      Component: component(controller, sender), onPress: () => { if (!sender.pending) controller.open(); },
+      id: "prompts", agentId: agent.id, workspaceId: agent.workspaceId,
+      button: { title: "Open saved prompts", label: "Prompts", icon: component(controller, sender),
+        behavior: { kind: "action", onPress: () => { if (!sender.pending) controller.open(); } } },
     });
-    pills.set(agent.id, { workspaceId: agent.workspaceId, remove: cleanup, controller, sender });
+    const unsubscribeSender = sender.subscribe(() => cleanup.update({ label: sender.pending ? "Sending…" : "Prompts", disabled: sender.pending }));
+    pills.set(agent.id, { workspaceId: agent.workspaceId, remove: () => { unsubscribeSender(); cleanup.remove(); }, controller, sender });
   }
   const unsubscribe = client.paseo.agents.subscribe(update => {
     if (!active) return;

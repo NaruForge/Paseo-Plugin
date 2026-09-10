@@ -6,13 +6,11 @@ Prepared text for a future maintainer-approved submission; it has not been sent 
 
 **Repository:** https://github.com/NaruForge/Paseo-Plugin
 
-**Suggested description:** Two community-maintained Paseo plugins for Git workspace visibility (Branch Garden) and provider usage (Provider Usage).
+**Suggested description:** Four community-maintained Paseo plugins for Git workspace visibility, provider usage, reusable prompts and Windows command execution.
 
-**Installation example:** `paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.2`
+**Installation example:** `paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.3`
 
-**Compatibility:** Paseo 0.7.2, with per-plugin prerequisites and platform limitations documented. Provider Usage is experimental.
-
-**0.8 status:** All four current sources target 0.8.0-beta.1, including the unreleased Prompt Palette and Command Deck. The user reported runtime verification of Branch Garden, Provider Usage and Prompt Palette on Paseo 0.8 with the [documented scope limits](verification/paseo-0.8-runtime.md); Git add/update/recovery for those three plugins is recorded in the [Git source verification](verification/paseo-0.8-git-source.md); Command Deck Git activation remains unverified. The suggested two-plugin description above applies only to the published 0.7 release. Do not describe the current release as 0.8-compatible in a submission; update this proposal after the [release verification](RELEASING.md#validate-runtime-safely) is complete.
+**Compatibility:** v0.1.0-rc.3 targets final Paseo 0.8.0. Branch Garden is preview; the other three plugins are experimental. Command Deck requires Windows and PowerShell 7. See the [final-version evidence and runtime limitations](verification/paseo-0.8.0-release.md). The older v0.1.0-rc.2 remains available for Paseo 0.7.2. Do not describe source or simulated UI checks as native runtime certification.
 
 **Maintenance:** NaruForge and contributors; MIT license; CI, release notes, configuration guides and private vulnerability reporting.
 

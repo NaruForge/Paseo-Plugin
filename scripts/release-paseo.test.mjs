@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { validatePaseoMetadata, validateRuntimeEntries } from "./release-paseo.mjs";
 
-function metadata(version = "0.8.0-beta.1") {
+function metadata(version = "0.8.0") {
   const devDependencies = { "@getpaseo/plugin": version, "@getpaseo/client": version };
   return {
     catalog: { paseoVersion: "0.7.2" }, entry: { paseoVersion: version },
@@ -12,7 +12,8 @@ function metadata(version = "0.8.0-beta.1") {
 }
 
 test("independent migrations preserve the default and enforce the entry override", () => {
-  assert.deepEqual(validatePaseoMetadata(metadata()), { version: "0.8.0-beta.1", errors: [] });
+  assert.deepEqual(validatePaseoMetadata(metadata()), { version: "0.8.0", errors: [] });
+  assert.deepEqual(validatePaseoMetadata(metadata("0.8.0-beta.1")), { version: "0.8.0-beta.1", errors: [] });
   const legacy = metadata("0.7.2");
   legacy.entry = {};
   legacy.manifest = {};
@@ -32,7 +33,7 @@ test("rejects a stale catalog, non-exact SDK, wrong client and stale lockfile", 
   }
 });
 
-test("a beta entry requires the migrated manifest even when the SDK matches", () => {
+test("a final 0.8 entry requires the migrated manifest even when the SDK matches", () => {
   const data = metadata();
   data.manifest = {};
   assert.deepEqual(validatePaseoMetadata(data).errors, ["migrated manifest must declare ^0.8.0."]);

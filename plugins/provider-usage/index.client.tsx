@@ -12,7 +12,7 @@ export default function contribute(client: PluginClientContext) {
   client.addSidebarItem({ id: "main", title: "Usage", icon: "Gauge", surface: "main" });
   const unsubscribeProviders = client.paseo.providers.subscribe(() => { void refreshUsageSnapshot().catch(() => {}); });
   const visibility = registerUsageVisibility(client, () =>
-    registerUsagePills(client, UsagePill, refreshUsageSnapshot));
+    registerUsagePills(client, updateButton => props => <UsagePill {...props} updateButton={updateButton} />, refreshUsageSnapshot));
   client.addSettingsScreen({
     id: "display", title: "Provider Usage Settings", icon: "Gauge",
     Component: (props: PluginSurfaceProps) => <UsageSettingsScreen {...props} onChanged={visibility.refresh} />,

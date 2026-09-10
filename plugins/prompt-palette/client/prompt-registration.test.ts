@@ -13,14 +13,33 @@ function setup(list = vi.fn<PluginClientContext["paseo"]["agents"]["list"]>(asyn
   const unsubscribe = vi.fn();
   const entries: PluginComposerPillContribution[] = [];
   const remove = vi.fn();
+  const update = vi.fn();
   const client = { paseo: { agents: { list, subscribe: (fn: typeof emit) => { emit = fn; return unsubscribe; } } },
-    addComposerPill: (p: PluginComposerPillContribution) => { entries.push(p); return remove; } } as unknown as PluginClientContext;
+    addComposerPill: (p: PluginComposerPillContribution) => { entries.push(p); return { remove, update }; } } as unknown as PluginClientContext;
   const component = vi.fn<Parameters<typeof registerPromptPills>[1]>(() => () => null);
   const cleanup = registerPromptPills(client, component);
-  return { entries, component, cleanup, remove, unsubscribe, list, emit: (u: Update) => emit(u) };
+  return { entries, component, cleanup, remove, update, unsubscribe, list, emit: (u: Update) => emit(u) };
 }
 afterEach(() => { vi.useRealTimers(); });
 describe("prompt registrations", () => {
+  it("updates the existing button while sending and unsubscribes before a late completion", async () => {
+    vi.useFakeTimers();
+    const t = setup(); t.emit(upsert("a"));
+    const sender = t.component.mock.calls[0][1];
+    let finish!: () => void;
+    const send = sender.send(async () => true, () => new Promise<void>(resolve => { finish = resolve; }));
+    await Promise.resolve();
+    expect(t.update).toHaveBeenLastCalledWith({ label: "Sending…", disabled: true });
+    expect(t.entries).toHaveLength(1);
+    finish(); await send;
+    expect(t.update).toHaveBeenLastCalledWith({ label: "Prompts", disabled: false });
+    const late = sender.send(async () => true, () => new Promise<void>(resolve => { finish = resolve; }));
+    await Promise.resolve();
+    t.cleanup(); const calls = t.update.mock.calls.length;
+    finish(); await late;
+    expect(t.update).toHaveBeenCalledTimes(calls);
+    expect(t.remove).toHaveBeenCalledTimes(1);
+  });
   it("loads every page and registers new providers without filtering", async () => {
     vi.useFakeTimers();
     const list = vi.fn<PluginClientContext["paseo"]["agents"]["list"]>()
@@ -45,7 +64,7 @@ describe("prompt registrations", () => {
     const t = setup(vi.fn(() => new Promise<Page>(r => { resolve = r; })));
     t.emit(upsert("a", "new")); resolve(page(["a"])); await vi.advanceTimersByTimeAsync(0);
     expect(t.entries[0].workspaceId).toBe("new");
-    t.entries[0].onPress();
+    press(t.entries[0]);
     const controller = t.component.mock.calls[0][0];
     expect(controller.snapshot()).toBe(true);
     t.emit(upsert("a", "moved"));
@@ -69,7 +88,7 @@ describe("prompt registrations", () => {
     t.emit(upsert("a")); t.cleanup(); resolve(page(["b"])); t.emit(upsert("c"));
     await vi.advanceTimersByTimeAsync(0);
     expect(t.entries).toHaveLength(1);
-    t.entries[0].onPress(); expect(t.component.mock.calls[0][0].snapshot()).toBe(false);
+    press(t.entries[0]); expect(t.component.mock.calls[0][0].snapshot()).toBe(false);
     expect(vi.getTimerCount()).toBe(0);
   });
   it("does not prune existing pills after a malformed incomplete page", async () => {
@@ -85,3 +104,8 @@ describe("prompt registrations", () => {
     expect(t.unsubscribe).toHaveBeenCalledTimes(1);
   });
 });
+
+function press(pill: PluginComposerPillContribution) {
+  if (pill.button.behavior.kind !== "action") throw new Error("Expected action");
+  return pill.button.behavior.onPress();
+}

@@ -1,6 +1,6 @@
 # UI 기여 지점
 
-이 문서는 **Paseo `0.8.0-beta.1`**가 Plugin에 열어 둔 UI 위치를 다룬다. 아래 내용은 [0.8 이관](../MIGRATION_0.8.md)에 적용할 계약이며, 실제 플러그인별 이관·검증 상태는 [호환성 기록](../COMPATIBILITY.md)을 따른다. Plugin UI는 React Native component이며 desktop, browser, iOS, Android에서 같은 기여 계약을 사용한다.
+이 문서는 **Paseo `0.8.0`**가 Plugin에 열어 둔 UI 위치를 다룬다. 아래 내용은 [0.8 이관](../MIGRATION_0.8.md)에 적용할 계약이며, 실제 플러그인별 이관·검증 상태는 [호환성 기록](../COMPATIBILITY.md)을 따른다. Plugin UI는 React Native component이며 desktop, browser, iOS, Android에서 같은 기여 계약을 사용한다.
 
 등록 예제의 `client`는 `index.client.tsx`의 `PluginClientContext`다. Context·props·훅은 `@getpaseo/plugin/client`, `PluginTheme` 같은 공유 타입은 `@getpaseo/plugin`, host UI는 `/client/react-native`에서 가져온다. 별도 파일의 코드 조각은 각 런타임 entry에 배치한다.
 
@@ -144,40 +144,39 @@ client.addCommandCenterItem({
 
 `keywords`는 검색 보조어일 뿐 별도 UI를 만들지 않는다. 사용자 정의 keyboard shortcut을 등록하는 필드는 없다.
 
-## 4. Composer track bar의 Pill 버튼
+## 4. Composer pill과 Header button
 
-`index.client.tsx`는 각 연결된 Paseo app에서 Plugin 설치당 한 번 실행된다. 여기서 직접 또는 `client/` helper를 통해 `client.addComposerPill`을 호출한다. 0.7의 `addClientSide` wrapper는 제거한다.
-
-다음은 알려진 `workspaceId`와 `agentId`에 pill 하나를 붙이는 `client/` helper의 본문이다. `ReviewPill`과 `review` panel은 같은 client entry에서 연결한다.
+정식 0.8.0의 두 기여는 `button` descriptor를 공유한다. 아래 예제는 같은 entry에서 등록한 `review` panel을 연다.
 
 ```ts
-const remove = client.addComposerPill({
-  id: "review",
-  title: "Open review",
-  workspaceId,
-  agentId,
-  Component: ReviewPill,
-  onPress() {
-    client.openPanel("review", { workspaceId, agentId });
+const registration = client.addComposerPill({
+  id: "review", workspaceId, agentId,
+  button: {
+    title: "Open review", label: "Review", icon: "ScanSearch",
+    behavior: { kind: "action", onPress() {
+      client.openPanel("review", { workspaceId, agentId });
+    } },
   },
 });
-// 생성한 helper의 cleanup에서 remove() 호출
+registration.update({ label: "Review · 3", disabled: false });
+// helper cleanup:
+registration.remove();
 ```
 
-여러 Agent를 지원하면 최초 목록과 live 구독을 조합하고 archive/remove/provider 변경에 따라 pill을 정리한다. 늦게 도착한 최초 목록이 구독에서 받은 최신 상태를 덮지 않도록 하고, entry cleanup에 구독·등록 해제를 합성한다.
+`addHeaderButton({ id, workspaceId, button })`는 Workspace header의 지정 위치에 기여한다. 임의 toolbar/좌표를 지정하지 않는다. Header는 label을 생략할 수 있고 compact에서 icon만 표시한다. Composer는 icon과 label(생략하면 title)을 표시하며 chevron이 없다.
 
-| 필드 | 역할 |
+| 계약 | 역할 |
 | --- | --- |
-| `id` | 해당 Agent 안에서의 Plugin-local pill ID |
-| `title` | 접근 가능한 버튼 label |
-| `workspaceId` | pill이 속할 Workspace |
-| `agentId` | pill이 속할 Agent |
-| `Component` | icon과 text 내부를 그리는 component |
-| `onPress` | 누름 동작. Promise를 반환할 수 있음 |
+| `button.title` | 접근성 이름·설명 |
+| `button.icon` | icon 이름 또는 `PluginButtonIconProps` component |
+| `button.label` | 보이는 텍스트; 변화는 `update`로 반영 |
+| `button.visible`, `disabled` | 표시·사용 가능 상태 |
+| `button.behavior` | `action`의 onPress, `menu`의 items, `popover`의 Content |
+| 반환 handle | `update(Partial<PluginButton>)`, idempotent `remove()` |
 
-Paseo가 pressable, 공통 chrome, pending/error 상태와 배치를 소유한다. Plugin은 pill의 생성 조건, 내부 icon/text와 callback을 소유한다. `addComposerPill`은 idempotent 제거 함수를 반환하며 app unload, host disconnect, Plugin reload 시 남은 pill도 정리된다.
+Custom icon에서 훅을 사용할 수 있다. Label을 icon 내부 Text로 그리지 않으며, render 도중 update하지 않고 effect나 model 구독으로 반영한다. `PluginButtonIconProps`의 context는 workspace/agent union이므로 agentId 접근 전에 좁힌다. Popover Content는 close capability를 받는다.
 
-즉 “채팅창 위에 버튼”은 가능하지만 **Composer track bar의 표준 pill**이어야 한다. 입력창 내부, 전송 버튼 옆, 임의 좌표 같은 별도 slot은 공개되지 않았다.
+여러 Agent는 초기 목록과 live 구독을 조합하고 archive/remove/provider 변경에 따라 정리한다. 늦은 응답이 최신 상태를 덮지 않도록 하며 entry cleanup에서 구독·타이머·handle을 해제한다. 제거 후 update는 no-op이다. Host가 chrome·pending/error 상태·배치와 남은 기여의 teardown을 소유한다.
 
 ## 5. Modal, Toast, Icon
 
