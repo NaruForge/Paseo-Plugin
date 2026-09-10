@@ -29,7 +29,7 @@
 
 `/client/host`는 private이다. Client에서 DOM library, `lucide-react-native`, `react-native-svg`를 직접 가져오지 않는다. Browser global이 필요한 경우 `client/web.ts`에 좁은 타입과 `Platform.OS` 분기를 두고 native 대안을 제공한다. `tsconfig`에 DOM lib를 추가해 우회하지 않는다.
 
-Server는 Node 기본 모듈과 설치된 dependency도 사용할 수 있다. Git source는 package manager를 자동 실행하지 않으므로 외부 dependency가 필요하면 manifest의 명시적 `build`를 설계해야 한다. 현재 두 플러그인은 `build` 없이 host/Node/내부 상대 import만 사용하는 배포 방식을 유지한다. 자세한 내용은 [Git 설치](../GIT_INSTALLATION.md)를 따른다.
+Server는 Node 기본 모듈과 설치된 dependency도 사용할 수 있다. Git source는 package manager를 자동 실행하지 않으므로 외부 dependency가 필요하면 manifest의 명시적 `build`를 설계해야 한다. 현재 네 플러그인은 `build` 없이 host/Node/내부 상대 import만 사용하는 배포 방식을 유지한다. 자세한 내용은 [Git 설치](../GIT_INSTALLATION.md)를 따른다.
 
 ## Hook과 주입 API
 

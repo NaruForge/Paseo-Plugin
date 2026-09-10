@@ -4,6 +4,7 @@ The collection uses one version/tag for all supported plugins. Published release
 
 ## Unreleased
 
+- Align release, design and community 0.8 source counts with the four current plugins, and document the same compiler check for Prompt Palette and Command Deck.
 - Record Git add/update/failed-candidate recovery for Branch Garden, Provider Usage and Prompt Palette on Paseo 0.8.0-beta.1. Command Deck Git activation remains unverified; see the [Git source verification](docs/verification/paseo-0.8-git-source.md).
 - Add experimental Windows-only Command Deck for Paseo 0.8.0-beta.1: Project command Settings, Composer/panel entry, official terminal execution, bounded output, explicit interruption/termination and reconnect discovery. Source/UI and Windows SDK evidence are [recorded separately](docs/verification/command-deck-0.8-source.md); installed app/mobile validation remains pending.
 
