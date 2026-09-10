@@ -1,6 +1,6 @@
 # Provider Usage
 
-Release **v0.1.0-rc.3** targets final **Paseo 0.8.0**. See [final-version checks and remaining runtime limits](../../docs/verification/paseo-0.8.0-release.md). Existing screenshots below retain their historical version and simulated-host scope.
+Release **v0.1.0-rc.3** targets final **Paseo 0.8.0**. See [final-version checks and remaining runtime limits](../../docs/verification/paseo-0.8.0-release.md). Screenshots below show the installed Paseo 0.8.0 Windows app.
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.3
@@ -14,15 +14,13 @@ Show usage for every enabled Provider connection on the selected Host, using Pas
 
 ## Screenshots
 
-These **0.8.0-beta.1 source previews** were captured on 2026-09-09 with simulated host controls, settings and provider data. They show functionality, not a live Paseo installation or actual account quotas. Original images are included unchanged from the [reset display review](../../docs/verification/provider-usage-reset-time.md).
+Captured from the installed **Paseo 0.8.0 Windows app** on 2026-09-10, in the dark desktop layout. These are real readings at capture time, not example quotas; see the [capture scope](../../docs/verification/plugin-screenshots-0.8.0.md).
 
-![Provider Usage source preview with pill fields and Time remaining selected](../../docs/screenshots/provider-usage/settings-preview.png)
+![Provider Usage live screen with Codex and Grok usage and an unavailable GitHub Copilot reading](../../docs/screenshots/provider-usage/usage-live.png)
 
-This example enables Show reset time and selects Time remaining; the defaults remain reset time off and Date and time. “Save requests” is preview instrumentation, not a Paseo setting.
+![Provider Usage live Settings with remaining percentage and reset time enabled](../../docs/screenshots/provider-usage/settings-live.png)
 
-![Provider Usage source preview showing a usage window, unsupported connection, credit balance and unavailable provider](../../docs/screenshots/provider-usage/usage-preview.png)
-
-The sample Usage screen distinguishes available values from unsupported or failed readings. The historical live Composer image is retained under Usage and refresh.
+The captured settings show provider name off and Time remaining selected. These are the installation's current preferences, not the defaults.
 
 ## Provider Usage Settings
 
@@ -60,9 +58,7 @@ Open **Usage** from the optional sidebar or Command Center to inspect plans, usa
 
 The surface and pills share a query to Paseo's official usage service, with no periodic usage polling. They read on initial mount and can reuse a recent reading. Use **Refresh** in Usage or press the Composer pill to request another reading; Provider catalog changes also trigger a shared usage refresh. Leaving the screen open does not repeatedly fetch usage, and the catalog subscription is not a live usage feed. **Paseo beta.1 caches usage for five minutes; its public API has no force-refresh option**, so a request may return the same host reading. The 30-second remaining-time display and Composer visibility settings synchronization are separate from usage retrieval.
 
-The image below records the previous 0.7 composer UI; it is not beta Settings verification.
-
-![Provider Usage pill showing Codex 96% remaining above the Paseo agent composer](../../docs/screenshots/provider-usage/composer-pill.jpg)
+The [historical 0.7 Composer image](../../docs/screenshots/provider-usage/composer-pill.jpg) is retained as earlier evidence.
 
 ## Installation
 

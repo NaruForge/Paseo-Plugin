@@ -1,6 +1,6 @@
 # Branch Garden
 
-Release **v0.1.0-rc.3** targets final **Paseo 0.8.0**. See [final-version checks and remaining runtime limits](../../docs/verification/paseo-0.8.0-release.md). Existing screenshots below retain their historical version and simulated-host scope.
+Release **v0.1.0-rc.3** targets final **Paseo 0.8.0**. See [final-version checks and remaining runtime limits](../../docs/verification/paseo-0.8.0-release.md). Screenshots below show the installed Paseo 0.8.0 Windows app.
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.3
@@ -10,17 +10,17 @@ Inspect registered Git projects, active workspaces, local branches and worktrees
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Install](#install) · [Support](../../SUPPORT.md)
 
-**Current source targets Paseo 0.8.0.** Runtime entries, imports and exact SDK dependencies have been migrated and checked with the target compiler, including a copy without `node_modules`. The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). See the [source verification](../../docs/verification/branch-garden-0.8-source.md) and [#82](https://github.com/NaruForge/Paseo-Plugin/issues/82). The screenshots and pinned release below remain 0.7 evidence.
+**Current source targets Paseo 0.8.0.** Runtime entries, imports and exact SDK dependencies have been migrated and checked with the target compiler, including a copy without `node_modules`. The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). See the [source verification](../../docs/verification/branch-garden-0.8-source.md) and [#82](https://github.com/NaruForge/Paseo-Plugin/issues/82). The historical v0.1.0-rc.2 installation instructions below remain specific to 0.7.
 
 ## Screenshots
 
-These remain **Paseo 0.7.2** live captures of this public repository. They are the representative UI for scan totals, filters and expanded repository details; they are not a 0.8 app screenshot. Current 0.8 source keeps this English interface and did not replace these images.
+Captured from the installed **Paseo 0.8.0 Windows app** on 2026-09-10, in the dark desktop layout. Images are cropped from real screens; see the [capture scope](../../docs/verification/plugin-screenshots-0.8.0.md).
 
-![Branch Garden overview with scan totals, review filter and expanded repository](../../docs/screenshots/branch-garden/overview.png)
+![Branch Garden live overview with scan totals and repository filters](../../docs/screenshots/branch-garden/overview-live.png)
 
-On a compact screen, workspace details and branch evidence stack vertically:
+The overview shows totals for the selected Host. The separate detail crop below shows only this public repository, including its active Workspace and kept default branch.
 
-![Branch Garden repository details on a compact screen](../../docs/screenshots/branch-garden/repository-compact.png)
+![Branch Garden live Paseo-Plugin repository detail with Workspace and kept branch evidence](../../docs/screenshots/branch-garden/repository-live.png)
 
 ## Install
 

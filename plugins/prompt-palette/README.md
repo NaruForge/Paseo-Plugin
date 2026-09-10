@@ -1,6 +1,6 @@
 # Prompt Palette
 
-Release **v0.1.0-rc.3** targets final **Paseo 0.8.0**. See [final-version checks and remaining runtime limits](../../docs/verification/paseo-0.8.0-release.md). Existing screenshots below retain their historical version and simulated-host scope.
+Release **v0.1.0-rc.3** targets final **Paseo 0.8.0**. See [final-version checks and remaining runtime limits](../../docs/verification/paseo-0.8.0-release.md). Screenshots below show the installed Paseo 0.8.0 Windows app.
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref v0.1.0-rc.3
@@ -14,15 +14,11 @@ Save prompts you use often and send them from an Agent's Composer after reviewin
 
 ## Screenshots
 
-These **0.8.0-beta.1 source previews**, captured on 2026-09-09, use simulated Paseo host components and sample text. They do not show a live Agent send or certify native mobile layout. Original captures are included unchanged.
+Captured from the installed **Paseo 0.8.0 Windows app** on 2026-09-10, in the dark desktop layout. The real saved library shows editing, ordering and save controls; see the [capture scope](../../docs/verification/plugin-screenshots-0.8.0.md).
 
-![Prompt Palette compact source preview listing a saved prompt and Manage prompts](../../docs/screenshots/prompt-palette/picker-preview.png)
+![Prompt Palette live Settings showing three saved prompts, edit and reorder controls, Add prompt and Save changes](../../docs/screenshots/prompt-palette/settings-live.png)
 
-The picker shows the Agent/Host target and opens a saved prompt for review. This image comes from the [mobile layout review](../../docs/verification/prompt-palette-mobile-layout.md).
-
-![Prompt Palette source preview showing the full prompt body, target Agent, Copy text and Send](../../docs/screenshots/prompt-palette/send-preview.png)
-
-The full-body preview comes from the earlier [initial source review](../../docs/verification/prompt-palette-0.8-source.md), before the later button/layout adjustments. It illustrates preview-before-send; surrounding controls and sheet dimensions are simulated.
+No prompt was sent or edited for this capture. Historical picker and send previews remain in the [initial source review](../../docs/verification/prompt-palette-0.8-source.md) and [mobile layout review](../../docs/verification/prompt-palette-mobile-layout.md); they are not current app captures.
 
 ## Use
 

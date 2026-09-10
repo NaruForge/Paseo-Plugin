@@ -1,6 +1,6 @@
 # Command Deck
 
-Release **v0.1.0-rc.3** targets final **Paseo 0.8.0**. See [final-version checks and remaining runtime limits](../../docs/verification/paseo-0.8.0-release.md). Existing screenshots below retain their historical version and simulated-host scope.
+Release **v0.1.0-rc.3** targets final **Paseo 0.8.0**. See [final-version checks and remaining runtime limits](../../docs/verification/paseo-0.8.0-release.md). Screenshots below show the installed Paseo 0.8.0 Windows app.
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref v0.1.0-rc.3
@@ -8,21 +8,21 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref v0.1.0-rc.3
 
 Save PowerShell commands for a Project and run them from the Agent Composer or a Workspace panel. **Experimental, v0.1.0-rc.3; Windows hosts only.** Requires Paseo daemon/app/CLI **0.8.0**, PowerShell 7 on the daemon PATH, and the tools used by your commands (for example Node.js/npm).
 
-Source and Windows SDK checks are complete as described in the [verification record](../../docs/verification/command-deck-0.8-source.md). Backend installation/reload passed; installed app/mobile interaction verification remains pending. Existing verification reports for the other three plugins do not cover Command Deck.
+Source and Windows SDK checks are complete as described in the [verification record](../../docs/verification/command-deck-0.8-source.md). Backend installation/reload passed. The [Windows screenshot session](../../docs/verification/plugin-screenshots-0.8.0.md) covers the installed Settings and empty panel; command execution and mobile interaction remain outside that session. Existing verification reports for the other three plugins do not cover Command Deck.
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Install](#install-current-source) · [Support](../../SUPPORT.md)
 
-## Source previews
+## Screenshots
 
-These **0.8.0-beta.1 source previews** render the actual source components with a **simulated Paseo host**, not an installed app or a native phone. Host-provided settings and modal primitives are approximations. The images themselves are labeled `Source preview - simulated Paseo host`.
+Captured from the installed **Paseo 0.8.0 Windows app** on 2026-09-10, in the dark desktop layout. The selected Paseo-Plugin Project has no saved commands, so these captures show its actual empty state; see the [capture scope](../../docs/verification/plugin-screenshots-0.8.0.md).
 
-![Command Deck compact panel listing saved commands, recent output, Run command, Send Ctrl+C and Terminate terminal](../../docs/screenshots/command-deck/panel-preview.png)
+![Command Deck live Workspace panel with an empty saved-command list and no connected terminal](../../docs/screenshots/command-deck/panel-live.png)
 
-The panel shows a Project command, captured output, and explicit run, interrupt and terminate actions. Terminal presence is not treated as success.
+The panel exposes Manage commands and Refresh. No command was run and no terminal was created for the screenshot.
 
-![Command Deck settings with a Project selected, saved command library, Add command and Save changes](../../docs/screenshots/command-deck/settings-preview.png)
+![Command Deck live Settings for Paseo-Plugin with Add command, Save changes, Load latest and Copy draft](../../docs/screenshots/command-deck/settings-live.png)
 
-Settings edits the Host-scoped command library for one Project. Save changes persists the draft; Load latest and Copy draft recover from revision conflicts.
+Settings edits the Host-scoped command library for the selected Project. Save changes is disabled because the draft is unchanged.
 
 ## Install current source
 

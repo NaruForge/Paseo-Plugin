@@ -17,7 +17,7 @@ Paseo에서 Git 작업 상태를 살펴보고, 공급자 사용량을 확인하�
 | [`prompt-palette`](plugins/prompt-palette/) | 반복 프롬프트를 저장하고 Composer에서 미리 본 뒤 보냅니다. | Paseo 0.8.0, Workspace가 있는 기존 Agent | Experimental; v0.1.0-rc.3 |
 | [`provider-usage`](plugins/provider-usage/) | 활성 Provider 연결의 사용량을 표시하고 Composer pill을 설정합니다. | Paseo 0.8.0, 활성 Provider 연결 | Experimental; v0.1.0-rc.3 |
 
-Branch Garden과 Provider Usage가 핵심 유지보수 대상이며 Prompt Palette와 Command Deck은 신규 실험 기능입니다. Branch Garden UI는 영어이고 Provider Usage에는 한국어 상태 문구가 남아 있습니다. 개별 가이드는 영어입니다. 각 가이드에 대표 이미지가 있으며, 실제 0.7 화면과 시뮬레이션한 0.8 소스 preview를 구분해 표시합니다.
+Branch Garden과 Provider Usage가 핵심 유지보수 대상이며 Prompt Palette와 Command Deck은 신규 실험 기능입니다. Branch Garden UI는 영어이고 Provider Usage에는 한국어 상태 문구가 남아 있습니다. 개별 가이드는 영어입니다. 각 가이드의 대표 이미지는 설치된 Paseo 0.8.0 Windows 앱에서 촬영했습니다. [촬영 범위](docs/verification/plugin-screenshots-0.8.0.md)를 참고하세요.
 
 ## 시작하기
 

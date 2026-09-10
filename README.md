@@ -22,7 +22,7 @@ Provider Usage uses Paseo’s official usage API. Branch Garden remains preview;
 | [`prompt-palette`](plugins/prompt-palette/) | Save reusable prompts in Host Settings, preview and send them from the Agent Composer. | Paseo 0.8.0 source; existing Agent with a Workspace | Experimental, v0.1.0-rc.3 |
 | [`provider-usage`](plugins/provider-usage/) | Inspect enabled Provider usage through Paseo, with configurable pills and a sidebar managed by Paseo Layout. | Paseo 0.8.0 source; enabled provider connections | Experimental; v0.1.0-rc.3 |
 
-Branch Garden and Provider Usage are maintained as this repository's core offering; this does not imply Paseo-team support. Prompt Palette and Command Deck are experimental additions in v0.1.0-rc.3. Branch Garden's interface is in English. Provider Usage remains experimental at the provider integration boundary and still includes Korean status messages. Each English guide includes a representative image and labels historical 0.7 captures separately from simulated 0.8 source previews.
+Branch Garden and Provider Usage are maintained as this repository's core offering; this does not imply Paseo-team support. Prompt Palette and Command Deck are experimental additions in v0.1.0-rc.3. Branch Garden's interface is in English. Provider Usage remains experimental at the provider integration boundary and still includes Korean status messages. Each English guide includes representative screenshots from the installed Paseo 0.8.0 Windows app; see the [capture scope](docs/verification/plugin-screenshots-0.8.0.md).
 
 ## Install one plugin
 
