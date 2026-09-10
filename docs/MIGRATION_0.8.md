@@ -86,11 +86,13 @@ Provider Usage의 `provider-usage.view.ts`는 `PluginTheme`를 이용한 표시�
 
 설치/reload가 요청된 단계에서만 대상 daemon을 확인해 실행한다. 0.8 원격 명령은 `paseo --host <target> plugin ls`, `paseo --host <target> plugin reload <runtime-id>`처럼 global `--host`를 사용한다. Directory reload 실패는 이전 bundle로 복구되지 않으며 Git update의 후보 복구와 다르다. 소스 반영을 위해 daemon을 재시작하지 않는다.
 
-문서 단계 #78은 완료됐다. Branch Garden 소스 이관은 타입·테스트·루트 검사와 아래 compiler 검사로 검증한다. 이 명령은 설치된 exact beta.1 server package를 명시적으로 받아 임시 사본에서 node_modules를 제외한 뒤 client/server를 compile하며 daemon을 시작하거나 설치하지 않는다. Compiler package의 내부 API를 사용하는 개발 검증 도구이므로 대상 버전을 바꿀 때 경로와 함수를 재대조한다.
+문서 단계 #78은 완료됐다. Branch Garden 소스 이관은 타입·테스트·루트 검사와 compiler 검사로 검증했다. 현재 네 플러그인 소스에도 같은 compiler 명령을 사용한다. 이 명령은 설치된 exact beta.1 server package를 명시적으로 받아 임시 사본에서 node_modules를 제외한 뒤 client/server를 compile하며 daemon을 시작하거나 설치하지 않는다. Compiler package의 내부 API를 사용하는 개발 검증 도구이므로 대상 버전을 바꿀 때 경로와 함수를 재대조한다.
 
 ```powershell
 node scripts/check-plugin-compiler.mjs plugins/branch-garden <beta.1-server-package-directory>
 node scripts/check-plugin-compiler.mjs plugins/provider-usage <beta.1-server-package-directory>
+node scripts/check-plugin-compiler.mjs plugins/prompt-palette <beta.1-server-package-directory>
+node scripts/check-plugin-compiler.mjs plugins/command-deck <beta.1-server-package-directory>
 ```
 
 Fresh CLI scaffold는 임시 빈 디렉터리에 `npm exec --yes --package=@getpaseo/cli@0.8.0-beta.1 -- paseo plugin init <absolute-directory> --id migration-probe`로 생성할 수 있다. 앱/daemon 업데이트는 별도 작업이다. 과거 `docs/verification/` 기록과 릴리스 changelog는 당시 사실을 보존하고, 0.8 증거는 새 기록으로 추가한다.

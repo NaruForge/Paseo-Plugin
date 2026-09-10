@@ -2,7 +2,7 @@
 
 이 문서는 `plugins/*`의 Paseo 클라이언트 UI에 적용하는 저장소 공통 디자인 규칙이다. Paseo 본체의 [Design](https://github.com/getpaseo/paseo/blob/main/docs/design.md)을 플러그인 공개 계약에 맞게 번안했으며, 원문을 그대로 복제하거나 자동 동기화하지 않는다.
 
-마지막 대조일: 2026-09-08. 새 API 참조와 두 플러그인 소스는 **0.8.0-beta.1** 기준이다. 아래 공통 시각 규칙은 두 버전에 적용하고, 새 import·Settings·Modal 계약은 [0.8 이관](MIGRATION_0.8.md) 이후 적용한다.
+마지막 대조일: 2026-09-08. 새 API 참조와 현재 네 플러그인 소스는 **0.8.0-beta.1** 기준이다. 아래 공통 시각 규칙은 0.7과 0.8 두 버전에 적용하고, 새 import·Settings·Modal 계약은 [0.8 이관](MIGRATION_0.8.md) 이후 적용한다.
 
 ## Rule precedence
 
