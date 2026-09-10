@@ -2,7 +2,7 @@ import { type PluginCleanup, settingsRpc } from "@getpaseo/plugin";
 import type { PluginClientContext } from "@getpaseo/plugin/client";
 import { UsageSettingsSchema, usageSettings } from "../shared/usage-settings";
 
-// beta.1 exposes useSettings updates to components, but no settings subscription to entries.
+// 0.8.0 exposes useSettings updates to components, but no settings subscription to entries.
 // Local saves call refresh immediately; other clients' Composer pill visibility changes converge on this read.
 export const VISIBILITY_REFRESH_INTERVAL_MS = 30_000;
 

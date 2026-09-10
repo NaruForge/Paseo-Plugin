@@ -1,10 +1,16 @@
 # Provider Usage
 
+Release **v0.1.0-rc.3** targets final **Paseo 0.8.0**. See [final-version checks and remaining runtime limits](../../docs/verification/paseo-0.8.0-release.md). Existing screenshots below retain their historical version and simulated-host scope.
+
+```sh
+paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.3
+```
+
 Show usage for every enabled Provider connection on the selected Host, using Paseo's official usage API. The optional sidebar and matching Agent Composer pills complement **Settings → Usage**.
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Install](#installation) · [Support](../../SUPPORT.md)
 
-**Current source targets Paseo 0.8.0-beta.1.** Source and isolated UI checks are recorded in [verification](../../docs/verification/provider-usage-0.8-source.md). The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). The published `v0.1.0-rc.2` tag retains the previous 0.7.2 implementation.
+**Current source targets Paseo 0.8.0.** Source and isolated UI checks are recorded in [verification](../../docs/verification/provider-usage-0.8-source.md). The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). The published `v0.1.0-rc.2` tag retains the previous 0.7.2 implementation.
 
 ## Screenshots
 
@@ -34,6 +40,8 @@ Changes save immediately to this Host and plugin installation, with revision con
 
 Sidebar visibility is controlled exclusively by **Paseo Settings → Layout**. The plugin always registers the Usage sidebar item, including while plugin settings are loading or invalid. It does not override your Layout preference. **Open provider usage** remains available in Command Center when the sidebar is hidden.
 
+When all three Pill fields are off, the button shows **Usage** because final 0.8.0 requires a nonempty label. The saved field choices are preserved.
+
 Pill fields follow the host's live settings hook. Composer pill visibility changes made in this screen apply after saving; changes from other clients converge within 30 seconds while connected. Turning all pill fields off leaves an accessible gauge icon.
 
 Settings schema v3 migrates v1/v2 while preserving Composer pill visibility and all three pill field choices, removing the retired Sidebar value and defaulting the reset format to Date and time. It does not modify Paseo Layout. Downgrading to older schema code may report the newer document as invalid; it does not silently reset it.
@@ -58,7 +66,7 @@ The image below records the previous 0.7 composer UI; it is not beta Settings ve
 
 ## Installation
 
-This guide’s Settings and official-API behavior describe current **0.8.0-beta.1 source**. For the published **0.7.2** release, use the [versioned usage guide](https://github.com/NaruForge/Paseo-Plugin/blob/v0.1.0-rc.2/plugins/provider-usage/README.md#use). Its old command examples are historical; use the installation and maintenance commands here. Enable trusted plugins in the target daemon’s Settings → Plugins, then install the release with:
+This guide’s Settings and official-API behavior describe current **0.8.0 source**. For the published **0.7.2** release, use the [versioned usage guide](https://github.com/NaruForge/Paseo-Plugin/blob/v0.1.0-rc.2/plugins/provider-usage/README.md#use). Its old command examples are historical; use the installation and maintenance commands here. Enable trusted plugins in the target daemon’s Settings → Plugins, then install the release with:
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
@@ -67,7 +75,7 @@ paseo plugin ls
 
 The tag is pinned and does not advance on update.
 
-For current source evaluation, both daemon and app must match the beta target. Enable the Provider connections through normal Paseo tooling. Follow the [source checkout steps](../../README.md#evaluate-current-08-source), then run PowerShell from the repository root on the daemon host:
+For current source evaluation, both daemon and app must use final 0.8.0. Enable the Provider connections through normal Paseo tooling. Follow the [source checkout steps](../../README.md#evaluate-current-08-source), then run PowerShell from the repository root on the daemon host:
 
 ```powershell
 $repoRoot = (Resolve-Path .).Path
@@ -81,10 +89,10 @@ Expect `provider-usage` to be `running` without load errors. If the ID already e
 For Git source evaluation of **0.8** source, choose a reviewed published commit that contains this plugin. Do not use `v0.1.0-rc.2` for 0.8:
 
 ```sh
-paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref <reviewed-0.8-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.3
 ```
 
-Replace the placeholder with that actual ref. Git add/update/recovery for this plugin is recorded in the [Git source verification](../../docs/verification/paseo-0.8-git-source.md). See [Git installation](../../docs/GIT_INSTALLATION.md) before selecting a beta candidate ref.
+The command pins the final-version collection tag. Git add/update/recovery for this plugin is recorded in the [Git source verification](../../docs/verification/paseo-0.8-git-source.md). See [Git installation](../../docs/GIT_INSTALLATION.md) before changing an installed ref.
 
 ## Data access and troubleshooting
 

@@ -1,4 +1,4 @@
-import { type PluginComposerPillProps, usePaseo, useSettings, useAgent } from "@getpaseo/plugin/client";
+import { type PluginHostProps, usePaseo, useSettings, useAgent } from "@getpaseo/plugin/client";
 import { Modal, ScrollView, copyText } from "@getpaseo/plugin/client/react-native";
 import { useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
@@ -6,7 +6,7 @@ import { promptSettings, type Prompt } from "../shared/prompt-settings";
 import type { PromptSender } from "./prompt-send";
 import { Action, PromptRow } from "./prompt-ui";
 
-export function PromptPicker({ theme, layout, host, agentId, workspaceId, sender, close, openSettings }: PluginComposerPillProps & {
+export function PromptPicker({ theme, layout, host, agentId, workspaceId, sender, close, openSettings }: PluginHostProps & { agentId: string; workspaceId: string } & {
   sender: PromptSender; close(): void; openSettings(): void;
 }) {
   const settings = useSettings(promptSettings);

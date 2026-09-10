@@ -2,7 +2,8 @@ import type { PluginCleanup } from "@getpaseo/plugin";
 import type { ComponentType } from "react";
 import type {
   PluginClientContext,
-  PluginComposerPillProps,
+  PluginButtonIconProps,
+  PluginButton,
 } from "@getpaseo/plugin/client";
 import { parseAgentProviderId } from "../shared/provider-usage.logic";
 
@@ -16,7 +17,7 @@ interface RegisteredPill {
 
 export function registerUsagePills(
   client: PluginClientContext,
-  Component: ComponentType<PluginComposerPillProps>,
+  createIcon: (update: (patch: Partial<PluginButton>) => void) => ComponentType<PluginButtonIconProps>,
   refreshUsage: RefreshUsage,
 ): PluginCleanup {
   const pills = new Map<string, RegisteredPill>();
@@ -66,21 +67,29 @@ export function registerUsagePills(
 
     removePill(agentId);
     let action: Promise<void> | undefined;
-    const remove = client.addComposerPill({
+    let removed = false;
+    const registration = client.addComposerPill({
       id: "usage",
-      title: "Refresh provider usage",
       workspaceId,
       agentId,
-      Component,
-      onPress() {
-        if (action) return action;
-        action = refreshUsage().finally(() => {
-          action = undefined;
-        });
-        return action;
+      button: {
+        title: "Refresh provider usage",
+        label: "…",
+        icon: createIcon(patch => registration.update(patch)),
+        behavior: {
+          kind: "action",
+          onPress() {
+            if (!active || removed) return;
+            if (action) return action;
+            action = refreshUsage().finally(() => {
+              action = undefined;
+            });
+            return action;
+          },
+        },
       },
     });
-    pills.set(agentId, { workspaceId, providerId, remove });
+    pills.set(agentId, { workspaceId, providerId, remove: () => { removed = true; registration.remove(); } });
   }
 
   const unsubscribe = client.paseo.agents.subscribe((update) => {

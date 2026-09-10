@@ -1,6 +1,6 @@
 # 실전 사용 예시
 
-이 문서는 Paseo **0.8.0-beta.1** Plugin API로 **실제로 무엇을 만들 수 있는지** 빠르게 보여주는 아이디어 모음이다. 예제는 핵심 계약만 보여주며, 실제 Plugin에는 import, loading·empty·error 상태, 접근성 label과 cleanup을 함께 추가한다.
+이 문서는 Paseo **0.8.0** Plugin API로 **실제로 무엇을 만들 수 있는지** 빠르게 보여주는 아이디어 모음이다. 예제는 핵심 계약만 보여주며, 실제 Plugin에는 import, loading·empty·error 상태, 접근성 label과 cleanup을 함께 추가한다.
 
 아래 예시는 현재 설치 가능한 제품 목록이나 실행 검증 결과가 아니다. 현재 구현의 버전과 검증 상태는 [호환성 기록](../COMPATIBILITY.md)과 [0.8 이관](../MIGRATION_0.8.md)을 따른다. 이 저장소의 배포 대상은 [Branch Garden과 Provider Usage](../../README.md#plugins)이며, 그 밖의 예시는 API 활용 아이디어다.
 
@@ -124,63 +124,31 @@ client.addCommandCenterItem({
 
 **만들 수 있는 것:** “리뷰 열기”, “현재 티켓 보기”, “배포 체크리스트”처럼 Agent와 가까운 표준 버튼.
 
-```tsx
-function ReviewPill({ theme }: PluginComposerPillProps) {
-  return (
-    <View style={{ flexDirection: "row", gap: 6 }}>
-      <Icon name="ScanSearch" size={14} color={theme.colors.foregroundMuted} />
-      <Text style={{ color: theme.colors.foregroundMuted }}>Review</Text>
-    </View>
-  );
-}
-
+```ts
 export function contributeClient(client: PluginClientContext) {
-  const removers = new Map<string, PluginCleanup>();
+  const registrations = new Map<string, PluginButtonRegistration>();
   const unsubscribe = client.paseo.agents.subscribe((update) => {
-    if (update.kind === "remove") {
-      void removers.get(update.agentId)?.();
-      removers.delete(update.agentId);
-      return;
-    }
-    if (!update.agent.workspaceId || update.agent.archivedAt) {
-      void removers.get(update.agent.id)?.();
-      removers.delete(update.agent.id);
-      return;
-    }
+    const id = update.kind === "remove" ? update.agentId : update.agent.id;
+    registrations.get(id)?.remove();
+    registrations.delete(id);
+    if (update.kind === "remove" || !update.agent.workspaceId || update.agent.archivedAt) return;
     const { id: agentId, workspaceId } = update.agent;
-
-    removers.get(agentId)?.();
-    removers.set(
-      agentId,
-      client.addComposerPill({
-        id: "review",
-        title: "Open review",
-        workspaceId,
-        agentId,
-        Component: ReviewPill,
-        onPress() {
+    registrations.set(agentId, client.addComposerPill({
+      id: "review", workspaceId, agentId,
+      button: { title: "Open review", label: "Review", icon: "ScanSearch",
+        behavior: { kind: "action", onPress() {
           client.openPanel("review", { workspaceId, agentId });
-        },
-      }),
-    );
+        } } },
+    }));
   });
-
   return () => {
     unsubscribe();
-    for (const remove of removers.values()) remove();
+    for (const registration of registrations.values()) registration.remove();
   };
-}
-
-// index.client.tsx: 다른 UI 등록 뒤 helper의 cleanup을 반환한다.
-export default function contribute(client: PluginClientContext) {
-  return contributeClient(client);
 }
 ```
 
-이 조각은 live 변경 경로를 보여준다. 실제 제품에서는 최초 Agent 목록도 읽고, 목록 응답과 구독의 경합을 처리한다. 등록한 `review` panel과 pill 제거 함수를 entry cleanup에 연결한다.
-
-Paseo가 버튼 외형, pending/error 상태와 위치를 소유한다. Plugin은 언제 pill을 만들지, 안에 무엇을 보여줄지, 눌렀을 때 무엇을 할지만 정한다.
-
+`PluginClientContext`와 `PluginButtonRegistration`은 `@getpaseo/plugin/client`에서 가져온다. 이 조각은 live 변경 경로만 보여준다. 실제 제품은 최초 목록·페이지·구독 경합도 처리한다. 등록된 label은 `registration.update({ label })`로 갱신한다. `index.client.tsx`는 review panel을 등록하고 helper cleanup을 반환한다. Header의 지정 slot에는 같은 descriptor로 `addHeaderButton`을 사용할 수 있다.
 
 
 ## 5. 확인 Modal과 결과 Toast
@@ -604,7 +572,7 @@ const snapshot = await paseo.providers.listUsage();
 const codex = snapshot.providers.find((provider) => provider.providerId === "codex");
 ```
 
-Client에서는 `usePaseo()`로 API를 얻고 TanStack Query의 loading/error/cache를 연결한다. `status`, window 잔여율·reset, balance의 nullable/optional 값을 처리하며 `agent.lastUsage`를 계획 잔여량으로 표시하지 않는다. Host 미지원 시 reject된다. 이 저장소의 Provider Usage는 이 공식 SDK를 사용하며, global Provider catalog의 enabled 연결만 표시한다. 소스 검증과 실제 beta runtime 검증은 구분한다.
+Client에서는 `usePaseo()`로 API를 얻고 TanStack Query의 loading/error/cache를 연결한다. `status`, window 잔여율·reset, balance의 nullable/optional 값을 처리하며 `agent.lastUsage`를 계획 잔여량으로 표시하지 않는다. Host 미지원 시 reject된다. 이 저장소의 Provider Usage는 이 공식 SDK를 사용하며, global Provider catalog의 enabled 연결만 표시한다. 소스 검증과 실제 앱 runtime 검증은 구분한다.
 
 ## 기능을 조합한 Plugin 아이디어
 

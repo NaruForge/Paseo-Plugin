@@ -1,10 +1,16 @@
 # Branch Garden
 
+Release **v0.1.0-rc.3** targets final **Paseo 0.8.0**. See [final-version checks and remaining runtime limits](../../docs/verification/paseo-0.8.0-release.md). Existing screenshots below retain their historical version and simulated-host scope.
+
+```sh
+paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.3
+```
+
 Inspect registered Git projects, active workspaces, local branches and worktrees on the selected host. No branch is checked out, reset or deleted.
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Install](#install) · [Support](../../SUPPORT.md)
 
-**Current source targets Paseo 0.8.0-beta.1.** Runtime entries, imports and exact SDK dependencies have been migrated and checked with the beta compiler, including a copy without `node_modules`. The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). See the [source verification](../../docs/verification/branch-garden-0.8-source.md) and [#82](https://github.com/NaruForge/Paseo-Plugin/issues/82). The screenshots and pinned release below remain 0.7 evidence.
+**Current source targets Paseo 0.8.0.** Runtime entries, imports and exact SDK dependencies have been migrated and checked with the target compiler, including a copy without `node_modules`. The user has completed Paseo 0.8 runtime verification; see the [runtime record and reported scope](../../docs/verification/paseo-0.8-runtime.md). See the [source verification](../../docs/verification/branch-garden-0.8-source.md) and [#82](https://github.com/NaruForge/Paseo-Plugin/issues/82). The screenshots and pinned release below remain 0.7 evidence.
 
 ## Screenshots
 
@@ -41,14 +47,14 @@ Expect runtime ID `branch-garden` with status `running` and no load error. If th
 For Git source evaluation of **0.8** source, choose a reviewed published commit that contains this plugin. Do not use `v0.1.0-rc.2` for 0.8:
 
 ```sh
-paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref <reviewed-0.8-ref>
+paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.3
 ```
 
 Replace the placeholder with that actual ref. Git add/update/recovery for this plugin is recorded in the [Git source verification](../../docs/verification/paseo-0.8-git-source.md); see [Git installation](../../docs/GIT_INSTALLATION.md).
 
 ## Requirements and configuration
 
-For the pinned `v0.1.0-rc.2` release: Paseo 0.7.2. For current source: daemon and app compatible with `^0.8.0`, with development checks pinned to 0.8.0-beta.1; this is not a final 0.8 runtime certification. Git is required on the daemon host. No repository-specific configuration is required. The plugin reads the selected host's existing Paseo project/workspace registry. Windows is the primary runtime environment; macOS/Linux automated checks and live runtime evidence are tracked separately in [Compatibility](../../docs/COMPATIBILITY.md).
+For the pinned `v0.1.0-rc.2` release: Paseo 0.7.2. For current source: daemon and app compatible with `^0.8.0`, with development checks pinned to 0.8.0; this is not a final 0.8 runtime certification. Git is required on the daemon host. No repository-specific configuration is required. The plugin reads the selected host's existing Paseo project/workspace registry. Windows is the primary runtime environment; macOS/Linux automated checks and live runtime evidence are tracked separately in [Compatibility](../../docs/COMPATIBILITY.md).
 
 ## Use
 

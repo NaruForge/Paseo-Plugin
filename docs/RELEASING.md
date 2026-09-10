@@ -11,11 +11,9 @@ All four current plugins use one collection version and one Git tag (`v<version>
 
 ## Validate runtime safely
 
-For **Paseo 0.8.0-beta.1**, apply the [migration checklist](MIGRATION_0.8.md) first. All four plugin sources target beta.1. The user runtime report and its limits for Branch Garden, Provider Usage and Prompt Palette are recorded in [verification](verification/paseo-0.8-runtime.md). Git add/update/recovery for those three plugins is recorded in the [Git source verification](verification/paseo-0.8-git-source.md); Command Deck Git activation remains unverified. The existing `v0.1.0-rc.2` release remains on 0.7.2. Source checks are not a new release or runtime certification. Keep the previous tag and use an explicit candidate ref. Do not overwrite 0.7 release notes or runtime evidence with beta claims.
+For **Paseo 0.8.0 final**, apply the [migration checklist](MIGRATION_0.8.md). All four plugins use exact final SDKs and the three pills use `button` descriptors with `update/remove` handles. Review the [final-version evidence](verification/paseo-0.8.0-release.md); beta-era runtime reports do not certify this changed API. Keep v0.1.0-rc.2 for 0.7.2 and never move an existing tag.
 
-Require separate client/server entries, runtime directories, `requirements.paseo`, exact target SDK/client dependencies and matching catalog/lockfile metadata. A plugin entry’s `paseoVersion` overrides the root `plugins.json.paseoVersion` default; release checks enforce the effective exact SDK and client dependency for every workspace. Update import checks and test stubs with the source migration. Recommended manifest range: `^0.8.0`; development SDK: exact `0.8.0-beta.1`.
-
-Validate daemon and app versions independently, including host compiler boundaries, contribution removers and Provider Usage's pill registration/cleanup. For 0.8 remote operations use global `--host`, for example `paseo --host <target> plugin ls`. Recheck declarations if advancing beyond beta.1. Static docs/type checks do not establish beta runtime support.
+Require separate runtime entries, runtime import boundaries, `requirements.paseo: ^0.8.0`, and matching exact 0.8.0 SDK/client/catalog/lockfile values. Validate daemon and app independently. For remote operations use `paseo --host <target> plugin ls`. A source/compiler check does not establish native app support. A prerelease may publish with documented runtime limitations; a stable release still requires the independent review and runtime evidence above.
 
 Use an authorized test daemon with plugins already enabled. Check `paseo plugin ls`; use unique runtime IDs. A Git branch candidate can be tested before a tag exists:
 

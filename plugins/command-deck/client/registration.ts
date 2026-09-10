@@ -1,7 +1,6 @@
-import type { PluginClientContext, PluginComposerPillProps } from "@getpaseo/plugin/client";
-import type { ComponentType } from "react";
+import type { PluginClientContext } from "@getpaseo/plugin/client";
 
-export function registerCommandPills(client: PluginClientContext, Component: ComponentType<PluginComposerPillProps>) {
+export function registerCommandPills(client: PluginClientContext) {
   let active = true;
   let loading = false;
   const touched = new Set<string>();
@@ -12,8 +11,10 @@ export function registerCommandPills(client: PluginClientContext, Component: Com
     if (pills.get(agent.id)?.workspaceId === agent.workspaceId) return;
     remove(agent.id);
     const workspaceId = agent.workspaceId;
-    pills.set(agent.id, { workspaceId, remove: client.addComposerPill({ id: "commands", title: "Open commands",
-      workspaceId, agentId: agent.id, Component, onPress: () => client.openPanel("commands", { workspaceId }) }) });
+    const registration = client.addComposerPill({ id: "commands", workspaceId, agentId: agent.id,
+      button: { title: "Open commands", label: "Commands", icon: "Terminal",
+        behavior: { kind: "action", onPress: () => { if (active) client.openPanel("commands", { workspaceId }); } } } });
+    pills.set(agent.id, { workspaceId, remove: () => registration.remove() });
   }
   const unsubscribe = client.paseo.agents.subscribe(update => {
     if (!active) return;

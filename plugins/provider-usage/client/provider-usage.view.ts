@@ -109,7 +109,8 @@ export function pillLabel(
   if (settings.showProviderName) parts.push(name);
   if (settings.showRemainingPercent) parts.push(formatPercent(remainingPercentForProvider(provider)));
   const label = parts.join(" ");
-  if (!settings.showResetTime) return label;
+  // Final 0.8 buttons reject empty labels; preserve the saved field choices.
+  if (!settings.showResetTime) return label || "Usage";
   const resetsAt = provider?.status === "available" ? (pickPrimaryWindow(provider.windows)?.resetsAt ?? pickPrimaryBalance(provider.balances)?.resetsAt) : null;
   const reset = formatPillResetAt(resetsAt, now, resetTimeFormat) ?? "—";
   return label ? `${label} · ${reset}` : reset;

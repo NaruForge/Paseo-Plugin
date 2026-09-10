@@ -98,14 +98,15 @@ describe("provider usage view", () => {
     expect(toneColor(theme, "ok")).toBe("success");
     expect(toneColor(theme, "default")).toBe("muted");
   });
-  it("honors all eight pill field combinations, including an accessible icon-only pill", () => {
+  it("honors all eight pill field combinations, with a nonempty final-API label", () => {
     for (let flags = 0; flags < 8; flags++) {
       const settings = { showProviderName: Boolean(flags & 1), showRemainingPercent: Boolean(flags & 2), showResetTime: Boolean(flags & 4) };
       const label = pillLabel(provider(), "codex", settings);
       expect(label.includes("Codex")).toBe(settings.showProviderName);
       expect(label.includes("75%")).toBe(settings.showRemainingPercent);
       expect(label.includes("—")).toBe(settings.showResetTime);
-      if (flags === 0) expect(label).toBe("");
+      expect(label.trim().length).toBeGreaterThan(0);
+      if (flags === 0) expect(label).toBe("Usage");
     }
     expect(pillAccessibilityLabel(provider(), "codex")).toBe("Codex 75 percent remaining");
   });
