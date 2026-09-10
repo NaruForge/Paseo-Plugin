@@ -16,7 +16,25 @@ Show usage for every enabled Provider connection on the selected Host, using Pas
 
 Captured from the installed **Paseo 0.8.0 Windows app** on 2026-09-10, in the dark desktop layout. These are real readings at capture time, not example quotas; see the [capture scope](../../docs/verification/plugin-screenshots-0.8.0.md).
 
+### Above the chat input: Composer pill
+
+The Usage pill sits directly above the Agent's chat input. It shows the matching Provider connection's remaining quota and, when enabled, reset time. Press the pill to request a fresh usage reading.
+
+![Provider Usage pill showing 53% remaining and 6d 16h until reset directly above the chat input](../../docs/screenshots/provider-usage/composer-live.png)
+
+This capture has provider name hidden in Settings; the gauge icon and remaining percentage identify the pill. Display fields are configurable in Provider Usage Settings below. Readings can change between captures.
+
+### Left sidebar: Usage
+
+Choose **Usage** in the left sidebar to open the usage screen for all enabled Provider connections on the selected Host. Its highlighted row shows the selected menu. If it is hidden, control sidebar visibility in **Settings → Layout**, or use **Open provider usage** in Command Center.
+
+![Paseo left sidebar with the Usage menu selected below Schedule](../../docs/screenshots/provider-usage/sidebar-live.png)
+
+The menu opens this screen:
+
 ![Provider Usage live screen with Codex and Grok usage and an unavailable GitHub Copilot reading](../../docs/screenshots/provider-usage/usage-live.png)
+
+### Display preferences
 
 ![Provider Usage live Settings with remaining percentage and reset time enabled](../../docs/screenshots/provider-usage/settings-live.png)
 
