@@ -25,14 +25,14 @@ describe("prompt registrations", () => {
   it("updates the existing button while sending and unsubscribes before a late completion", async () => {
     vi.useFakeTimers();
     const t = setup(); t.emit(upsert("a"));
-    const sender = t.component.mock.calls[0][1];
+    const sender = t.component.mock.calls[0][0];
     let finish!: () => void;
     const send = sender.send(async () => true, () => new Promise<void>(resolve => { finish = resolve; }));
     await Promise.resolve();
-    expect(t.update).toHaveBeenLastCalledWith({ label: "Sending…", disabled: true });
+    expect(t.update).toHaveBeenLastCalledWith({ label: "Sending…" });
     expect(t.entries).toHaveLength(1);
     finish(); await send;
-    expect(t.update).toHaveBeenLastCalledWith({ label: "Prompts", disabled: false });
+    expect(t.update).toHaveBeenLastCalledWith({ label: "Prompts" });
     const late = sender.send(async () => true, () => new Promise<void>(resolve => { finish = resolve; }));
     await Promise.resolve();
     t.cleanup(); const calls = t.update.mock.calls.length;
@@ -64,11 +64,13 @@ describe("prompt registrations", () => {
     const t = setup(vi.fn(() => new Promise<Page>(r => { resolve = r; })));
     t.emit(upsert("a", "new")); resolve(page(["a"])); await vi.advanceTimersByTimeAsync(0);
     expect(t.entries[0].workspaceId).toBe("new");
-    press(t.entries[0]);
-    const controller = t.component.mock.calls[0][0];
-    expect(controller.snapshot()).toBe(true);
+    expect(t.entries[0].button.icon).toBe("MessagesSquare");
+    expect(t.entries[0].button.behavior.kind).toBe("popover");
+    if (t.entries[0].button.behavior.kind === "popover") {
+      expect(t.entries[0].button.behavior.Content).toBe(t.component.mock.results[0].value);
+    }
     t.emit(upsert("a", "moved"));
-    expect(controller.snapshot()).toBe(false); expect(t.remove).toHaveBeenCalledTimes(1);
+    expect(t.remove).toHaveBeenCalledTimes(1);
     t.emit(upsert("a", "moved", "archived"));
     expect(t.remove).toHaveBeenCalledTimes(2); t.cleanup();
   });
@@ -88,7 +90,7 @@ describe("prompt registrations", () => {
     t.emit(upsert("a")); t.cleanup(); resolve(page(["b"])); t.emit(upsert("c"));
     await vi.advanceTimersByTimeAsync(0);
     expect(t.entries).toHaveLength(1);
-    press(t.entries[0]); expect(t.component.mock.calls[0][0].snapshot()).toBe(false);
+    expect(t.entries[0].button.behavior.kind).toBe("popover");
     expect(vi.getTimerCount()).toBe(0);
   });
   it("does not prune existing pills after a malformed incomplete page", async () => {
@@ -104,8 +106,3 @@ describe("prompt registrations", () => {
     expect(t.unsubscribe).toHaveBeenCalledTimes(1);
   });
 });
-
-function press(pill: PluginComposerPillContribution) {
-  if (pill.button.behavior.kind !== "action") throw new Error("Expected action");
-  return pill.button.behavior.onPress();
-}

@@ -1,12 +1,12 @@
 import type { PluginClientContext } from "@getpaseo/plugin/client";
 import { PromptSettingsScreen } from "./client/prompt-settings";
-import { PromptPill } from "./client/prompt-pill";
+import { PromptPickerContent } from "./client/prompt-picker";
 import { registerPromptPills } from "./client/prompt-registration";
 export default function contribute(client: PluginClientContext) {
   const removeSettings = client.addSettingsScreen({
     id: "library", title: "Prompt Palette", icon: "MessagesSquare", Component: PromptSettingsScreen,
   });
-  const removePills = registerPromptPills(client, (controller, sender) => props =>
-    <PromptPill {...props} controller={controller} sender={sender} openSettings={() => client.openSettings("library")} />);
+  const removePills = registerPromptPills(client, sender => props =>
+    <PromptPickerContent {...props} sender={sender} openSettings={() => client.openSettings("library")} />);
   return () => { removePills(); void removeSettings(); };
 }
