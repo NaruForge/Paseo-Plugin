@@ -25,10 +25,10 @@ No prompt was sent or edited for this capture. Historical picker and send previe
 1. Open **Settings → Plugins → Prompt Palette**.
 2. Choose **Add prompt**, enter a name, optional description and prompt body, then **Apply to draft**.
 3. Edit, delete or move items up/down as needed. Choose **Save changes** to save the whole library.
-4. Open an existing Agent and press **Prompts** in its Composer.
+4. Open an existing Agent and press **Prompts** in its Composer. Paseo opens the saved-prompt picker as an anchored popover on wide layouts or a bottom sheet on compact layouts.
 5. Select a saved prompt, review its full text and Host/Agent target, then press **Send**.
 
-The pill remains available for an empty library and links to Settings. Creating a new Agent from a draft Composer is outside this version's scope.
+The pill remains available for an empty library and links to Settings. The picker is host-owned, so it remains mounted while a prompt submission is pending; duplicate sends stay blocked. Creating a new Agent from a draft Composer is outside this version's scope.
 
 Apply to draft does not save to the Host. Save before leaving Settings or changing Host; unsaved changes are local to the open screen. Cancel / load latest confirms discarding the draft. Delete also requires confirmation and is persisted only by Save changes.
 

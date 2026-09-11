@@ -1,19 +1,26 @@
-import { type PluginHostProps, usePaseo, useSettings, useAgent } from "@getpaseo/plugin/client";
-import { Modal, ScrollView, copyText } from "@getpaseo/plugin/client/react-native";
-import { useEffect, useRef, useState } from "react";
+import { type PluginButtonContentProps, usePaseo, useSettings, useAgent } from "@getpaseo/plugin/client";
+import { ScrollView, copyText } from "@getpaseo/plugin/client/react-native";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Text, View } from "react-native";
 import { promptSettings, type Prompt } from "../shared/prompt-settings";
 import type { PromptSender } from "./prompt-send";
 import { Action, PromptRow } from "./prompt-ui";
 
-export function PromptPicker({ theme, layout, host, agentId, workspaceId, sender, close, openSettings }: PluginHostProps & { agentId: string; workspaceId: string } & {
+export function PromptPickerContent(props: PluginButtonContentProps & {
   sender: PromptSender; close(): void; openSettings(): void;
+}) {
+  if (props.context !== "agent") return null;
+  return <PromptPicker {...props} />;
+}
+
+function PromptPicker({ theme, layout, host, agentId, workspaceId, sender, close, openSettings }: PluginButtonContentProps & { context: "agent"; agentId: string; workspaceId: string } & {
+  sender: PromptSender; openSettings(): void;
 }) {
   const settings = useSettings(promptSettings);
   const paseo = usePaseo();
   const agent = useAgent(agentId, value => ({ title: value.title, workspaceId: value.workspaceId }));
   const [selected, setSelected] = useState<Prompt | null>(null);
-  const [pending, setPending] = useState(false);
+  const pending = useSyncExternalStore(sender.subscribe, sender.snapshot, sender.snapshot);
   const [error, setError] = useState<string | null>(sender.uncertain ? "Delivery is uncertain. Check the conversation before sending again." : null);
   const [reloading, setReloading] = useState(true);
   const alive = useRef(true);
@@ -27,21 +34,19 @@ export function PromptPicker({ theme, layout, host, agentId, workspaceId, sender
   async function send() {
     if (!selected || pending || sender.pending || sender.uncertain || unavailable) return;
     const body = selected.body;
-    setPending(true); setError(null);
+    setError(null);
     const handle = paseo.agents.ref(agentId);
     const result = await sender.send(async () => {
       const latest = await handle.refresh();
       return alive.current && !!latest && !latest.agent.archivedAt && latest.agent.workspaceId === workspaceId;
     }, () => handle.send(body));
     if (!alive.current) return;
-    setPending(false);
     if (result === "sent") close();
     else if (result === "unknown") setError("Delivery is uncertain. Check the conversation before sending again.");
     else if (result === "unavailable") setError("Agent unavailable. Check the Host connection and try again.");
   }
   const message = (text: string) => <Text style={{ color: theme.colors.foregroundMuted, fontSize: 12 }}>{text}</Text>;
-  return <Modal title={selected ? selected.name : "Quick prompts"} open onOpenChange={open => { if (!open && !sender.pending) close(); }}>
-    <Modal.Content style={{ backgroundColor: theme.colors.surface0 }} contentContainerStyle={{ padding: layout.compact ? 16 : 24, gap: 16, minHeight: 0 }} scrollable={false}>
+  return <View style={{ gap: 16 }}>
       <View style={{ gap: 4 }}>
         <Text numberOfLines={2} style={{ color: theme.colors.foreground, fontSize: 14, lineHeight: 20 }}>
           Agent: {agent?.title || agentId}
@@ -90,6 +95,5 @@ export function PromptPicker({ theme, layout, host, agentId, workspaceId, sender
             <Action theme={theme} secondary label={settings.values.prompts.length ? "Manage prompts" : "Add prompts"} onPress={() => { close(); openSettings(); }} />
           </View>
         </>}
-    </Modal.Content>
-  </Modal>;
+  </View>;
 }
