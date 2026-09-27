@@ -1,6 +1,6 @@
 # Git source 설치와 업데이트
 
-현재 **v0.1.0-rc.4**는 Paseo **0.9.0-beta.2**용 네 플러그인입니다. [0.9 검증 기록](verification/paseo-0.9.0-beta.2.md)을 확인하고 daemon·app·CLI를 모두 0.9.0-beta.2로 맞추세요. `^0.8.0` manifest는 0.9에서 거부됩니다. 과거 `v0.1.0-rc.3`는 0.8.0용, `v0.1.0-rc.2`는 0.7.2용으로 보존합니다. 같은 컴퓨터의 개발에는 directory install/reload, 다른 daemon이나 PC 배포에는 Git source를 사용합니다.
+현재 **v0.1.0-rc.4**는 Paseo **0.9.x 안정 버전**과 검증한 **0.10.0-beta.1 베타**를 지원하는 네 플러그인입니다(`requirements.paseo: >=0.9.0 <0.10.0-beta.2`). [0.9.2 / 0.10.0-beta.1 검증 기록](verification/paseo-0.9.2-0.10.0-beta.1.md)을 확인하고 daemon·app·CLI를 이 범위의 버전으로 맞추세요. `^0.8.0` manifest는 0.9에서, 이전 `^0.9.0` manifest는 0.10.0-beta.1에서 거부됩니다. 그 이후 베타와 0.10.0 정식은 검증 전까지 거부됩니다. 과거 `v0.1.0-rc.3`는 0.8.0용, `v0.1.0-rc.2`는 0.7.2용으로 보존합니다. 같은 컴퓨터의 개발에는 directory install/reload, 다른 daemon이나 PC 배포에는 Git source를 사용합니다.
 
 ```powershell
 paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.4
@@ -58,9 +58,9 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden `
 
 `--path`는 기존 자동화와의 호환을 위한 legacy 형식입니다. 새 명령과 문서에는 source 뒤에 `:relative/path`를 붙이는 canonical 형식을 사용합니다.
 
-## 0.8 소스 Git 평가
+## 현재 소스 Git 평가
 
-네 플러그인의 현재 소스는 main에 있습니다. `v0.1.0-rc.2`는 Paseo 0.7.2용 Branch Garden과 Provider Usage만 포함하며 Prompt Palette와 Command Deck은 없습니다. `v0.1.0-rc.3`는 0.8.0용입니다. 0.9 평가에는 그 태그들을 쓰지 마세요. 아래 rc.4 태그를 검토하고 0.9.0-beta.2 daemon/app에서 **명령 하나만** 선택하세요. 아래 명령을 실행하는 것 자체가 검증 완료는 아닙니다. 세 플러그인의 add/update/실패 복구 증거는 [0.8 Git 검증 기록](verification/paseo-0.8-git-source.md)에 있고, Command Deck Git 경로는 포함되지 않습니다.
+네 플러그인의 현재 소스는 main에 있습니다. `v0.1.0-rc.2`는 Paseo 0.7.2용 Branch Garden과 Provider Usage만 포함하며 Prompt Palette와 Command Deck은 없습니다. `v0.1.0-rc.3`는 0.8.0용입니다. 0.9 이상 평가에는 그 태그들을 쓰지 마세요. 아래 rc.4 태그를 검토하고 0.9.x 또는 0.10.0-beta.1 daemon/app에서 **명령 하나만** 선택하세요. 아래 명령을 실행하는 것 자체가 검증 완료는 아닙니다. 세 플러그인의 add/update/실패 복구 증거는 [0.8 Git 검증 기록](verification/paseo-0.8-git-source.md)에 있고, Command Deck Git 경로는 포함되지 않습니다.
 
 ```powershell
 paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.4
@@ -71,7 +71,7 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref v0.1.0-rc.4
 
 위 명령은 `v0.1.0-rc.4` 태그를 고정합니다. 다른 ref를 선택하려면 해당 소스와 지원 버전을 먼저 검토하세요.
 
-현재 로컬 개발은 컬렉션 [0.9 평가](../README.md#evaluate-current-09-source)와 각 플러그인 가이드의 directory 설치를 사용합니다. 세 플러그인의 Git 활성화·업데이트·실패 복구는 [0.8 Git 검증 기록](verification/paseo-0.8-git-source.md)을 따르고, Command Deck Git 활성화는 아직 수행하지 않았습니다.
+현재 로컬 개발은 컬렉션 [현재 소스 평가](../README.md#evaluate-current-source)와 각 플러그인 가이드의 directory 설치를 사용합니다. 세 플러그인의 Git 활성화·업데이트·실패 복구는 [0.8 Git 검증 기록](verification/paseo-0.8-git-source.md)을 따르고, Command Deck Git 활성화는 아직 수행하지 않았습니다.
 
 ## Ref 선택
 
@@ -84,7 +84,9 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/command-deck --ref v0.1.0-rc.4
 
 운영 환경에서 변경 시점을 통제하려면 tag나 commit을 사용하고, 지속 배포가 필요할 때만 branch를 추적하세요.
 
-0.7 사용자는 기존 태그·commit을 보존하세요. Default branch에는 이미 0.8 소스가 있으므로 이를 추적하면 0.7과 호환되지 않는 업데이트 후보를 받습니다. 0.8 이전 버전은 새 `requirements.paseo` 진단을 이해하지 못하므로 범위 선언만으로 0.7 설치를 보호할 수 없습니다. 위 태그 고정 설치는 `update`로 새 commit을 받지 않습니다.
+**Paseo 안정·베타 채널:** 한 소스가 안정 Paseo와 검증한 베타를 함께 지원합니다. Paseo 새 베타는 비교·실행 검증 뒤 다음 컬렉션 릴리스에서 manifest 범위에 추가되므로, 그 전까지 새 베타 daemon/app은 `requires Paseo …` 오류로 로드를 거부합니다. 태그에 고정한 베타 사용자는 새 릴리스 태그로 ref를 바꾸고, main을 추적하는 사용자는 `paseo plugin update`로 받습니다. 두 버전의 API가 갈라진 기간에만 베타용 `next` branch를 운영하며, 그때는 `--ref next`를 사용합니다. 정책은 [호환성](COMPATIBILITY.md#paseo-version-channels)과 [릴리스 절차](RELEASING.md#paseo-version-channels)를 따릅니다.
+
+0.7·0.8 사용자는 기존 태그·commit을 보존하세요. Default branch에는 0.9 이상을 대상으로 하는 소스가 있으므로 이를 추적하면 0.8 이하와 호환되지 않는 업데이트 후보를 받습니다. 0.8 이전 버전은 새 `requirements.paseo` 진단을 이해하지 못하므로 범위 선언만으로 0.7 설치를 보호할 수 없습니다. 위 태그 고정 설치는 `update`로 새 commit을 받지 않습니다.
 
 ## 상태 확인과 업데이트
 

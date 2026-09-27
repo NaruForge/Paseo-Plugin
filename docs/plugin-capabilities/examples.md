@@ -1,6 +1,6 @@
 # 실전 사용 예시
 
-이 문서는 Paseo **0.9.0-beta.2** Plugin API로 **실제로 무엇을 만들 수 있는지** 빠르게 보여주는 아이디어 모음이다. 예제는 핵심 계약만 보여주며, 실제 Plugin에는 import, loading·empty·error 상태, 접근성 label과 cleanup을 함께 추가한다.
+이 문서는 Paseo **0.9.0-beta.2** Plugin API(0.9.2·0.10.0-beta.1과 선언이 동일)로 **실제로 무엇을 만들 수 있는지** 빠르게 보여주는 아이디어 모음이다. 예제는 핵심 계약만 보여주며, 실제 Plugin에는 import, loading·empty·error 상태, 접근성 label과 cleanup을 함께 추가한다.
 
 아래 예시는 현재 설치 가능한 제품 목록이나 실행 검증 결과가 아니다. 현재 구현의 버전과 검증 상태는 [호환성 기록](../COMPATIBILITY.md)과 [0.9 이관](../MIGRATION_0.9.md)을 따른다. 이 저장소의 배포 대상은 [Branch Garden과 Provider Usage](../../README.md#plugins)이며, 그 밖의 예시는 API 활용 아이디어다.
 

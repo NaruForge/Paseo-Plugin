@@ -10,7 +10,7 @@ Prepared text for a future maintainer-approved submission; it has not been sent 
 
 **Installation example:** `paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.4`
 
-**Compatibility:** v0.1.0-rc.4 targets Paseo 0.9.0-beta.2. Branch Garden is preview; the other three plugins are experimental. Command Deck requires Windows and PowerShell 7. See the [0.9 evidence and runtime limitations](verification/paseo-0.9.0-beta.2.md). The older v0.1.0-rc.3 remains available for Paseo 0.8.0 and v0.1.0-rc.2 for Paseo 0.7.2. Do not describe source or simulated UI checks as native runtime certification.
+**Compatibility:** v0.1.0-rc.4 supports Paseo 0.9.x stable and the verified 0.10.0-beta.1 beta. Branch Garden is preview; the other three plugins are experimental. Command Deck requires Windows and PowerShell 7. See the [0.9.2 / 0.10.0-beta.1 evidence and runtime limitations](verification/paseo-0.9.2-0.10.0-beta.1.md). The older v0.1.0-rc.3 remains available for Paseo 0.8.0 and v0.1.0-rc.2 for Paseo 0.7.2. Do not describe source or simulated UI checks as native runtime certification.
 
 **Maintenance:** NaruForge and contributors; MIT license; CI, release notes, configuration guides and private vulnerability reporting.
 

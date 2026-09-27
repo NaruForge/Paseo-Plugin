@@ -39,6 +39,7 @@ jobs:
       - run: npm run check
         env:
           RELEASE_TAG: ${{ inputs.tag }}
+      - run: npm run check:paseo-channel -- beta
   draft:
     needs: verify
     runs-on: ubuntu-latest

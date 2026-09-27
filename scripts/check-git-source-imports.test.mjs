@@ -3,7 +3,8 @@ import { test } from "node:test";
 import { collectImports, importError } from "./check-git-source-imports.mjs";
 
 const beta = "0.8.0-beta.1";
-const nine = "0.9.0-beta.2";
+const nine = "0.9.2";
+const next = "0.10.0-beta.1";
 test("reads imports without confusing comments, strings, and type-only forms", () => {
   assert.deepEqual(collectImports(`
     // import "ignored";
@@ -26,8 +27,8 @@ test("reads imports without confusing comments, strings, and type-only forms", (
   ]);
 });
 
-test("accepts the separate 0.8/0.9 runtime contracts and 0.7 imports", () => {
-  for (const sdk of [beta, nine]) {
+test("accepts the separate 0.8+ runtime contracts and 0.7 imports", () => {
+  for (const sdk of [beta, nine, next]) {
     for (const [file, name, typeOnly] of [
       ["index.client.tsx", "./client/main", false],
       ["client/main.tsx", "../shared/contract", false],
@@ -58,7 +59,7 @@ test("rejects runtime leaks, including type-only and transitive shared edges", (
     ["index.ts", "./shared/contract"],
     ["index.server.ts", "@getpaseo/client"],
   ]) {
-    for (const sdk of [beta, nine]) {
+    for (const sdk of [beta, nine, next]) {
       for (const typeOnly of [false, true]) assert.ok(importError({ name, typeOnly }, file, sdk), `${sdk} ${file}: ${name}`);
     }
   }

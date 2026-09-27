@@ -2,7 +2,7 @@
 
 이 저장소는 Branch Garden, Provider Usage, Prompt Palette, Command Deck 네 개의 독립적인 Paseo 플러그인을 개발하는 npm workspace다. 각 `plugins/*` 디렉터리는 자체 manifest와 진입점을 가진 별도의 설치 단위다.
 
-현재 소스와 개발 SDK는 exact **0.9.0-beta.2**이고, manifest `requirements.paseo`는 **^0.9.0**이다. 공개 태그 `v0.1.0-rc.3`은 **0.8.0**, `v0.1.0-rc.2`의 Branch Garden과 Provider Usage는 **0.7.2**다. 파일·import·검증 순서는 [docs/MIGRATION_0.9.md](docs/MIGRATION_0.9.md)를 본다. 0.8 검증 범위는 [Runtime](docs/verification/paseo-0.8-runtime.md), [Git source](docs/verification/paseo-0.8-git-source.md), Command Deck은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 본다.
+현재 소스는 한 벌로 Paseo **0.9.x 안정 버전**과 검증한 **0.10.0-beta.1 베타**를 함께 지원한다. 개발 SDK는 exact **0.9.2**, manifest `requirements.paseo`는 **`>=0.9.0 <0.10.0-beta.2`**이고, 베타 SDK는 `plugins.json`의 `paseoBetaVersion`으로 CI에서 다시 검사한다. 채널 정책은 [호환성](docs/COMPATIBILITY.md#paseo-version-channels)과 [릴리스 절차](docs/RELEASING.md#paseo-version-channels)를 본다. 공개 태그 `v0.1.0-rc.3`은 **0.8.0**, `v0.1.0-rc.2`의 Branch Garden과 Provider Usage는 **0.7.2**다. 파일·import·검증 순서는 [docs/MIGRATION_0.9.md](docs/MIGRATION_0.9.md)를 본다. 0.8 검증 범위는 [Runtime](docs/verification/paseo-0.8-runtime.md), [Git source](docs/verification/paseo-0.8-git-source.md), Command Deck은 [별도 기록](docs/verification/command-deck-0.8-source.md)을 본다.
 
 아이디어, 개발 계획과 버그의 이슈 관리는 GitHub Issues를 사용한다. 새 이슈는 `.github/ISSUE_TEMPLATE/`의 양식을 사용하고, 분류·Project 상태·PR 연결 규칙은 `.github/ISSUE_MANAGEMENT.md`를 따른다.
 
@@ -28,7 +28,10 @@
 ```powershell
 npm ci
 npm run check
+npm run check:paseo-channel -- beta
 ```
+
+마지막 명령은 package 파일과 lockfile을 바꾸지 않고 검증한 베타 SDK로 모든 workspace의 typecheck와 테스트를 반복한 뒤, CI가 아니면 잠긴 SDK로 되돌린다.
 
 현재 플러그인 하나만 검사할 때는 package 이름을 workspace 선택자로 사용한다.
 
@@ -39,7 +42,7 @@ npm test --workspace branch-garden
 
 ## Adding a Plugin
 
-1. 지원할 Paseo 버전을 먼저 정하고 해당 CLI로 `plugins/<plugin-id>` 아래의 새 빈 디렉터리에 `paseo plugin init <absolute-directory> --id <plugin-id>`를 실행한다. 각 workspace의 대상 SDK와 manifest를 맞추고 catalog의 플러그인별 `paseoVersion`을 기록한다.
+1. 지원할 Paseo 버전을 먼저 정하고 해당 CLI로 `plugins/<plugin-id>` 아래의 새 빈 디렉터리에 `paseo plugin init <absolute-directory> --id <plugin-id>`를 실행한다. 각 workspace의 대상 SDK와 manifest를 맞추고 catalog의 플러그인별 `paseoVersion`을 기록한다. Manifest `requirements.paseo`는 스캐폴드의 상한 없는 `>=` 기본값 대신 catalog `paseoRange`와 같게 둔다.
 2. 생성된 `package.json`의 `name`과 `paseo-plugin.json`의 `id`가 이 저장소 안에서 고유한지 확인한다.
 3. 루트에서 `npm install`을 실행해 workspace 설치 상태를 갱신한다.
 4. 아래 Synchronization Rules의 플러그인 디렉터리 변경 목록을 갱신한다. 현재 검사기는 모든 플러그인의 Git 설치 예시를 요구하므로 배포 제외 플러그인을 추가하려면 문서와 `scripts/check-doc-sync.mjs`의 검사 대상 정책을 함께 검토한다.
@@ -73,7 +76,7 @@ npm test --workspace branch-garden
 - `client/`: UI·훅·구독·query·controller. `server/`: Node·파일·프로세스·자격 증명·외부 API. `shared/`: 런타임 중립 값·타입·Zod 계약. Entry 외 소스 모듈은 이 디렉터리들에 두고 구형 루트 `index.ts`는 제거한다.
 - 공유 `defineRpc`·`defineSettings`·`defineAttachmentSource`·`RpcInput`·`RpcOutput`·`PluginTheme`는 SDK root, client 훅·props는 `/client`, UI는 `/client/react-native`·`/client/ui`에서 가져온다. `/client/host`는 private이며 type import에도 runtime 경계를 적용한다.
 - `*.logic.ts`, `*.view.ts`와 helper·테스트는 실제 소비자와 runtime 의존성에 따라 이동한다. 이름만으로 shared로 분류하지 않는다.
-- 이관 완료 소스는 manifest에 `requirements.paseo`를 선언한다. 권장 범위는 `^0.9.0`, 이관 기준 SDK는 exact `0.9.0-beta.2`이다. Manifest만 바꿔 호환성을 표시하지 않는다.
+- 이관 완료 소스는 manifest에 catalog `paseoRange`와 같은 `requirements.paseo`를 선언한다. 현재 범위는 `>=0.9.0 <0.10.0-beta.2`, 기준 SDK는 exact `0.9.2`, 검증한 베타는 `0.10.0-beta.1`이다. 범위는 검증한 최신 버전 바로 다음에서 끝나야 하며 `npm run check:release`가 이를 검사한다. Manifest만 바꿔 호환성을 표시하지 않는다.
 
 - `client/*.tsx`: UI, 훅, React Native 스타일. 모든 `Text` 색상은 `theme.colors`, 루트 배경은 `theme.colors.surface0`, 좁은 화면은 `layout.compact`를 사용한다.
 - `*.logic.ts`, `*.view.ts`: 런타임에 의존하지 않는 도메인 판단과 표시용 파생 값을 소유한다. 동작을 바꾸면 같은 이름의 테스트를 함께 확인한다.
@@ -93,6 +96,7 @@ npm test --workspace branch-garden
 - 플러그인 디렉터리를 추가·삭제·이름 변경하면 이 파일의 Workspace Map, `README.md`, `README.ko.md`, `plugins.json`의 플러그인 목록·설치 예시·저장소 구조, `.github/ISSUE_TEMPLATE/*.yml`의 대상 선택지와 `docs/GIT_INSTALLATION.md`의 설치 목록을 같은 변경에서 맞춘다. `npm run check:docs-sync`는 모든 플러그인의 설치 예시를 대조한다. Workspace Map 제목과 목록 형식도 이 검사기가 읽으므로 구조를 바꿀 때 함께 대조한다.
 - 플러그인의 사용자용 설치 요구 사항, 운영 절차 또는 안전 경계를 바꾸면 해당 내용을 이미 설명하는 루트나 플러그인 `README.md`와 `docs/` 문서를 같은 변경에서 갱신한다. 과거 release·verification 기록은 당시 사실을 보존하고 새 버전 증거를 별도로 추가한다.
 - Paseo 플러그인 계약이 바뀌면 현재 CLI가 생성하는 새 스캐폴드, exact `@getpaseo/plugin` package declaration과 공식 참조 문서를 대조하고, 영향받는 각 플러그인의 타입 계약을 확인한다.
+- Paseo 지원 버전을 바꾸면(`paseoVersion`·`paseoRange`·`paseoBetaVersion`) 네 manifest, workspace의 exact SDK·client, lockfile, 새 `docs/verification/` 기록과 지원 버전을 명시한 README·호환성·CHANGELOG를 같은 변경에서 맞추고 [릴리스 절차](docs/RELEASING.md#paseo-version-channels)의 새 베타 도입·안정 버전 승격 순서를 따른다. 안정 버전과 베타가 같은 소스로 동작할 수 없을 때만 `next` branch를 만들고, runtime 버전 분기를 추가하지 않는다.
 - 0.9 source 이관은 runtime import allowlist, Vitest stub, exact SDK·client dependency, lockfile·catalog 일치도 함께 검증한다. Catalog의 플러그인별 `paseoVersion`이 있으면 collection 기본 `paseoVersion`보다 우선한다. 현재 검사 스크립트 통과만으로 0.9 host compiler나 실행 호환성을 인증하지 않는다.
 
 ## Validation and Runtime Safety
@@ -104,7 +108,7 @@ npm test --workspace branch-garden
 - `prompt-palette`의 settings, registration, controller 또는 send 동작을 바꾸면 `npm run typecheck --workspace prompt-palette`와 `npm test --workspace prompt-palette`를 모두 실행한다. 전송은 공식 Agent `send()`만 사용하며 자동 재전송하지 않는다.
 - `command-deck`의 settings, runner, controller 또는 registration 동작을 바꾸면 `npm run typecheck --workspace command-deck`과 `npm test --workspace command-deck`을 모두 실행한다. 명령 실행은 공식 Terminal SDK만 사용하며 응답 유실 시 자동 재전송하지 않는다. Cleanup은 터미널을 종료하지 않는다.
 - workspace 구조, 설치 상태 또는 여러 플러그인 소스에 걸친 변경은 루트에서 `npm run check`로 검사한다. 문서만 바꾼 경우에는 위 문서 전용 변경 기준을 적용한다.
-- `scripts/check-git-source-imports.mjs`·`release-paseo.mjs`와 해당 테스트를 바꾸면 `npm run test:scripts`를 실행하고, 각각 `npm run check:git-source-imports`·`npm run check:release`로 현재 저장소도 검사한다. `scripts/check-doc-sync.mjs`는 `npm run check:docs-sync`, `scripts/check-release.mjs`는 `npm run test:scripts`와 `npm run check:release`, `scripts/run-tests.mjs`는 `npm test`로 검사한다. `scripts/check-plugin-compiler.mjs`의 exact compiler 검증은 [이관 문서](docs/MIGRATION_0.9.md)의 명령과 전제 조건을 따른다.
+- `scripts/check-git-source-imports.mjs`·`release-paseo.mjs`·`check-paseo-channel.mjs`와 해당 테스트를 바꾸면 `npm run test:scripts`를 실행하고, 각각 `npm run check:git-source-imports`·`npm run check:release`·`npm run check:paseo-channel -- beta`로 현재 저장소도 검사한다. SDK 사용 방식이나 Paseo 지원 버전을 바꾼 플러그인 소스 변경도 `npm run check:paseo-channel -- beta`를 실행한다. `scripts/check-doc-sync.mjs`는 `npm run check:docs-sync`, `scripts/check-release.mjs`는 `npm run test:scripts`와 `npm run check:release`, `scripts/run-tests.mjs`는 `npm test`로 검사한다. `scripts/check-plugin-compiler.mjs`의 exact compiler 검증은 [이관 문서](docs/MIGRATION_0.9.md)의 명령과 전제 조건을 따른다.
 - Git source 설치나 업데이트 경로를 변경하거나 배포를 준비할 때는 루트에서 `npm run check:git-source-imports`를 실행한다. Paseo는 package manager와 install script를 자동 실행하지 않는다. Manifest에 `build`가 있으면 명시한 argv 명령만 staged plugin directory에서 실행하므로, 현재 플러그인처럼 `build`를 생략한 source의 runtime import는 host 제공 모듈, Node 기본 모듈과 플러그인 내부 상대 경로만 사용한다.
 - 같은 컴퓨터에서 소스를 편집하는 개발 흐름은 directory install과 `plugin reload`, 다른 daemon이나 PC에 배포하는 운영 흐름은 Git source의 `plugin add owner/repository:plugins/<id>`와 `plugin update`를 사용한다. `--path`는 legacy 호환 형식이다. 기존 directory runtime과 Git 검증 runtime에는 서로 다른 ID를 사용한다.
 - 설치·업데이트 또는 재로딩까지 요청된 경우에만 대상 데몬과 source를 확인하고 directory source에는 `paseo plugin install`, Git source에는 `paseo plugin add`/`update`, 소스 변경 반영에는 `paseo plugin reload`를 실행한다. 설치 시 `paseo-plugin.json`의 ID가 기본값이며 `--id`를 지정하면 그 값이 실제 런타임 ID가 된다. 생명주기 명령과 로그 확인 전에는 대상 데몬에서 `paseo plugin ls`를 실행해 실제 런타임 ID를 확인하고, 원격 데몬에는 같은 명령에 `--host <host>`를 사용한다. 명령 실행 후에는 `paseo plugin ls`에서 상태와 오류를 확인한다.
