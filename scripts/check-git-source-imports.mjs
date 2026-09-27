@@ -3,6 +3,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
+import { separatesRuntimes } from "./release-paseo.mjs";
 
 const repositoryRoot = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const pluginsRoot = path.join(repositoryRoot, "plugins");
@@ -99,7 +100,7 @@ function runtimeOwner(relative) {
 
 export function importError({ name, typeOnly }, relative, version) {
   if (name === null) return "non-literal dynamic imports cannot be checked for Git-source availability";
-  if (!/^0\.(8|9)\./.test(version)) {
+  if (!separatesRuntimes(version)) {
     return typeOnly || name.startsWith(".") || hostRuntimeModules.has(name) || nodeRuntimeModules.has(name)
       ? null : `unavailable runtime module "${name}"`;
   }
@@ -134,7 +135,7 @@ async function main() {
       manifest = JSON.parse(await readFile(manifestPath, "utf8"));
       const pkg = JSON.parse(await readFile(path.join(pluginDirectory, "package.json"), "utf8"));
       version = pkg.devDependencies?.["@getpaseo/plugin"];
-      if (!/^0\.(7|8|9)\.\d+(?:-[a-z0-9.-]+)?$/.test(version ?? "")) throw new Error("Unsupported or non-exact plugin SDK version");
+      if (!/^0\.([7-9]|[1-9]\d+)\.\d+(?:-[a-z0-9.-]+)?$/.test(version ?? "")) throw new Error("Unsupported or non-exact plugin SDK version");
     } catch (error) {
       failures.push(`${path.relative(repositoryRoot, manifestPath)}: ${error.message}`);
       continue;
@@ -145,7 +146,7 @@ async function main() {
       const source = await readFile(sourceFile, "utf8");
 
       const relative = path.relative(pluginDirectory, sourceFile);
-      if (/^0\.(8|9)\./.test(version) && !runtimeOwner(relative)) {
+      if (separatesRuntimes(version) && !runtimeOwner(relative)) {
         failures.push(`${manifest.id}: ${relative}: source modules must be in client/, server/, or shared/`);
       }
       for (const imported of collectImports(source, sourceFile)) {

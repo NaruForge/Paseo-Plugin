@@ -1,6 +1,6 @@
 # Provider Usage
 
-Release **v0.1.0-rc.4** targets **Paseo 0.9.0-beta.2**. See [0.9 checks and remaining runtime limits](../../docs/verification/paseo-0.9.0-beta.2.md). Screenshots below show the installed Paseo 0.8.0 Windows app.
+Release **v0.1.0-rc.4** supports **Paseo 0.9.x stable and the verified 0.10.0-beta.1 beta** (`requirements.paseo: >=0.9.0 <0.10.0-beta.2`). See [checks and remaining runtime limits](../../docs/verification/paseo-0.9.2-0.10.0-beta.1.md) and [version channels](../../docs/COMPATIBILITY.md#paseo-version-channels). Screenshots below show the installed Paseo 0.8.0 Windows app.
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.4
@@ -10,7 +10,7 @@ Show usage for every enabled Provider connection on the selected Host, using Pas
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Install](#installation) · [Support](../../SUPPORT.md)
 
-**Current source targets Paseo 0.9.0-beta.2.** See the [0.9 verification](../../docs/verification/paseo-0.9.0-beta.2.md). Historical 0.8 source checks are in [verification](../../docs/verification/provider-usage-0.8-source.md). The published `v0.1.0-rc.2` tag retains the previous 0.7.2 implementation.
+**Current source supports Paseo 0.9.x and 0.10.0-beta.1.** See the [0.9.2 / 0.10.0-beta.1 verification](../../docs/verification/paseo-0.9.2-0.10.0-beta.1.md). Historical 0.8 source checks are in [verification](../../docs/verification/provider-usage-0.8-source.md). The published `v0.1.0-rc.2` tag retains the previous 0.7.2 implementation.
 
 ## Screenshots
 
@@ -89,7 +89,7 @@ paseo plugin ls
 
 The tag is pinned and does not advance on update.
 
-For current source evaluation, both daemon and app must use 0.9.0-beta.2. Enable the Provider connections through normal Paseo tooling. Follow the [source checkout steps](../../README.md#evaluate-current-09-source), then run PowerShell from the repository root on the daemon host:
+For current source evaluation, both daemon and app must use 0.9.x or 0.10.0-beta.1. Enable the Provider connections through normal Paseo tooling. Follow the [source checkout steps](../../README.md#evaluate-current-source), then run PowerShell from the repository root on the daemon host:
 
 ```powershell
 $repoRoot = (Resolve-Path .).Path

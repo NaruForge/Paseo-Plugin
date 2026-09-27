@@ -1,8 +1,9 @@
-// Uses an explicitly supplied, exact-version Paseo compiler without starting a daemon.
+// Uses an explicitly supplied, exact-version Paseo compiler (catalog stable SDK or verified beta) without starting a daemon.
 import { cp, mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { paseoChannels } from "./release-paseo.mjs";
 
 const [pluginArgument, serverArgument] = process.argv.slice(2);
 if (!pluginArgument || !serverArgument) {
@@ -13,8 +14,14 @@ const serverDirectory = path.resolve(serverArgument);
 const json = async (directory) => JSON.parse(await readFile(path.join(directory, "package.json"), "utf8"));
 const plugin = await json(pluginDirectory);
 const server = await json(serverDirectory);
-if (server.name !== "@getpaseo/server" || server.version !== plugin.devDependencies?.["@getpaseo/plugin"] || server.version !== "0.9.0-beta.2") {
-  throw new Error("Supply @getpaseo/server 0.9.0-beta.2 matching the plugin's exact SDK. Recheck the private compiler API before changing versions.");
+const catalog = JSON.parse(await readFile(new URL("../plugins.json", import.meta.url), "utf8"));
+const entry = catalog.plugins.find((candidate) => path.resolve(fileURLToPath(new URL(`../${candidate.path}`, import.meta.url))) === pluginDirectory);
+const { version, beta } = paseoChannels(catalog, entry);
+if (!entry || plugin.devDependencies?.["@getpaseo/plugin"] !== version) {
+  throw new Error("The plugin must be a catalog entry whose exact SDK matches its catalog paseoVersion.");
+}
+if (server.name !== "@getpaseo/server" || ![version, beta].includes(server.version)) {
+  throw new Error(`Supply @getpaseo/server ${[version, beta].filter(Boolean).join(" or ")} from the catalog. Recheck the private compiler API before adding versions.`);
 }
 const { compilePlugin } = await import(pathToFileURL(path.join(serverDirectory, "dist/server/server/plugins/compiler.js")).href);
 const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "paseo-plugin-compiler-"));

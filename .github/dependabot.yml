@@ -6,7 +6,7 @@ updates:
       interval: weekly
     open-pull-requests-limit: 5
     ignore:
-      # Upgrade these together after comparing the target Paseo scaffold/contracts.
+      # Upgrade these with plugins.json after comparing the target Paseo scaffold/contracts; paseo-drift.yml reports new releases.
       - dependency-name: "@getpaseo/*"
     groups:
       development:

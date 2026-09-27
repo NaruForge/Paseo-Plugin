@@ -6,15 +6,18 @@
     "plugins/*"
   ],
   "scripts": {
-    "test:scripts": "node --test scripts/check-git-source-imports.test.mjs scripts/release-paseo.test.mjs",
+    "test:scripts": "node --test scripts/check-git-source-imports.test.mjs scripts/release-paseo.test.mjs scripts/check-paseo-channel.test.mjs",
+    "test:workspaces": "node scripts/run-tests.mjs",
     "check:docs-sync": "node scripts/check-doc-sync.mjs",
     "check:git-source-imports": "node scripts/check-git-source-imports.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "check:release": "node scripts/check-release.mjs",
-    "test": "npm run test:scripts && node scripts/run-tests.mjs",
+    "check:paseo-channel": "node scripts/check-paseo-channel.mjs",
+    "test": "npm run test:scripts && npm run test:workspaces",
     "check": "npm run check:docs-sync && npm run check:git-source-imports && npm run check:release && npm run typecheck && npm test"
   },
   "devDependencies": {
+    "semver": "^7.8.5",
     "typescript": "^5.9.3"
   },
   "license": "MIT",

@@ -1,6 +1,6 @@
 # Prompt Palette
 
-Release **v0.1.0-rc.4** targets **Paseo 0.9.0-beta.2**. See [0.9 checks and remaining runtime limits](../../docs/verification/paseo-0.9.0-beta.2.md). Screenshots below show the installed Paseo 0.8.0 Windows app.
+Release **v0.1.0-rc.4** supports **Paseo 0.9.x stable and the verified 0.10.0-beta.1 beta** (`requirements.paseo: >=0.9.0 <0.10.0-beta.2`). See [checks and remaining runtime limits](../../docs/verification/paseo-0.9.2-0.10.0-beta.1.md) and [version channels](../../docs/COMPATIBILITY.md#paseo-version-channels). Screenshots below show the installed Paseo 0.8.0 Windows app.
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref v0.1.0-rc.4
@@ -8,7 +8,7 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/prompt-palette --ref v0.1.0-rc.4
 
 Save prompts you use often and send them from an Agent's Composer after reviewing the full text.
 
-**Experimental, v0.1.0-rc.4 source for Paseo 0.9.0-beta.2.** This plugin is not included in the existing `v0.1.0-rc.2` tag. Both daemon and app must be compatible. See the [0.9 verification](../../docs/verification/paseo-0.9.0-beta.2.md). Earlier [source verification](../../docs/verification/prompt-palette-0.8-source.md) remains a separate historical record.
+**Experimental, v0.1.0-rc.4 source for Paseo 0.9.x and 0.10.0-beta.1.** This plugin is not included in the existing `v0.1.0-rc.2` tag. Both daemon and app must be compatible. See the [0.9.2 / 0.10.0-beta.1 verification](../../docs/verification/paseo-0.9.2-0.10.0-beta.1.md). Earlier [source verification](../../docs/verification/prompt-palette-0.8-source.md) remains a separate historical record.
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Install](#install-current-source) · [Support](../../SUPPORT.md)
 
@@ -55,9 +55,9 @@ Settings are ordinary JSON, not a secret vault. They survive reload, disable, up
 
 ## Install current source
 
-The v0.1.0-rc.4 collection includes this plugin. Use it with compatible **0.9.0-beta.2 daemon, app and CLI**. Enable trusted plugins in the intended daemon’s **Settings → Plugins**. An existing Agent with a Workspace is needed for sending.
+The v0.1.0-rc.4 collection includes this plugin. Use it with a **0.9.x or 0.10.0-beta.1 daemon, app and CLI**. Enable trusted plugins in the intended daemon’s **Settings → Plugins**. An existing Agent with a Workspace is needed for sending.
 
-Follow the [source checkout steps](../../README.md#evaluate-current-09-source), then run this in PowerShell from the repository root on the daemon host. npm is not needed just to install the existing source.
+Follow the [source checkout steps](../../README.md#evaluate-current-source), then run this in PowerShell from the repository root on the daemon host. npm is not needed just to install the existing source.
 
 ```powershell
 $repoRoot = (Resolve-Path .).Path

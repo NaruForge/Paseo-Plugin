@@ -2,6 +2,6 @@
   "id": "command-deck",
   "description": "Save Project PowerShell commands and run, inspect and stop their terminals from the Composer on Windows.",
   "requirements": {
-    "paseo": "^0.9.0"
+    "paseo": ">=0.9.0 <0.10.0-beta.2"
   }
 }

@@ -1,0 +1,40 @@
+name: Paseo release drift
+
+# Fails when a newly published Paseo SDK is outside the manifest range or breaks type checks/tests.
+on:
+  schedule:
+    - cron: "23 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: paseo-drift
+  cancel-in-progress: true
+
+jobs:
+  drift:
+    name: Paseo ${{ matrix.dist-tag }}
+    strategy:
+      fail-fast: false
+      matrix:
+        dist-tag: [latest, beta]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compare the published SDK with the catalog
+        run: npm run check:paseo-channel -- --dist-tag ${{ matrix.dist-tag }}
