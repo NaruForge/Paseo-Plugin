@@ -1,4 +1,4 @@
-// Uses an explicitly supplied, exact-version Paseo compiler (catalog stable SDK or verified beta) without starting a daemon.
+// Uses an explicitly supplied, exact-version Paseo compiler (catalog stable, previous stable or verified beta SDK) without starting a daemon.
 import { cp, mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -16,12 +16,13 @@ const plugin = await json(pluginDirectory);
 const server = await json(serverDirectory);
 const catalog = JSON.parse(await readFile(new URL("../plugins.json", import.meta.url), "utf8"));
 const entry = catalog.plugins.find((candidate) => path.resolve(fileURLToPath(new URL(`../${candidate.path}`, import.meta.url))) === pluginDirectory);
-const { version, beta } = paseoChannels(catalog, entry);
+const { version, beta, previous } = paseoChannels(catalog, entry);
 if (!entry || plugin.devDependencies?.["@getpaseo/plugin"] !== version) {
   throw new Error("The plugin must be a catalog entry whose exact SDK matches its catalog paseoVersion.");
 }
-if (server.name !== "@getpaseo/server" || ![version, beta].includes(server.version)) {
-  throw new Error(`Supply @getpaseo/server ${[version, beta].filter(Boolean).join(" or ")} from the catalog. Recheck the private compiler API before adding versions.`);
+const verified = [version, beta, previous].filter(Boolean);
+if (server.name !== "@getpaseo/server" || !verified.includes(server.version)) {
+  throw new Error(`Supply @getpaseo/server ${verified.join(" or ")} from the catalog. Recheck the private compiler API before adding versions.`);
 }
 const { compilePlugin } = await import(pathToFileURL(path.join(serverDirectory, "dist/server/server/plugins/compiler.js")).href);
 const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "paseo-plugin-compiler-"));

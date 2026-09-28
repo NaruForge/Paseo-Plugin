@@ -1,6 +1,6 @@
 # Branch Garden
 
-Release **v0.1.0-rc.4** supports **Paseo 0.9.x stable and the verified 0.10.0-beta.1 beta** (`requirements.paseo: >=0.9.0 <0.10.0-beta.2`). See [checks and remaining runtime limits](../../docs/verification/paseo-0.9.2-0.10.0-beta.1.md) and [version channels](../../docs/COMPATIBILITY.md#paseo-version-channels). Screenshots below show the installed Paseo 0.8.0 Windows app.
+Release **v0.1.0-rc.4** supports **Paseo 0.10.x stable and the previous 0.9.x line** (`requirements.paseo: >=0.9.0 <0.11.0-0`). See [checks and remaining runtime limits](../../docs/verification/paseo-0.10.0.md) and [version channels](../../docs/COMPATIBILITY.md#paseo-version-channels). Screenshots below show the installed Paseo 0.8.0 Windows app.
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.4
@@ -10,7 +10,7 @@ Inspect registered Git projects, active workspaces, local branches and worktrees
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Install](#install) · [Support](../../SUPPORT.md)
 
-**Current source supports Paseo 0.9.x and 0.10.0-beta.1.** Runtime entries, imports and exact SDK dependencies are checked with both host compilers, including a copy without `node_modules`. See the [0.9.2 / 0.10.0-beta.1 verification](../../docs/verification/paseo-0.9.2-0.10.0-beta.1.md). Historical v0.1.0-rc.3 (0.8) and v0.1.0-rc.2 (0.7) installation instructions remain below.
+**Current source supports Paseo 0.10.x and 0.9.x.** Runtime entries, imports and exact SDK dependencies are checked with the 0.10.0 and 0.9.2 host compilers, including a copy without `node_modules`. See the [0.10.0 verification](../../docs/verification/paseo-0.10.0.md). Historical v0.1.0-rc.3 (0.8) and v0.1.0-rc.2 (0.7) installation instructions remain below.
 
 ## Screenshots
 
@@ -44,7 +44,7 @@ paseo plugin ls
 
 Expect runtime ID `branch-garden` with status `running` and no load error. If that ID already exists, choose a distinct `--id branch-garden-dev` and use it in subsequent commands. Open **Branch Garden** in the sidebar.
 
-For Git source evaluation on Paseo **0.9.x or 0.10.0-beta.1**, choose a reviewed published commit that contains this plugin. Do not use `v0.1.0-rc.2` or `v0.1.0-rc.3` for 0.9 or later:
+For Git source evaluation on Paseo **0.10.x or 0.9.x**, choose a reviewed published commit that contains this plugin. Do not use `v0.1.0-rc.2` or `v0.1.0-rc.3` for 0.9 or later:
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.4
@@ -54,7 +54,7 @@ The command pins v0.1.0-rc.4. See [Git installation](../../docs/GIT_INSTALLATION
 
 ## Requirements and configuration
 
-For the pinned `v0.1.0-rc.2` release: Paseo 0.7.2. For current source: daemon and app accepted by `>=0.9.0 <0.10.0-beta.2` (0.9.x stable or 0.10.0-beta.1), with development checks pinned to 0.9.2 and repeated with the 0.10.0-beta.1 SDK; this is not a native app runtime certification. Git is required on the daemon host. No repository-specific configuration is required. The plugin reads the selected host's existing Paseo project/workspace registry. Windows is the primary runtime environment; macOS/Linux automated checks and live runtime evidence are tracked separately in [Compatibility](../../docs/COMPATIBILITY.md).
+For the pinned `v0.1.0-rc.2` release: Paseo 0.7.2. For current source: daemon and app accepted by `>=0.9.0 <0.11.0-0` (0.10.x or 0.9.x), with development checks pinned to 0.10.0 and repeated with the 0.9.2 SDK; this is not a native app runtime certification. Git is required on the daemon host. No repository-specific configuration is required. The plugin reads the selected host's existing Paseo project/workspace registry. Windows is the primary runtime environment; macOS/Linux automated checks and live runtime evidence are tracked separately in [Compatibility](../../docs/COMPATIBILITY.md).
 
 ## Use
 

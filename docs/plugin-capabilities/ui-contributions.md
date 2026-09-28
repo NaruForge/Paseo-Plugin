@@ -1,6 +1,6 @@
 # UI 기여 지점
 
-이 문서는 **Paseo `0.9.0-beta.2`**가 Plugin에 열어 둔 UI 위치를 다룬다(0.9.2·0.10.0-beta.1과 선언이 동일). 아래 내용은 [0.9 이관](../MIGRATION_0.9.md)에 적용할 계약이며, 실제 플러그인별 이관·검증 상태는 [호환성 기록](../COMPATIBILITY.md)을 따른다. Plugin UI는 React Native component이며 desktop, browser, iOS, Android에서 같은 기여 계약을 사용한다.
+이 문서는 **Paseo `0.9.0-beta.2`**가 Plugin에 열어 둔 UI 위치를 다룬다(0.9.2·0.10.0과 선언이 동일). 아래 내용은 [0.9 이관](../MIGRATION_0.9.md)에 적용할 계약이며, 실제 플러그인별 이관·검증 상태는 [호환성 기록](../COMPATIBILITY.md)을 따른다. Plugin UI는 React Native component이며 desktop, browser, iOS, Android에서 같은 기여 계약을 사용한다.
 
 등록 예제의 `client`는 `index.client.tsx`의 `PluginClientContext`다. Context·props·훅은 `@getpaseo/plugin/client`, `PluginTheme` 같은 공유 타입은 `@getpaseo/plugin`, host UI는 `/client/react-native`에서 가져온다. 별도 파일의 코드 조각은 각 런타임 entry에 배치한다.
 
@@ -44,7 +44,7 @@ Sidebar contribution 필드는 다음 네 개뿐이다.
 | `icon` | Lucide icon 이름 |
 | `surface` | 먼저 등록한 surface ID |
 
-한 Plugin이 여러 surface와 Sidebar 항목을 등록할 수 있다. 다만 nested menu, section 지정, 순서나 badge를 제어하는 필드는 없다. 0.8에서는 사용자가 Paseo Layout 설정에서 top-level Sidebar 항목을 재정렬·숨길 수 있지만 플러그인의 순서 제어 필드는 아니다. 같은 contribution이 여러 host에 설치되면 Paseo가 하나의 Sidebar 항목과 host picker로 합친다.
+한 Plugin이 여러 surface와 Sidebar 항목을 등록할 수 있다. 다만 nested menu, section 지정, 순서나 badge를 제어하는 필드는 없다. 0.8·0.9에서는 Paseo Layout 설정, 0.10부터는 Paseo Sidebar 설정에서 사용자가 top-level Sidebar 항목을 재정렬·숨길 수 있지만 플러그인의 순서 제어 필드는 아니다. 같은 contribution이 여러 host에 설치되면 Paseo가 하나의 Sidebar 항목과 host picker로 합친다.
 
 Surface component는 `PluginSurfaceProps`의 `theme`, `host`, `layout`, optional `navigation`을 받는다. `navigation`은 다음 두 메서드만 제공한다.
 

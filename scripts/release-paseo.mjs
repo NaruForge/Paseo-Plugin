@@ -24,15 +24,19 @@ export function nextUnverifiedVersion(version) {
 }
 
 // Catalog fields: paseoVersion is the exact stable SDK, paseoRange the manifest requirement,
-// paseoBetaVersion an optional exact prerelease verified against the same source.
-// A plugin entry that sets a field overrides the collection default; paseoBetaVersion: null opts out of the beta.
+// paseoBetaVersion an optional exact prerelease and paseoPreviousVersion an optional exact older stable SDK,
+// both verified against the same source. A plugin entry that sets a field overrides the collection default;
+// null opts out of an optional channel.
 export function paseoChannels(catalog, entry) {
   const pick = (key) => (entry && Object.hasOwn(entry, key) ? entry[key] : catalog[key]) ?? undefined;
-  return { version: pick("paseoVersion"), range: pick("paseoRange"), beta: pick("paseoBetaVersion") };
+  return {
+    version: pick("paseoVersion"), range: pick("paseoRange"),
+    beta: pick("paseoBetaVersion"), previous: pick("paseoPreviousVersion"),
+  };
 }
 
 export function validatePaseoMetadata({ catalog, entry, pkg, manifest, locked }) {
-  const { version, range: declaredRange, beta } = paseoChannels(catalog, entry);
+  const { version, range: declaredRange, beta, previous } = paseoChannels(catalog, entry);
   const errors = [];
   if (!exactVersion.test(version ?? "") || !semver.valid(version) || pkg.devDependencies?.["@getpaseo/plugin"] !== version) {
     errors.push("exact Paseo dependency must match catalog.");
@@ -58,6 +62,11 @@ export function validatePaseoMetadata({ catalog, entry, pkg, manifest, locked })
         if (!exactVersion.test(beta) || !semver.prerelease(beta) || !semver.gt(beta, version)) {
           errors.push("Paseo beta must be an exact prerelease newer than the stable SDK.");
         } else if (!paseoAccepts(beta, range)) errors.push("catalog Paseo range must accept the verified beta.");
+      }
+      if (previous !== undefined) {
+        if (!exactVersion.test(previous) || semver.prerelease(previous) || !semver.lt(previous, version)) {
+          errors.push("previous Paseo SDK must be an exact stable version older than the stable SDK.");
+        } else if (!paseoAccepts(previous, range)) errors.push("catalog Paseo range must accept the previous stable SDK.");
       }
       const highest = beta && semver.valid(beta) && semver.gt(beta, version) ? beta : version;
       const next = nextUnverifiedVersion(highest);

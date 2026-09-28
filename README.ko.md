@@ -4,7 +4,7 @@
 
 Paseo에서 Git 작업 상태를 살펴보고, 공급자 사용량을 확인하고, 반복 프롬프트를 저장해 보내고 Windows 명령을 실행하는 네 플러그인입니다. 필요한 것만 개별 설치할 수 있습니다. NaruForge와 기여자가 관리하는 커뮤니티 프로젝트로, Paseo 팀의 공식 운영·보증 저장소가 아닙니다.
 
-**현재 소스:** 컬렉션 **v0.1.0-rc.4**는 Paseo **0.9.x 안정 버전**과 검증한 **0.10.0-beta.1 베타**를 함께 지원합니다. Manifest는 `requirements.paseo: >=0.9.0 <0.10.0-beta.2`를 선언하고, SDK는 exact 0.9.2에 고정하며, CI는 0.10.0-beta.1 SDK도 검사합니다. 그 이후 베타와 0.10.0 정식은 검증 전까지 로드 단계에서 거부됩니다. [Paseo 버전 채널](docs/COMPATIBILITY.md#paseo-version-channels)과 [0.9.2 / 0.10.0-beta.1 검증 범위와 한계](docs/verification/paseo-0.9.2-0.10.0-beta.1.md)를 확인하세요. 컬렉션은 prerelease입니다.
+**현재 소스:** 컬렉션 **v0.1.0-rc.4**는 Paseo **0.10.x 안정 버전**과 이전 **0.9.x**를 함께 지원합니다. Manifest는 `requirements.paseo: >=0.9.0 <0.11.0-0`을 선언하고, SDK는 exact 0.10.0에 고정하며, CI는 0.9.2 SDK도 검사합니다. Paseo 0.11 베타와 정식은 검증 전까지 로드 단계에서 거부됩니다. [Paseo 버전 채널](docs/COMPATIBILITY.md#paseo-version-channels)과 [0.10.0 검증 범위와 한계](docs/verification/paseo-0.10.0.md)를 확인하세요. 컬렉션은 prerelease입니다.
 
 기존 [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/releases/tag/v0.1.0-rc.2)는 Paseo 0.7.2용으로 보존합니다. 이전 사용자 Runtime·Git 검증 보고는 당시 범위를 유지하며 새 pill 구현의 정식 앱 검증을 대신하지 않습니다.
 
@@ -12,16 +12,16 @@ Paseo에서 Git 작업 상태를 살펴보고, 공급자 사용량을 확인하�
 
 | 플러그인 | 역할 | 현재 소스 요구 사항 | 성숙도·배포 상태 |
 | --- | --- | --- | --- |
-| [`branch-garden`](plugins/branch-garden/) | Git Project·Workspace와 branch·worktree 상태를 읽기 전용으로 모아 봅니다. | Paseo 0.9.x 또는 0.10.0-beta.1, host의 Git과 등록된 Project/Workspace | Preview; v0.1.0-rc.4 |
-| [`command-deck`](plugins/command-deck/) | Project별 PowerShell 명령을 저장하고 Composer에서 실행·출력 조회·중지합니다. | Windows Host, PowerShell 7, Paseo 0.9.x 또는 0.10.0-beta.1 | Experimental; v0.1.0-rc.4·앱 runtime 검증 대기 |
-| [`prompt-palette`](plugins/prompt-palette/) | 반복 프롬프트를 저장하고 Composer에서 미리 본 뒤 보냅니다. | Paseo 0.9.x 또는 0.10.0-beta.1, Workspace가 있는 기존 Agent | Experimental; v0.1.0-rc.4 |
-| [`provider-usage`](plugins/provider-usage/) | 활성 Provider 연결의 사용량을 표시하고 Composer pill을 설정합니다. | Paseo 0.9.x 또는 0.10.0-beta.1, 활성 Provider 연결 | Experimental; v0.1.0-rc.4 |
+| [`branch-garden`](plugins/branch-garden/) | Git Project·Workspace와 branch·worktree 상태를 읽기 전용으로 모아 봅니다. | Paseo 0.10.x 또는 0.9.x, host의 Git과 등록된 Project/Workspace | Preview; v0.1.0-rc.4 |
+| [`command-deck`](plugins/command-deck/) | Project별 PowerShell 명령을 저장하고 Composer에서 실행·출력 조회·중지합니다. | Windows Host, PowerShell 7, Paseo 0.10.x 또는 0.9.x | Experimental; v0.1.0-rc.4·앱 runtime 검증 대기 |
+| [`prompt-palette`](plugins/prompt-palette/) | 반복 프롬프트를 저장하고 Composer에서 미리 본 뒤 보냅니다. | Paseo 0.10.x 또는 0.9.x, Workspace가 있는 기존 Agent | Experimental; v0.1.0-rc.4 |
+| [`provider-usage`](plugins/provider-usage/) | 활성 Provider 연결의 사용량을 표시하고 Composer pill을 설정합니다. | Paseo 0.10.x 또는 0.9.x, 활성 Provider 연결 | Experimental; v0.1.0-rc.4 |
 
 Branch Garden과 Provider Usage가 핵심 유지보수 대상이며 Prompt Palette와 Command Deck은 신규 실험 기능입니다. Branch Garden UI는 영어이고 Provider Usage에는 한국어 상태 문구가 남아 있습니다. 개별 가이드는 영어입니다. 각 가이드의 대표 이미지는 설치된 Paseo 0.8.0 Windows 앱에서 촬영했습니다. [촬영 범위](docs/verification/plugin-screenshots-0.8.0.md)를 참고하세요.
 
 ## 시작하기
 
-먼저 설치할 버전을 고르세요. 0.7.2 사용자는 아래 공개 태그를 고정하고, 0.9.x·0.10.0-beta.1 사용자는 [로컬 설치](#로컬-설치와-reload)나 [Git source](#git-source-배포와-update)로 이동합니다. 사용자 설치에는 npm 검사나 전체 컬렉션 설치가 필요하지 않습니다.
+먼저 설치할 버전을 고르세요. 0.7.2 사용자는 아래 공개 태그를 고정하고, 0.9.x·0.10.x 사용자는 [로컬 설치](#로컬-설치와-reload)나 [Git source](#git-source-배포와-update)로 이동합니다. 사용자 설치에는 npm 검사나 전체 컬렉션 설치가 필요하지 않습니다.
 
 플러그인은 신뢰된 비격리 코드로 daemon 사용자의 파일·프로세스·네트워크 권한으로 실행됩니다. Git과 사용량 조회는 읽기 전용입니다. Prompt Palette는 설정 저장과 명시적인 Agent 전송을, Command Deck은 저장한 PowerShell을 daemon 사용자 권한으로 실행·중지합니다. [보안·데이터 접근](SECURITY.md)을 확인하고 신뢰하기로 결정한 뒤 대상 daemon의 **Settings → Plugins**에서 활성화하세요.
 
@@ -40,7 +40,7 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.2
 
 ## 로컬 설치와 reload
 
-현재 소스 평가에는 **0.9.x 안정 버전 또는 0.10.0-beta.1 daemon/app/CLI**를 사용합니다. daemon과 app은 버전 범위를 각각 검사합니다. daemon host에 저장소를 clone하고 루트로 이동한 뒤 commit과 소스를 검토하세요. 기존 checkout이 있다면 그 루트에서 ref와 로컬 변경을 먼저 확인합니다.
+현재 소스 평가에는 **0.10.x 또는 0.9.x daemon/app/CLI**를 사용합니다. daemon과 app은 버전 범위를 각각 검사합니다. daemon host에 저장소를 clone하고 루트로 이동한 뒤 commit과 소스를 검토하세요. 기존 checkout이 있다면 그 루트에서 ref와 로컬 변경을 먼저 확인합니다.
 
 ```powershell
 git clone https://github.com/NaruForge/Paseo-Plugin.git
@@ -63,7 +63,7 @@ paseo plugin ls
 설치한 ID가 `running`이고 오류가 없으면 다음 위치에서 사용합니다.
 
 - Branch Garden: sidebar에서 열고 host를 선택한 뒤 Refresh. 등록된 저장소가 없거나 필터에 맞지 않으면 빈 결과가 정상입니다.
-- Provider Usage: Command Center의 Open provider usage. Sidebar 표시는 Settings → Layout, pill은 Settings → Plugins → Provider Usage에서 조절합니다. 미지원 사용량은 조회 불가로 남습니다.
+- Provider Usage: Command Center의 Open provider usage. Sidebar 표시는 Settings → Sidebar(0.9는 Settings → Layout), pill은 Settings의 Host → Plugins → Provider Usage에서 조절합니다. 미지원 사용량은 조회 불가로 남습니다.
 - Command Deck: Settings → Plugins → Command Deck에서 Project를 고르고 명령을 저장합니다. Composer의 Commands 또는 Command Center의 Open workspace commands에서 실행·출력·중지를 제공합니다. 처음에는 빈 명령 목록이 정상입니다. 설치된 앱·모바일 검증은 별도로 필요합니다.
 - Prompt Palette: Settings → Plugins → Prompt Palette에서 프롬프트를 추가하고 Apply to draft → Save changes. 기존 Agent의 Prompts에서 본문과 대상을 확인한 뒤 Send합니다. 처음에는 빈 라이브러리가 정상입니다.
 
@@ -73,7 +73,7 @@ paseo plugin ls
 
 다른 daemon이나 PC에는 Git source를 사용합니다. `--ref`를 생략하면 **0.9 이상을 대상으로 하는 main**을 추적하므로 0.7·0.8 사용자는 기존 태그를 고정하세요. Branch는 새 commit을 추적하고 tag/commit은 고정됩니다. Paseo 새 베타는 검증 뒤 다음 컬렉션 릴리스에서 범위에 추가됩니다. 베타 사용자는 그 릴리스로 ref를 바꾸거나 main을 추적하고 `paseo plugin update`를 실행하세요.
 
-0.9.x·0.10.0-beta.1 Git 평가에는 `v0.1.0-rc.2`나 `v0.1.0-rc.3`을 쓰지 마세요. 아래 `v0.1.0-rc.4` 태그를 검토하고 **명령 하나만** 선택하세요. 이 명령은 Git 경로의 실행 검증을 완료했다는 뜻이 아닙니다.
+0.9.x·0.10.x Git 평가에는 `v0.1.0-rc.2`나 `v0.1.0-rc.3`을 쓰지 마세요. 아래 `v0.1.0-rc.4` 태그를 검토하고 **명령 하나만** 선택하세요. 이 명령은 Git 경로의 실행 검증을 완료했다는 뜻이 아닙니다.
 
 ```powershell
 paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.4
@@ -103,7 +103,7 @@ npm ci
 npm run check
 ```
 
-`npm run check:paseo-channel -- beta`는 package 파일을 바꾸지 않고 검증한 베타 SDK로 typecheck와 테스트를 반복하며 CI도 실행합니다. 변경 범위별 검사와 기여 절차는 [Contributing](CONTRIBUTING.md), 0.9 계약과 이관 배경은 [이관 안내](docs/MIGRATION_0.9.md), 안정·베타 버전 운영은 [릴리스 절차](docs/RELEASING.md#paseo-version-channels)에 있습니다.
+`npm run check:paseo-channel -- previous`(검증한 베타가 있으면 `-- beta`)는 package 파일을 바꾸지 않고 catalog의 이전 안정·베타 SDK로 typecheck와 테스트를 반복하며 CI도 실행합니다. 변경 범위별 검사와 기여 절차는 [Contributing](CONTRIBUTING.md), 0.9 계약과 이관 배경은 [이관 안내](docs/MIGRATION_0.9.md), 안정·베타 버전 운영은 [릴리스 절차](docs/RELEASING.md#paseo-version-channels)에 있습니다.
 
 ## 저장소 구조
 
@@ -140,7 +140,7 @@ npm run check
 | `*.logic.ts`, `*.view.ts` | runtime에 의존하지 않는 판단과 표시용 파생 값 |
 | `*-registration.ts` 등 helper | client 등록, query, modal과 비동기 controller 수명주기 |
 | `paseo-plugin.json` | 기본 설치 runtime ID |
-| `package.json` | 로컬 타입 검사에 사용하는 exact 안정 `@getpaseo/plugin` 개발 의존성. 베타는 `plugins.json`의 `paseoBetaVersion`으로 검사 |
+| `package.json` | 로컬 타입 검사에 사용하는 exact 안정 `@getpaseo/plugin` 개발 의존성. 이전 안정·베타 SDK는 `plugins.json`의 `paseoPreviousVersion`·`paseoBetaVersion`으로 검사 |
 
 클라이언트 모듈에서 `server/`를 가져오거나 서버 모듈에서 `client/`를 가져오지 않습니다. 화면 안에서 별도의 Paseo client를 생성하지 않고 host가 제공한 Paseo API와 plugin RPC를 사용합니다.
 

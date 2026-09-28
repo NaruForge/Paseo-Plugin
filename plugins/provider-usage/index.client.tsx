@@ -8,7 +8,7 @@ import { registerUsageVisibility } from "./client/usage-visibility";
 
 export default function contribute(client: PluginClientContext) {
   client.addSurface("main", MainSurface);
-  // Paseo Settings → Layout owns visibility; keep the contribution available there.
+  // Paseo Settings → Sidebar (Layout before 0.10) owns visibility; keep the contribution available there.
   client.addSidebarItem({ id: "main", title: "Usage", icon: "Gauge", surface: "main" });
   const unsubscribeProviders = client.paseo.providers.subscribe(() => { void refreshUsageSnapshot().catch(() => {}); });
   const visibility = registerUsageVisibility(client, () =>

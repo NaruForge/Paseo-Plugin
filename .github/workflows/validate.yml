@@ -51,12 +51,14 @@ jobs:
       - name: Test workspaces
         run: npm test
 
-  paseo-beta:
-    name: Verified Paseo beta SDK
+  paseo-channels:
+    name: Verified Paseo ${{ matrix.channel }} SDK (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
+        # A channel absent from plugins.json passes without installing anything.
+        channel: [beta, previous]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
 
@@ -73,5 +75,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Typecheck and test with the catalog paseoBetaVersion
-        run: npm run check:paseo-channel -- beta
+      - name: Typecheck and test with the catalog ${{ matrix.channel }} SDK
+        run: npm run check:paseo-channel -- ${{ matrix.channel }}

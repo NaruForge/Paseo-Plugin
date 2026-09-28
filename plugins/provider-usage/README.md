@@ -1,6 +1,6 @@
 # Provider Usage
 
-Release **v0.1.0-rc.4** supports **Paseo 0.9.x stable and the verified 0.10.0-beta.1 beta** (`requirements.paseo: >=0.9.0 <0.10.0-beta.2`). See [checks and remaining runtime limits](../../docs/verification/paseo-0.9.2-0.10.0-beta.1.md) and [version channels](../../docs/COMPATIBILITY.md#paseo-version-channels). Screenshots below show the installed Paseo 0.8.0 Windows app.
+Release **v0.1.0-rc.4** supports **Paseo 0.10.x stable and the previous 0.9.x line** (`requirements.paseo: >=0.9.0 <0.11.0-0`). See [checks and remaining runtime limits](../../docs/verification/paseo-0.10.0.md) and [version channels](../../docs/COMPATIBILITY.md#paseo-version-channels). Screenshots below show the installed Paseo 0.8.0 Windows app.
 
 ```sh
 paseo plugin add NaruForge/Paseo-Plugin:plugins/provider-usage --ref v0.1.0-rc.4
@@ -10,7 +10,7 @@ Show usage for every enabled Provider connection on the selected Host, using Pas
 
 [Collection](../../README.md) · [Compatibility](../../docs/COMPATIBILITY.md) · [Install](#installation) · [Support](../../SUPPORT.md)
 
-**Current source supports Paseo 0.9.x and 0.10.0-beta.1.** See the [0.9.2 / 0.10.0-beta.1 verification](../../docs/verification/paseo-0.9.2-0.10.0-beta.1.md). Historical 0.8 source checks are in [verification](../../docs/verification/provider-usage-0.8-source.md). The published `v0.1.0-rc.2` tag retains the previous 0.7.2 implementation.
+**Current source supports Paseo 0.10.x and 0.9.x.** See the [0.10.0 verification](../../docs/verification/paseo-0.10.0.md). Historical 0.8 source checks are in [verification](../../docs/verification/provider-usage-0.8-source.md). The published `v0.1.0-rc.2` tag retains the previous 0.7.2 implementation.
 
 ## Screenshots
 
@@ -26,7 +26,7 @@ This capture has provider name hidden in Settings; the gauge icon and remaining 
 
 ### Left sidebar: Usage
 
-Choose **Usage** in the left sidebar to open the usage screen for all enabled Provider connections on the selected Host. Its highlighted row shows the selected menu. If it is hidden, control sidebar visibility in **Settings → Layout**, or use **Open provider usage** in Command Center.
+Choose **Usage** in the left sidebar to open the usage screen for all enabled Provider connections on the selected Host. Its highlighted row shows the selected menu. If it is hidden, control sidebar visibility in **Settings → Sidebar** (**Settings → Layout** on Paseo 0.9), or use **Open provider usage** in Command Center.
 
 ![Paseo left sidebar with the Usage menu selected below Schedule](../../docs/screenshots/provider-usage/sidebar-live.png)
 
@@ -54,13 +54,13 @@ Open **Settings → Plugins → Provider Usage → Provider Usage Settings**, or
 
 Changes save immediately to this Host and plugin installation, with revision conflict detection. Failed saves leave the previous values in effect; reload the latest settings before retrying. Invalid settings can be explicitly restored to defaults. Loading or invalid settings do not silently overwrite stored values.
 
-Sidebar visibility is controlled exclusively by **Paseo Settings → Layout**. The plugin always registers the Usage sidebar item, including while plugin settings are loading or invalid. It does not override your Layout preference. **Open provider usage** remains available in Command Center when the sidebar is hidden.
+Sidebar visibility is controlled exclusively by **Paseo Settings → Sidebar** (**Settings → Layout** on Paseo 0.9). The plugin always registers the Usage sidebar item, including while plugin settings are loading or invalid. It does not override your sidebar preference. **Open provider usage** remains available in Command Center when the sidebar is hidden.
 
 When all three Pill fields are off, the button shows **Usage** because final 0.8.0 requires a nonempty label. The saved field choices are preserved.
 
 Pill fields follow the host's live settings hook. Composer pill visibility changes made in this screen apply after saving; changes from other clients converge within 30 seconds while connected. Turning all pill fields off leaves an accessible gauge icon.
 
-Settings schema v3 migrates v1/v2 while preserving Composer pill visibility and all three pill field choices, removing the retired Sidebar value and defaulting the reset format to Date and time. It does not modify Paseo Layout. Downgrading to older schema code may report the newer document as invalid; it does not silently reset it.
+Settings schema v3 migrates v1/v2 while preserving Composer pill visibility and all three pill field choices, removing the retired Sidebar value and defaulting the reset format to Date and time. It does not modify Paseo's sidebar settings. Downgrading to older schema code may report the newer document as invalid; it does not silently reset it.
 
 Settings survive reload, disable, update and daemon restart. Removing the installation deletes its settings; reinstalling starts from defaults. Values are shared across authorized clients of the same Host and installation, without cross-host synchronization.
 
@@ -89,7 +89,7 @@ paseo plugin ls
 
 The tag is pinned and does not advance on update.
 
-For current source evaluation, both daemon and app must use 0.9.x or 0.10.0-beta.1. Enable the Provider connections through normal Paseo tooling. Follow the [source checkout steps](../../README.md#evaluate-current-source), then run PowerShell from the repository root on the daemon host:
+For current source evaluation, both daemon and app must use 0.10.x or 0.9.x. Enable the Provider connections through normal Paseo tooling. Follow the [source checkout steps](../../README.md#evaluate-current-source), then run PowerShell from the repository root on the daemon host:
 
 ```powershell
 $repoRoot = (Resolve-Path .).Path
@@ -98,7 +98,7 @@ paseo plugin install (Join-Path $repoRoot "plugins/provider-usage")
 paseo plugin ls
 ```
 
-Expect `provider-usage` to be `running` without load errors. If the ID already exists, use a distinct `--id provider-usage-dev`. Open **Usage** from Command Center; sidebar visibility belongs to **Settings → Layout**. A matching enabled connection is required for an Agent pill. No enabled connections means there is no usage to show; unsupported connections stay visible as unavailable.
+Expect `provider-usage` to be `running` without load errors. If the ID already exists, use a distinct `--id provider-usage-dev`. Open **Usage** from Command Center; sidebar visibility belongs to **Settings → Sidebar** (**Settings → Layout** on 0.9). A matching enabled connection is required for an Agent pill. No enabled connections means there is no usage to show; unsupported connections stay visible as unavailable.
 
 For Git source evaluation of **0.8** source, choose a reviewed published commit that contains this plugin. Do not use `v0.1.0-rc.2` for 0.8:
 

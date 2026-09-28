@@ -1,29 +1,30 @@
 # Compatibility
 
-Published `v0.1.0-rc.2` contracts: Paseo daemon/client/CLI and exact `@getpaseo/plugin` **0.7.2**. Published `v0.1.0-rc.3` contracts: exact final **0.8.0**. The v0.1.0-rc.4 collection and all four current sources support **Paseo 0.9.x stable** and the verified **0.10.0-beta.1** beta: exact 0.9.2 SDKs, `requirements.paseo: >=0.9.0 <0.10.0-beta.2`, and repeated 0.10.0-beta.1 SDK checks. Development checks use Node.js 22 in CI. The root package and catalog describe the collection release; they do not change Paseo's plugin API version.
+Published `v0.1.0-rc.2` contracts: Paseo daemon/client/CLI and exact `@getpaseo/plugin` **0.7.2**. Published `v0.1.0-rc.3` contracts: exact final **0.8.0**. The v0.1.0-rc.4 collection and all four current sources support **Paseo 0.10.x stable** and the previous **0.9.x** line: exact 0.10.0 SDKs, `requirements.paseo: >=0.9.0 <0.11.0-0`, and repeated 0.9.2 SDK checks. Development checks use Node.js 22 in CI. The root package and catalog describe the collection release; they do not change Paseo's plugin API version.
 
 ## Paseo version channels
 
-One source supports a stable Paseo line and, when verified, the current Paseo beta. The repository does not keep a separate beta branch while both versions share the same plugin API.
+One source supports the current stable Paseo line, the previous stable line while it still shares the plugin API, and, when verified, the current Paseo beta. The repository does not keep a separate beta branch while these versions share the same plugin API.
 
 | Catalog field (`plugins.json`) | Meaning | Current value |
 | --- | --- | --- |
-| `paseoVersion` | Exact stable SDK in every workspace `package.json` and the lockfile | `0.9.2` |
-| `paseoRange` | Exact `requirements.paseo` in every manifest | `>=0.9.0 <0.10.0-beta.2` |
-| `paseoBetaVersion` | Exact prerelease also type-checked and tested in CI; omit or set `null` for none | `0.10.0-beta.1` |
+| `paseoVersion` | Exact stable SDK in every workspace `package.json` and the lockfile | `0.10.0` |
+| `paseoRange` | Exact `requirements.paseo` in every manifest | `>=0.9.0 <0.11.0-0` |
+| `paseoPreviousVersion` | Exact older stable SDK also type-checked and tested in CI; omit or set `null` for none | `0.9.2` |
+| `paseoBetaVersion` | Exact prerelease also type-checked and tested in CI; omit or set `null` for none | none |
 
-Paseo accepts a plugin when either the full daemon/app version or its stable core (`0.10.0` for `0.10.0-beta.1`) satisfies `requirements.paseo`. The daemon and the app check it separately. Therefore:
+Paseo accepts a plugin when either the full daemon/app version or its stable core (`0.11.0` for `0.11.0-beta.1`) satisfies `requirements.paseo`. The daemon and the app check it separately. Therefore:
 
-| Paseo daemon/app | `^0.9.0` (before) | `>=0.9.0 <0.10.0-beta.2` (current) |
+| Paseo daemon/app | `>=0.9.0 <0.10.0-beta.2` (#123) | `>=0.9.0 <0.11.0-0` (current) |
 | --- | --- | --- |
-| 0.9.0-beta.2, 0.9.x | Accepted | Accepted |
-| 0.10.0-beta.1 | Rejected | Accepted |
-| 0.10.0-beta.2 and later betas | Rejected | Rejected until verified |
-| 0.10.0 | Rejected | Rejected until verified |
+| 0.9.x | Accepted | Accepted |
+| 0.10.0-beta.1 | Accepted | Accepted |
+| 0.10.0, 0.10.x | Rejected | Accepted |
+| 0.11.0 betas and 0.11.0 | Rejected | Rejected until verified |
 
-The range ends just after the newest verified version. Patch releases of a verified stable line stay accepted; a newer beta or minor release is rejected at load time with a clear error rather than failing inside the plugin. `npm run check:release` enforces this: the range must accept the stable SDK and verified beta, and must reject the next unverified prerelease or minor.
+The range ends just after the newest verified version. Patch releases of a verified stable line stay accepted; a newer beta or minor release is rejected at load time with a clear error rather than failing inside the plugin. `npm run check:release` enforces this: the range must accept the stable SDK, the previous stable SDK and the verified beta, and must reject the next unverified prerelease or minor.
 
-CI checks the stable SDK on every change and the verified beta with `npm run check:paseo-channel -- beta`. The daily [Paseo release drift](../.github/workflows/paseo-drift.yml) workflow fails when npm `latest` or `beta` publishes a version outside the range or one that breaks type checks/tests. [Releasing](RELEASING.md#paseo-version-channels) describes how to adopt a new beta, promote a stable release, and when to split a branch.
+CI checks the stable SDK on every change, and the previous stable and verified beta SDKs with `npm run check:paseo-channel -- previous` and `-- beta` (a channel absent from the catalog passes without installing anything). The daily [Paseo release drift](../.github/workflows/paseo-drift.yml) workflow fails when npm `latest` or `beta` publishes a version outside the range or one that breaks type checks/tests. [Releasing](RELEASING.md#paseo-version-channels) describes how to adopt a new beta, promote a stable release, and when to split a branch.
 
 ## Published 0.7 release: daemon and client support
 
@@ -53,17 +54,17 @@ See the [0.8.0 release verification](verification/paseo-0.8.0-release.md) for ac
 
 The earlier [user runtime report](verification/paseo-0.8-runtime.md), [Git verification](verification/paseo-0.8-git-source.md) and per-plugin beta source records retain their original scope. The 0.8.0 release does not retroactively change those results. Follow the [0.8 migration guide](MIGRATION_0.8.md) and [#112](https://github.com/NaruForge/Paseo-Plugin/issues/112) for those changes.
 
-## Paseo 0.9 stable and 0.10 beta collection
+## Paseo 0.10 stable collection
 
-All four sources keep separate runtime entries and the 0.8 Composer `button` / `update` / `remove` contract. They pin exact 0.9.2 SDKs and declare `requirements.paseo: >=0.9.0 <0.10.0-beta.2`. Install v0.1.0-rc.4 with a 0.9.x stable or 0.10.0-beta.1 daemon, app and CLI. A `^0.8.0` manifest is rejected on 0.9, and the earlier `^0.9.0` manifest is rejected on 0.10.0-beta.1.
+All four sources keep separate runtime entries and the 0.8 Composer `button` / `update` / `remove` contract. They pin exact 0.10.0 SDKs and declare `requirements.paseo: >=0.9.0 <0.11.0-0`. Install v0.1.0-rc.4 with a 0.10.x or 0.9.x daemon, app and CLI. A `^0.8.0` manifest is rejected on 0.9, and the interim `>=0.9.0 <0.10.0-beta.2` range from [#123](https://github.com/NaruForge/Paseo-Plugin/issues/123) is rejected on 0.10.0.
 
-The published `@getpaseo/plugin` declarations are byte-identical in 0.9.0-beta.2, 0.9.2 and 0.10.0-beta.1, and the 0.9.2 and 0.10.0-beta.1 host plugin runtimes (compiler, import allowlist and requirement check) are identical. The 0.10.0-beta.1 client/protocol changes are additive authentication fields.
+The published `@getpaseo/plugin`, `@getpaseo/client` and `@getpaseo/protocol` packages are identical in 0.10.0-beta.1 and 0.10.0 apart from version numbers, and the plugin SDK `dist` is byte-identical to 0.9.2. The 0.9.2 and 0.10.0 host plugin runtimes (compiler, import allowlist and requirement check) are identical. The 0.10.0 app moves the sidebar item settings from **Settings → Layout** to **Settings → Sidebar**; plugin settings stay under the Host group's **Plugins** page.
 
-| Plugin | Daemon scope | 0.9.2 / 0.10.0-beta.1 evidence |
+| Plugin | Daemon scope | 0.10.0 / 0.9.2 evidence |
 | --- | --- | --- |
 | Branch Garden | Windows, macOS, Linux; Git required | Both exact SDKs' types, read-only regression tests, both staged compilers |
-| Provider Usage | Windows, macOS, Linux; enabled Provider connection | Usage/settings/registration tests on both SDKs, owned Agent directory observation, both staged compilers, live 0.10.0-beta.1 reload |
+| Provider Usage | Windows, macOS, Linux; enabled Provider connection | Usage/settings/registration tests on both SDKs, owned Agent directory observation, both staged compilers, live 0.10.0 reload |
 | Prompt Palette | Windows, macOS, Linux; Agent with Workspace | Settings/send/registration tests on both SDKs, owned Agent directory observation, both staged compilers |
 | Command Deck | Windows + PowerShell 7 | Settings/runner/registration tests on both SDKs, Explorer panel locations, both staged compilers |
 
-See the [0.9.2 / 0.10.0-beta.1 verification record](verification/paseo-0.9.2-0.10.0-beta.1.md) for comparisons, commands, compiler bytes, the live 0.10.0-beta.1 reload and remaining limits. The earlier [0.9.0-beta.2 record](verification/paseo-0.9.0-beta.2.md) keeps its original scope. Collection v0.1.0-rc.4 remains a prerelease. Native app/mobile and live Git activation/update are not certified by these source checks. Follow the [0.9 migration guide](MIGRATION_0.9.md), [#121](https://github.com/NaruForge/Paseo-Plugin/issues/121) and the stable/beta tracking issue [#123](https://github.com/NaruForge/Paseo-Plugin/issues/123). Daemon and app compatibility are checked separately.
+See the [0.10.0 verification record](verification/paseo-0.10.0.md) for comparisons, commands, compiler bytes, the live 0.10.0 reload and remaining limits. The [0.9.2 / 0.10.0-beta.1](verification/paseo-0.9.2-0.10.0-beta.1.md) and [0.9.0-beta.2](verification/paseo-0.9.0-beta.2.md) records keep their original scope. Collection v0.1.0-rc.4 remains a prerelease. Native app/mobile and live Git activation/update are not certified by these source checks. Follow the [0.9 migration guide](MIGRATION_0.9.md), [#121](https://github.com/NaruForge/Paseo-Plugin/issues/121), [#123](https://github.com/NaruForge/Paseo-Plugin/issues/123) and [#125](https://github.com/NaruForge/Paseo-Plugin/issues/125). Daemon and app compatibility are checked separately.

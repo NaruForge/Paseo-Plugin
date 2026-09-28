@@ -1,11 +1,11 @@
 # Paseo Plugin Capabilities
 
-이 문서는 **Paseo `0.9.0-beta.2`**의 공개 플러그인 계약을 정리한다. `@getpaseo/plugin` 선언은 0.9.2와 0.10.0-beta.1에서도 바이트 단위로 같다. 플러그인별 소스 이관 상태와 기존 배포 태그의 대상 버전은 [호환성 기록](../COMPATIBILITY.md)을 따른다. 이 기능표는 0.9 실행 검증 결과나 배포 플러그인 목록이 아니다. 유지보수 대상은 [Branch Garden과 Provider Usage](../../README.md#plugins) 두 개이며, 0.9 이관은 [#121](https://github.com/NaruForge/Paseo-Plugin/issues/121)에서 추적한다.
+이 문서는 **Paseo `0.9.0-beta.2`**의 공개 플러그인 계약을 정리한다. `@getpaseo/plugin` 선언은 0.9.2, 0.10.0-beta.1, 0.10.0에서도 바이트 단위로 같다. 플러그인별 소스 이관 상태와 기존 배포 태그의 대상 버전은 [호환성 기록](../COMPATIBILITY.md)을 따른다. 이 기능표는 0.9 실행 검증 결과나 배포 플러그인 목록이 아니다. 유지보수 대상은 [Branch Garden과 Provider Usage](../../README.md#plugins) 두 개이며, 0.9 이관은 [#121](https://github.com/NaruForge/Paseo-Plugin/issues/121)에서 추적한다.
 
 - 대조일: 2026-09-21 (Asia/Seoul)
 - 문서: [quickstart](https://paseo.sh/docs/plugins), [reference](https://paseo.sh/docs/plugins/reference), [0.9 이관](../MIGRATION_0.9.md), [provider guide](https://paseo.sh/docs/plugins/providers)
-- 정적 계약: npm에 배포된 exact `@getpaseo/plugin`, `@getpaseo/client`, `@getpaseo/protocol` **0.9.0-beta.2**의 선언. 2026-09-28에 0.9.2·0.10.0-beta.1과 다시 대조했으며 0.10.0-beta.1 client/protocol의 차이는 인증 관련 추가 필드뿐이다.
-- 검증 한계: 이번 조사는 문서·package 정적 대조다. 기능표 자체는 실행 인증이 아니다. CLI init·compiler 및 플러그인 검증은 [0.9.0-beta.2 기록](../verification/paseo-0.9.0-beta.2.md)과 [0.9.2 / 0.10.0-beta.1 기록](../verification/paseo-0.9.2-0.10.0-beta.1.md)에서 구분한다.
+- 정적 계약: npm에 배포된 exact `@getpaseo/plugin`, `@getpaseo/client`, `@getpaseo/protocol` **0.9.0-beta.2**의 선언. 2026-09-28에 0.9.2·0.10.0-beta.1·0.10.0과 다시 대조했으며 0.10 client/protocol의 차이는 인증 관련 추가 필드뿐이다.
+- 검증 한계: 이번 조사는 문서·package 정적 대조다. 기능표 자체는 실행 인증이 아니다. CLI init·compiler 및 플러그인 검증은 [0.9.0-beta.2 기록](../verification/paseo-0.9.0-beta.2.md)과 [0.9.2 / 0.10.0-beta.1 기록](../verification/paseo-0.9.2-0.10.0-beta.1.md), [0.10.0 기록](../verification/paseo-0.10.0.md)에서 구분한다.
 
 공식 문서도 후속 버전에서 바뀔 수 있다. 실제 구현에서는 대상 CLI가 생성한 fresh scaffold와 같은 exact SDK 선언을 다시 대조한다. 현재 0.7 소스를 유지보수할 때는 [v0.7 reference](https://paseo.sh/docs/plugins/v0.7/reference)를 사용한다.
 
