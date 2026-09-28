@@ -1,5 +1,5 @@
 // Type-checks and tests every workspace against another exact Paseo SDK without editing package files or the lockfile.
-// Usage: npm run check:paseo-channel -- beta | --dist-tag <latest|beta> | <exact-version>
+// Usage: npm run check:paseo-channel -- beta | previous | --dist-tag <latest|beta> | <exact-version>
 import { access, readdir, readFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
@@ -9,18 +9,19 @@ import { paseoAccepts, paseoChannels } from "./release-paseo.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const sdkPackages = ["@getpaseo/plugin", "@getpaseo/client"];
+const channelFields = { beta: "paseoBetaVersion", previous: "paseoPreviousVersion" };
 
 export function parseTarget(args) {
   if (args[0] === "--dist-tag" && /^[a-z][a-z0-9-]*$/.test(args[1] ?? "") && args.length === 2) return { distTag: args[1] };
-  if (args.length === 1 && (args[0] === "beta" || semver.valid(args[0]) === args[0])) return { version: args[0] };
-  throw new Error("Usage: npm run check:paseo-channel -- beta | --dist-tag <tag> | <exact-version>");
+  if (args.length === 1 && (channelFields[args[0]] || semver.valid(args[0]) === args[0])) return { version: args[0] };
+  throw new Error("Usage: npm run check:paseo-channel -- beta | previous | --dist-tag <tag> | <exact-version>");
 }
 
 // Compares a Paseo version with each plugin's verified SDKs and manifest range.
 export function classifyVersion(catalog, target) {
   const plugins = catalog.plugins.map((entry) => {
-    const { version, range, beta } = paseoChannels(catalog, entry);
-    return { id: entry.id, range, verified: [version, beta].includes(target), accepted: Boolean(range) && paseoAccepts(target, range) };
+    const { version, range, beta, previous } = paseoChannels(catalog, entry);
+    return { id: entry.id, range, verified: [version, beta, previous].includes(target), accepted: Boolean(range) && paseoAccepts(target, range) };
   });
   return {
     verified: plugins.every((plugin) => plugin.verified),
@@ -53,9 +54,14 @@ async function installedVersion(workspace, name) {
 async function main() {
   const target = parseTarget(process.argv.slice(2));
   const catalog = JSON.parse(await readFile(path.join(root, "plugins.json"), "utf8"));
+  const channel = channelFields[target.version];
+  if (channel && catalog[channel] == null) {
+    console.log(`The catalog has no ${channel}; nothing to check.`);
+    return;
+  }
   const version = target.distTag
     ? npm(["view", `@getpaseo/plugin@${target.distTag}`, "version"], { capture: true }).trim()
-    : target.version === "beta" ? catalog.paseoBetaVersion : target.version;
+    : channel ? catalog[channel] : target.version;
   if (!semver.valid(version)) throw new Error(`No exact Paseo version for ${JSON.stringify(target)}.`);
   const label = target.distTag ? `@getpaseo/plugin@${target.distTag} (${version})` : `Paseo ${version}`;
   const { verified, rejectedBy } = classifyVersion(catalog, version);
@@ -97,7 +103,7 @@ async function main() {
     annotate("error", `${label}: ${failure.message}`);
     process.exitCode = 1;
   } else if (rejectedBy.length) {
-    annotate("error", `${label} passes type checks and tests but is outside the manifest range of ${rejectedBy.join(", ")}. Verify it at runtime, then update paseoRange/paseoBetaVersion (docs/RELEASING.md).`);
+    annotate("error", `${label} passes type checks and tests but is outside the manifest range of ${rejectedBy.join(", ")}. Verify it at runtime, then update the catalog channels (docs/RELEASING.md#paseo-version-channels).`);
     process.exitCode = 1;
   } else if (!verified) {
     annotate("notice", `${label} passes type checks and tests and is inside the manifest range, but it is not a verified catalog SDK.`);

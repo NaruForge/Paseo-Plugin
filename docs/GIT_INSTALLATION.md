@@ -1,6 +1,6 @@
 # Git source 설치와 업데이트
 
-현재 **v0.1.0-rc.4**는 Paseo **0.9.x 안정 버전**과 검증한 **0.10.0-beta.1 베타**를 지원하는 네 플러그인입니다(`requirements.paseo: >=0.9.0 <0.10.0-beta.2`). [0.9.2 / 0.10.0-beta.1 검증 기록](verification/paseo-0.9.2-0.10.0-beta.1.md)을 확인하고 daemon·app·CLI를 이 범위의 버전으로 맞추세요. `^0.8.0` manifest는 0.9에서, 이전 `^0.9.0` manifest는 0.10.0-beta.1에서 거부됩니다. 그 이후 베타와 0.10.0 정식은 검증 전까지 거부됩니다. 과거 `v0.1.0-rc.3`는 0.8.0용, `v0.1.0-rc.2`는 0.7.2용으로 보존합니다. 같은 컴퓨터의 개발에는 directory install/reload, 다른 daemon이나 PC 배포에는 Git source를 사용합니다.
+현재 **v0.1.0-rc.4**는 Paseo **0.10.x 안정 버전**과 이전 **0.9.x**를 지원하는 네 플러그인입니다(`requirements.paseo: >=0.9.0 <0.11.0-0`). [0.10.0 검증 기록](verification/paseo-0.10.0.md)을 확인하고 daemon·app·CLI를 이 범위의 버전으로 맞추세요. `^0.8.0` manifest는 0.9에서, 중간 범위 `>=0.9.0 <0.10.0-beta.2`는 0.10.0에서 거부됩니다. Paseo 0.11 베타와 정식은 검증 전까지 거부됩니다. 과거 `v0.1.0-rc.3`는 0.8.0용, `v0.1.0-rc.2`는 0.7.2용으로 보존합니다. 같은 컴퓨터의 개발에는 directory install/reload, 다른 daemon이나 PC 배포에는 Git source를 사용합니다.
 
 ```powershell
 paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.4
@@ -60,7 +60,7 @@ paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden `
 
 ## 현재 소스 Git 평가
 
-네 플러그인의 현재 소스는 main에 있습니다. `v0.1.0-rc.2`는 Paseo 0.7.2용 Branch Garden과 Provider Usage만 포함하며 Prompt Palette와 Command Deck은 없습니다. `v0.1.0-rc.3`는 0.8.0용입니다. 0.9 이상 평가에는 그 태그들을 쓰지 마세요. 아래 rc.4 태그를 검토하고 0.9.x 또는 0.10.0-beta.1 daemon/app에서 **명령 하나만** 선택하세요. 아래 명령을 실행하는 것 자체가 검증 완료는 아닙니다. 세 플러그인의 add/update/실패 복구 증거는 [0.8 Git 검증 기록](verification/paseo-0.8-git-source.md)에 있고, Command Deck Git 경로는 포함되지 않습니다.
+네 플러그인의 현재 소스는 main에 있습니다. `v0.1.0-rc.2`는 Paseo 0.7.2용 Branch Garden과 Provider Usage만 포함하며 Prompt Palette와 Command Deck은 없습니다. `v0.1.0-rc.3`는 0.8.0용입니다. 0.9 이상 평가에는 그 태그들을 쓰지 마세요. 아래 rc.4 태그를 검토하고 0.10.x 또는 0.9.x daemon/app에서 **명령 하나만** 선택하세요. 아래 명령을 실행하는 것 자체가 검증 완료는 아닙니다. 세 플러그인의 add/update/실패 복구 증거는 [0.8 Git 검증 기록](verification/paseo-0.8-git-source.md)에 있고, Command Deck Git 경로는 포함되지 않습니다.
 
 ```powershell
 paseo plugin add NaruForge/Paseo-Plugin:plugins/branch-garden --ref v0.1.0-rc.4

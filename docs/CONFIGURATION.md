@@ -1,6 +1,6 @@
 # Configuration
 
-No plugin requires a custom host settings file. This guide describes current source for Paseo 0.9.x and 0.10.0-beta.1; for the published 0.8 release use [v0.1.0-rc.3](https://github.com/NaruForge/Paseo-Plugin/tree/v0.1.0-rc.3/plugins) and for 0.7 use [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/tree/v0.1.0-rc.2/plugins).
+No plugin requires a custom host settings file. This guide describes current source for Paseo 0.10.x and 0.9.x; for the published 0.8 release use [v0.1.0-rc.3](https://github.com/NaruForge/Paseo-Plugin/tree/v0.1.0-rc.3/plugins) and for 0.7 use [v0.1.0-rc.2](https://github.com/NaruForge/Paseo-Plugin/tree/v0.1.0-rc.2/plugins).
 
 - Branch Garden reads the selected daemon's Paseo project/workspace registry and uses its installed Git executable. See the [plugin guide](../plugins/branch-garden/README.md).
 - Provider Usage reads enabled connections and usage through Paseo. The daemon owns authentication and provider HTTP; the plugin neither reads nor writes credentials. See the [plugin guide](../plugins/provider-usage/README.md).
@@ -15,7 +15,7 @@ The earlier GitHub owner and File Browser root configuration files are no longer
 
 Changes save immediately. Defaults: Composer pill on, Show remaining % on, Show provider name on, Show reset time off, Reset time display format Date and time. Command Center always provides the usage surface and settings screen. Local Composer pill visibility changes apply after saving; another client’s Composer pill visibility changes converge within 30 seconds while connected. Pill fields use live host settings. Failed saves preserve prior values and offer reload; invalid documents offer explicit default recovery.
 
-Sidebar visibility belongs to **Paseo Settings → Layout**. Provider Usage always registers the Usage sidebar item, independently of its settings state. Schema v3 migrates v1/v2 by removing the retired Sidebar preference, preserving all four choices and defaulting the new reset format to Date and time; it does not modify Paseo Layout. Downgrading to the old schema can report the v3 document as invalid.
+Sidebar visibility belongs to **Paseo Settings → Sidebar** (**Settings → Layout** on Paseo 0.9). Provider Usage always registers the Usage sidebar item, independently of its settings state. Schema v3 migrates v1/v2 by removing the retired Sidebar preference, preserving all four choices and defaulting the new reset format to Date and time; it does not modify Paseo Layout. Downgrading to the old schema can report the v3 document as invalid.
 
 **Reset time → Display format** chooses Date and time or Time remaining for both Usage and the pill. Show reset time still independently controls pill visibility. Pill text omits Reset/Resets and uses at most two duration units (`2h 15m`, `6d 3h`). Client-only countdowns update every 30 seconds while mounted; `<1m` covers the final minute and `Due` indicates a passed deadline pending fresh usage. Background throttling may delay the next tick.
 
@@ -35,7 +35,7 @@ The installation identifier is retained even when the command list is empty so e
 
 ## Paseo 0.9 settings contract
 
-All four plugin sources and v0.1.0-rc.4 support Paseo 0.9.x and 0.10.0-beta.1 (`>=0.9.0 <0.10.0-beta.2`). Upgrade daemon, app and CLI from 0.8.0 before installing; `^0.8.0` manifests are rejected. Settings schemas and values are unchanged between these Paseo versions. Provider Usage registers **Provider Usage Settings** under Settings → Plugins, using `addSettingsScreen` and host-scoped `defineSettings` → `registerSettings` → `useSettings`; see the [settings reference](plugin-capabilities/backend-and-sdk.md#host-단위-설정-저장) and [0.9 migration plan](MIGRATION_0.9.md).
+All four plugin sources and v0.1.0-rc.4 support Paseo 0.10.x and 0.9.x (`>=0.9.0 <0.11.0-0`). Plugin settings screens are under the Host group's **Plugins** page in both versions. Upgrade daemon, app and CLI from 0.8.0 before installing; `^0.8.0` manifests are rejected. Settings schemas and values are unchanged between these Paseo versions. Provider Usage registers **Provider Usage Settings** under Settings → Plugins, using `addSettingsScreen` and host-scoped `defineSettings` → `registerSettings` → `useSettings`; see the [settings reference](plugin-capabilities/backend-and-sdk.md#host-단위-설정-저장) and [0.9 migration plan](MIGRATION_0.9.md).
 
 Built-in values are shared by authorized clients of the same host and installation, validated against a schema, and saved with revision conflict detection. They survive reload/disable/update and daemon restart, but **removing the installation deletes its values**. Reinstalling starts from defaults. They are ordinary JSON, not a credential vault, and provide neither per-user storage nor cross-host synchronization. A settings screen does not replace Paseo's native provider usage screen or expose a generic route into it.
 

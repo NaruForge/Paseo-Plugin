@@ -1,6 +1,6 @@
 # Backend와 Paseo SDK
 
-기준은 **Paseo 0.9.0-beta.2**이며 0.9.2·0.10.0-beta.1과 선언이 동일하다. 플러그인별 소스 상태는 [호환성 기록](../COMPATIBILITY.md), 파일 이동과 검증 순서는 [이관 안내](../MIGRATION_0.9.md)를 따른다. 이 문서는 [공식 reference](https://paseo.sh/docs/plugins/reference)와 exact SDK 선언을 정적으로 대조한 참조 자료다.
+기준은 **Paseo 0.9.0-beta.2**이며 0.9.2·0.10.0과 선언이 동일하다. 플러그인별 소스 상태는 [호환성 기록](../COMPATIBILITY.md), 파일 이동과 검증 순서는 [이관 안내](../MIGRATION_0.9.md)를 따른다. 이 문서는 [공식 reference](https://paseo.sh/docs/plugins/reference)와 exact SDK 선언을 정적으로 대조한 참조 자료다.
 
 ## Runtime 경계
 

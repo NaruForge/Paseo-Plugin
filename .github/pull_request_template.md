@@ -11,7 +11,7 @@ Closes #
 - [ ] `npm run check:docs-sync`
 - [ ] `npm run check:git-source-imports` (Git source 또는 배포 경로에 영향이 있는 경우)
 - [ ] `npm run check:release` (버전·카탈로그·workspace·lockfile 변경 시)
-- [ ] `npm run check:paseo-channel -- beta` (SDK 사용 방식·Paseo 지원 버전·`plugins.json` 채널 필드 변경 시)
+- [ ] `npm run check:paseo-channel -- previous`와 `-- beta` (SDK 사용 방식·Paseo 지원 버전·`plugins.json` 채널 필드 변경 시)
 - [ ] 대상 workspace의 typecheck
 - [ ] 대상 workspace의 필수 테스트
 - [ ] 여러 workspace·구조·설치 상태 변경 시 루트 `npm run typecheck`

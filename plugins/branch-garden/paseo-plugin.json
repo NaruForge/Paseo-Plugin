@@ -2,6 +2,6 @@
   "id": "branch-garden",
   "description": "Inspect registered Git projects, workspaces, branches and worktrees without changing Git state.",
   "requirements": {
-    "paseo": ">=0.9.0 <0.10.0-beta.2"
+    "paseo": ">=0.9.0 <0.11.0-0"
   }
 }

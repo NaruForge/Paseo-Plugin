@@ -96,6 +96,30 @@ test("rejects stale manifests and ranges that miss or exceed the verified versio
   }
 });
 
+function promoted({ range = ">=0.9.0 <0.11.0-0", previous = "0.9.2" } = {}) {
+  const data = metadata("0.10.0");
+  data.catalog = { paseoVersion: "0.10.0", paseoRange: range, paseoPreviousVersion: previous };
+  data.entry = { paseoVersion: "0.10.0" };
+  data.manifest = { requirements: { paseo: range } };
+  return data;
+}
+
+test("a promoted stable SDK keeps a verified previous stable line in range", () => {
+  assert.deepEqual(validatePaseoMetadata(promoted()), { version: "0.10.0", errors: [] });
+  const optedOut = promoted();
+  optedOut.entry.paseoPreviousVersion = null;
+  assert.deepEqual(validatePaseoMetadata(optedOut).errors, []);
+  for (const [options, error] of [
+    [{ range: ">=0.10.0 <0.11.0-0" }, "catalog Paseo range must accept the previous stable SDK."],
+    [{ previous: "0.10.0-beta.1" }, "previous Paseo SDK must be an exact stable version older than the stable SDK."],
+    [{ previous: "0.10.1" }, "previous Paseo SDK must be an exact stable version older than the stable SDK."],
+    [{ previous: "^0.9.2" }, "previous Paseo SDK must be an exact stable version older than the stable SDK."],
+    [{ range: ">=0.9.0 <0.12.0-0" }, "catalog Paseo range must reject unverified 0.11.0-0."],
+  ]) {
+    assert.deepEqual(validatePaseoMetadata(promoted(options)).errors, [error], JSON.stringify(options));
+  }
+});
+
 test("a 0.9 entry without a catalog range keeps the ^0.9.0 default", () => {
   const data = metadata("0.9.2");
   data.manifest = { requirements: { paseo: "^0.9.0" } };

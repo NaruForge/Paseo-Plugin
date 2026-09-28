@@ -10,7 +10,7 @@ import contribute from "../index.client";
 
 afterEach(() => vi.useRealTimers());
 
-describe("Layout-owned sidebar registration", () => {
+describe("Paseo-owned sidebar registration", () => {
   it.each(["loading", "error", "invalid", "pill-off", "pill-on"])("keeps the same sidebar contribution registered with %s settings", async (state) => {
     vi.useFakeTimers();
     const removeSidebar = vi.fn();
