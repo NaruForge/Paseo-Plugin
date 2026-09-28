@@ -52,7 +52,7 @@ jobs:
         run: npm test
 
   paseo-channels:
-    name: Verified Paseo ${{ matrix.channel }} SDK
+    name: Verified Paseo ${{ matrix.channel }} SDK (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
