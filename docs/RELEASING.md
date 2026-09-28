@@ -36,14 +36,14 @@ One source serves the stable Paseo line, the previous stable line and the verifi
 
 1. Read the Paseo release notes. Compare the new `@getpaseo/plugin`, `@getpaseo/client` and `@getpaseo/protocol` declarations, the host plugin runtime (`@getpaseo/server` `dist/server/server/plugins/`) and `@getpaseo/protocol` `dist/plugin-requirements.js` with the verified beta.
 2. Set `paseoBetaVersion` to the new exact prerelease. Raise the `paseoRange` upper bound to its next prerelease (for example `>=0.9.0 <0.11.0-beta.2` for 0.11.0-beta.1) in `plugins.json` and all four manifests. Keep the stable SDK unchanged.
-3. Run `npm run check`, `npm run check:paseo-channel -- beta`, and `node scripts/check-plugin-compiler.mjs plugins/<id> <@getpaseo/server-directory>` for each plugin with that beta's server package.
+3. Compare a fresh `paseo plugin init` scaffold from that CLI and align the scaffold-owned devDependencies (`react`, `react-native`, `@types/react`, `@tanstack/react-query`, `zod`, `typescript`). Run `npm run check`, `npm run check:paseo-channel -- beta`, and `node scripts/check-plugin-compiler.mjs plugins/<id> <@getpaseo/server-directory>` for each plugin with that beta's server package.
 4. On a daemon and app running the beta, reload the directory installations and confirm `running` with no load errors in `paseo plugin ls` and `paseo plugin logs`. Exercise the changed contracts. Add a new record under `docs/verification/`; keep earlier records unchanged.
 5. Update the documents that name supported versions (root and plugin READMEs, Compatibility, Changelog) and release a new collection version. Users pinned to an older tag keep its range until they change `--ref`; users tracking main receive it with `paseo plugin update`.
 
 ### Promote a Paseo stable release
 
 1. Repeat the beta comparison and runtime checks for the stable version.
-2. Set `paseoVersion` and every workspace `@getpaseo/plugin` (and Branch Garden's `@getpaseo/client`) to that exact version, then run `npm install` so the lockfile matches.
+2. Set `paseoVersion` and every workspace `@getpaseo/plugin` (and Branch Garden's `@getpaseo/client`) to that exact version, align the scaffold-owned devDependencies and the `@types/node` major with the new scaffold and Paseo's embedded Node.js, then run `npm install` so the lockfile matches.
 3. Remove `paseoBetaVersion` until the next beta is verified. The range must then reject the next minor prerelease, for example `<0.11.0-0` for 0.10.0.
 4. If the previous stable line still passes on the same source, keep its lower bound and set `paseoPreviousVersion` to its newest exact stable SDK (for example `>=0.9.0 <0.11.0-0` with 0.9.2); CI then runs `npm run check:paseo-channel -- previous`. Otherwise raise the lower bound to the new line, remove `paseoPreviousVersion`, and tell previous-line users which tag to keep in the Changelog.
 5. Replace the old stable-line Settings paths and version names in user documents, add a verification record, and reload the directory installations on the new stable daemon.

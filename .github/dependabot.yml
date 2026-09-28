@@ -8,6 +8,19 @@ updates:
     ignore:
       # Upgrade these with plugins.json after comparing the target Paseo scaffold/contracts; paseo-drift.yml reports new releases.
       - dependency-name: "@getpaseo/*"
+      # Paseo supplies these modules at runtime. Keep the versions from the target Paseo CLI scaffold.
+      - dependency-name: "react"
+      - dependency-name: "react-native"
+      - dependency-name: "@types/react"
+      - dependency-name: "@tanstack/react-query"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "zod"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      # The desktop daemon runs Paseo's embedded Node.js 24; a newer major would type-check APIs it lacks.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
     groups:
       development:
         patterns:
