@@ -85,7 +85,7 @@ npm test --workspace branch-garden
 - Prompt Palette의 `shared/prompt-settings.ts`는 schema를, `client/prompt-settings.tsx`는 revision을 고정한 draft 편집을, `prompt-registration.ts`·`prompt-picker.tsx`·`prompt-send.ts`는 등록·popover 본문·전송 수명을 소유한다. Picker의 세로 스크롤과 compact sheet 표시는 host가 소유하며, 본문에 세로 ScrollView를 중첩하지 않는다. 변경 시 workspace typecheck와 테스트를 실행한다. 전송은 공식 Agent `send()`만 사용하며 자동 재전송하지 않는다.
 - Command Deck의 `shared/commands.ts`는 Project(`projectId`) Settings와 실행 RPC 계약을 소유한다. v1 `workspaceId`는 `legacyWorkspaceId`로만 이전한다. 실행·터미널 소유권은 현재 Workspace다. `server/runner.ts`는 실행 직렬화·터미널 소유권 확인·재발견을 소유한다. `client/run-controller.ts`·`registration.ts`는 조회·기여 수명을 소유한다. 변경 시 workspace typecheck와 테스트를 실행한다. 명령 실행은 공식 Terminal SDK만 사용하며 응답 유실 시 자동 재전송하지 않는다. Cleanup은 터미널을 종료하지 않는다.
 - `paseo-plugin.json`: 설치 기본 ID를 소유한다. 디렉터리명이나 package 이름으로 런타임 ID를 추측하지 않는다.
-- `package.json`: 로컬 타입 검사용 exact `@getpaseo/plugin` 의존성을 소유한다. 공개 계약을 ambient declaration으로 임의 확장하지 않는다.
+- `package.json`: 로컬 타입 검사용 exact `@getpaseo/plugin` 의존성을 소유한다. 공개 계약을 ambient declaration으로 임의 확장하지 않는다. Host가 실행 시 제공하는 `react`·`react-native`·`@tanstack/react-query`·`zod`와 `@types/react`·`typescript`는 대상 Paseo CLI 스캐폴드 버전을 따르고, `@types/node` 메이저는 Paseo 내장 Node(0.10.0은 24)를 따른다. Dependabot은 이 의존성의 스캐폴드 밖 업데이트를 무시하며 `vitest` 같은 개발 전용 도구만 올린다.
 
 클라이언트 모듈에서 `server/`를 가져오거나 서버 모듈에서 `client/`를 가져오지 않는다. 화면 안에서 별도 Paseo 클라이언트를 만들지 않고 제공된 Paseo API를 사용한다.
 
